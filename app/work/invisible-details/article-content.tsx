@@ -2,7 +2,7 @@
 
 import * as React from "react"
 import Link from "next/link"
-import { Undo2, Check, LinkIcon } from "lucide-react"
+import { Undo2, Check, LinkIcon, CheckCircle, CircleCheck } from "lucide-react"
 import { Footer, type Language } from "@/components/footer"
 
 function Divider() {
@@ -78,7 +78,7 @@ function CopyInstallButton({ text }: { text: string }) {
   return (
     <button
       onClick={handleCopy}
-      className="group flex shrink-0 cursor-pointer items-center justify-center rounded-md p-1.5 transition-[scale,background-color] duration-150 ease-out hover:bg-foreground/10 active:scale-[0.96]"
+      className="group flex shrink-0 cursor-pointer items-center justify-center rounded-lg p-1.5 transition-[scale,background-color] duration-150 ease-out hover:bg-foreground/10 active:scale-[0.96]"
       aria-label="Copy install command"
     >
       <span className="relative grid size-4 place-items-center">
@@ -529,7 +529,7 @@ export function ArticleContent({
 
           <p className="mb-4 w-full text-pretty text-muted-foreground">{t.moreP1}</p>
 
-          <div className="my-4 flex items-center justify-between gap-2 overflow-x-auto rounded-lg bg-muted py-2 pr-2 pl-3 font-mono text-[13px]">
+          <div className="flex h-10 items-center justify-between gap-2 overflow-hidden rounded-xl bg-preview-bg pr-1.5 pl-3 shadow-custom my-8 text-sm">
             <code className="select-all">{t.moreInstall}</code>
             <CopyInstallButton text={t.moreInstall} />
           </div>

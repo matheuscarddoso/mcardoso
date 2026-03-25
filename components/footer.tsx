@@ -38,7 +38,7 @@ export function Footer({ language = "EN", onLanguageChange }: FooterProps) {
           <button
             type="button"
             onClick={toggleLanguage}
-            className="hover:bg-zinc-50 dark:hover:bg-zinc-800 relative flex h-[28px] items-center gap-2 rounded-lg px-2 py-1.5 transition-[colors,transform] duration-200 active:scale-98"
+            className="hover:bg-zinc-50 dark:hover:bg-zinc-800 relative flex h-[28px] items-center gap-2 rounded-xl px-2 py-1.5 transition-[colors,transform] duration-200 active:scale-98"
           >
             <span className="text-primary-light-11 dark:text-primary-dark-11 text-xs font-medium select-none">
               {language}
@@ -54,7 +54,7 @@ export function Footer({ language = "EN", onLanguageChange }: FooterProps) {
         <button
           type="button"
           onClick={toggleTheme}
-          className="hover:bg-zinc-50 dark:hover:bg-zinc-800 relative flex h-[28px] items-center gap-2 rounded-lg px-2 py-1.5 transition-[colors,transform] duration-200 active:scale-98"
+          className="hover:bg-zinc-50 dark:hover:bg-zinc-800 relative flex h-[28px] items-center gap-2 rounded-xl px-2 py-1.5 transition-[colors,transform] duration-200 active:scale-98"
         >
           <span className="text-primary-light-11 dark:text-primary-dark-11 text-xs font-medium select-none">
             {theme === "system" ? t.system : theme === "dark" ? t.dark : t.light}

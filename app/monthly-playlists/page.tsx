@@ -62,9 +62,9 @@ export default function MonthlyPlaylistsPage() {
                 href={pl.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex flex-col items-center gap-1.5 transition-opacity hover:opacity-90"
+                className="flex flex-col items-center gap-1.5 transition-[transform,box-shadow] duration-200 ease-out hover:scale-[1.02] hover:shadow-md active:scale-[0.98]"
               >
-                <div className="aspect-square w-full overflow-hidden rounded-[20px] corner-squircle">
+                <div className="aspect-square w-full overflow-hidden rounded-[20px] corner-squircle outline outline-1 outline-black/5 outline-offset-2 dark:outline-white/5">
                   <Image
                     src={pl.image}
                     alt={label}

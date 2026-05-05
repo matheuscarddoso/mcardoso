@@ -160,6 +160,16 @@ export default function Home() {
                 <span className="text-sm text-muted-foreground">Mar 2026</span>
               </div>
             </Link>
+            <Link
+              href="/work/saving-claude-tokens"
+              className="group -mx-2 flex items-center gap-3 rounded-xl px-2 py-2 transition-colors duration-200 ease-out hover:bg-secondary"
+            >
+              <div className="relative flex h-13 w-11 shrink-0 select-none items-center justify-center overflow-hidden rounded-md bg-preview-bg shadow-custom"><div className="flex h-full w-full flex-col items-start justify-center gap-[3px] px-2 py-2"><div className="h-[2px] w-7 rounded-full bg-gray-400"></div><div className="h-[2px] w-6 rounded-full bg-gray-400"></div><div className="h-[2px] w-5 rounded-full bg-gray-400"></div><div className="mt-[3px] h-[2px] w-4 rounded-full bg-gray-500"></div><div className="h-[2px] w-3 rounded-full bg-gray-500"></div><div className="h-[2px] w-2 rounded-full bg-gray-500"></div></div></div>
+              <div className="flex flex-col">
+                <span className="font-[450] text-foreground">{language === "PT" ? "Como economizar tokens do Claude Code" : language === "ES" ? "Cómo ahorrar tokens de Claude Code" : "How to save Claude Code tokens"}</span>
+                <span className="text-sm text-muted-foreground">May 2026</span>
+              </div>
+            </Link>
           </div>
         </div>
       </main>

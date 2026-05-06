@@ -161,8 +161,8 @@ export function ArticleContent({ codeStructure, codeGradients, codeBrowser }: Ar
   const t = translations[language]
 
   return (
-    <div className="relative flex min-h-[100dvh] w-screen flex-col">
-      <main className="mx-auto max-w-(--breakpoint-sm) flex-1 px-4 py-12 leading-relaxed sm:py-20">
+    <div className="relative flex min-h-[100dvh] w-full flex-col overflow-x-hidden">
+      <main className="mx-auto w-full max-w-(--breakpoint-sm) flex-1 px-4 py-12 leading-relaxed sm:py-20">
         <header>
           <div className="mb-24 flex min-h-9 w-full select-none items-center justify-between gap-2">
             <Link

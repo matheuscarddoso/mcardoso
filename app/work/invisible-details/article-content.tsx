@@ -379,8 +379,8 @@ export function ArticleContent({
   const t = translations[language]
 
   return (
-    <div className="relative flex min-h-[100dvh] w-screen flex-col">
-      <main className="mx-auto max-w-(--breakpoint-sm) flex-1 px-4 py-12 leading-relaxed sm:py-20">
+    <div className="relative flex min-h-[100dvh] w-full flex-col overflow-x-hidden">
+      <main className="mx-auto w-full max-w-(--breakpoint-sm) flex-1 px-4 py-12 leading-relaxed sm:py-20">
         <header>
           <div className="mb-24 flex min-h-9 w-full select-none items-center justify-between gap-2">
             <Link
@@ -530,7 +530,9 @@ export function ArticleContent({
           <p className="mb-4 w-full text-pretty text-muted-foreground">{t.moreP1}</p>
 
           <div className="flex h-10 items-center justify-between gap-2 overflow-hidden rounded-xl bg-preview-bg pr-1.5 pl-3 shadow-custom my-8 text-sm">
-            <code className="select-all">{t.moreInstall}</code>
+            <div className="min-w-0 flex-1 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+              <code className="select-all whitespace-nowrap">{t.moreInstall}</code>
+            </div>
             <CopyInstallButton text={t.moreInstall} />
           </div>
 

@@ -174,8 +174,8 @@ export function ArticleContent({ codeInstall, codeInit, codeCommands, codeDirect
   const t = translations[language]
 
   return (
-    <div className="relative flex min-h-[100dvh] w-screen flex-col">
-      <main className="mx-auto max-w-(--breakpoint-sm) flex-1 px-4 py-12 leading-relaxed sm:py-20">
+    <div className="relative flex min-h-[100dvh] w-full flex-col overflow-x-hidden">
+      <main className="mx-auto w-full max-w-(--breakpoint-sm) flex-1 px-4 py-12 leading-relaxed sm:py-20">
         <header>
           <div className="mb-24 flex min-h-9 w-full select-none items-center justify-between gap-2">
             <Link
@@ -293,19 +293,19 @@ export function ArticleContent({ codeInstall, codeInit, codeCommands, codeDirect
               ].map((row, i) => (
                 <div
                   key={row.cmd}
-                  className={`grid grid-cols-4 items-center px-4 py-2.5 ${i < 4 ? "border-b" : ""}`}
+                  className={`grid grid-cols-4 items-center px-2 py-2 sm:px-4 sm:py-2.5 ${i < 4 ? "border-b" : ""}`}
                 >
-                  <span className="font-mono text-sm text-foreground">{row.cmd}</span>
-                  <span className="text-sm text-muted-foreground/60">{row.std}</span>
-                  <span className="text-sm text-muted-foreground">{row.rtk}</span>
-                  <span className="text-sm font-medium text-foreground">{row.savings}</span>
+                  <span className="font-mono text-[11px] sm:text-sm text-foreground">{row.cmd}</span>
+                  <span className="text-[11px] sm:text-sm text-muted-foreground/60">{row.std}</span>
+                  <span className="text-[11px] sm:text-sm text-muted-foreground">{row.rtk}</span>
+                  <span className="text-[11px] sm:text-sm font-medium text-foreground">{row.savings}</span>
                 </div>
               ))}
-              <div className="grid grid-cols-4 items-center border-t bg-secondary/40 px-4 py-2.5">
-                <span className="text-sm font-medium text-foreground">{language === "PT" ? "Total" : language === "ES" ? "Total" : "Total"}</span>
-                <span className="text-sm text-muted-foreground/60">~118,000</span>
-                <span className="text-sm text-muted-foreground">~23,900</span>
-                <span className="text-sm font-medium text-foreground">-80%</span>
+              <div className="grid grid-cols-4 items-center border-t bg-secondary/40 px-2 py-2 sm:px-4 sm:py-2.5">
+                <span className="text-[11px] sm:text-sm font-medium text-foreground">Total</span>
+                <span className="text-[11px] sm:text-sm text-muted-foreground/60">~118,000</span>
+                <span className="text-[11px] sm:text-sm text-muted-foreground">~23,900</span>
+                <span className="text-[11px] sm:text-sm font-medium text-foreground">-80%</span>
               </div>
             </div>
           </div>

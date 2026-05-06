@@ -74,7 +74,7 @@ export default function Home() {
   const linkClass = "article-underline hover:text-zinc-900 dark:hover:text-white text-inherit"
 
   return (
-    <div className="relative flex min-h-dvh w-screen flex-col">
+    <div className="relative flex min-h-dvh w-full flex-col overflow-x-hidden">
       <main className="mx-auto flex w-full max-w-(--breakpoint-sm) flex-1 flex-col px-4 pt-20 pb-4 dark:text-[#b4b4b4] text-gray-600">
         <div className="relative z-10 mb-8 flex items-center">
           <div className="relative z-10">

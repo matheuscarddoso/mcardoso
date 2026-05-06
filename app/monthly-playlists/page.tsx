@@ -37,7 +37,7 @@ export default function MonthlyPlaylistsPage() {
   const [language, setLanguage] = React.useState<"PT" | "EN" | "ES">("EN")
 
   return (
-    <div className="relative flex min-h-dvh w-screen flex-col">
+    <div className="relative flex min-h-dvh w-full flex-col overflow-x-hidden">
       <div
         className="pointer-events-none fixed top-0 left-0 z-50 h-12 w-full bg-neutral-100 to-transparent backdrop-blur-xl [-webkit-mask-image:linear-gradient(to_bottom,black,transparent)] dark:bg-neutral-900"
         aria-hidden

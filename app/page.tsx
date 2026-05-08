@@ -170,6 +170,16 @@ export default function Home() {
                 <span className="text-sm text-muted-foreground">May 2026</span>
               </div>
             </Link>
+            <Link
+              href="/work/whatsapp-cloud-api"
+              className="group -mx-2 flex items-center gap-3 rounded-xl px-2 py-2 transition-colors duration-200 ease-out hover:bg-secondary"
+            >
+              <div className="relative flex h-13 w-11 shrink-0 select-none items-center justify-center overflow-hidden rounded-md bg-preview-bg shadow-custom"><div className="flex h-full w-full flex-col items-center justify-center gap-1 px-1.5 py-2"><div className="w-full rounded-[3px] bg-gray-400/20 px-1 py-1"><div className="h-[2px] w-full rounded-full bg-gray-400"></div><div className="mt-0.5 h-[2px] w-3/4 rounded-full bg-gray-400/60"></div></div><div className="flex w-full gap-0.5"><div className="flex-1 rounded-[2px] border border-gray-400/40 py-[3px]"></div><div className="flex-1 rounded-[2px] border border-gray-400/40 py-[3px]"></div></div></div></div>
+              <div className="flex flex-col">
+                <span className="font-[450] text-foreground">{language === "PT" ? "Mensagens interativas com a WhatsApp Cloud API" : language === "ES" ? "Mensajes interactivos con la WhatsApp Cloud API" : "Interactive messages with the WhatsApp Cloud API"}</span>
+                <span className="text-sm text-muted-foreground">May 2026</span>
+              </div>
+            </Link>
           </div>
         </div>
       </main>

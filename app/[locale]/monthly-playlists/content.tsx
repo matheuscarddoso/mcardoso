@@ -4,7 +4,9 @@ import * as React from "react"
 import Image from "next/image"
 import Link from "next/link"
 import { Undo2 } from "lucide-react"
-import { Footer } from "@/components/footer"
+import { useParams, useRouter } from "next/navigation"
+import { Footer, type Language } from "@/components/footer"
+import { localeToLanguage, languageToLocale } from "@/lib/locale"
 
 const introByLang = {
   PT: "Todo mês, crio uma playlist com minhas músicas favoritas do momento.",
@@ -33,8 +35,11 @@ const monthLabels: Record<string, { PT: string; EN: string; ES: string }> = {
   December:  { PT: "Dezembro",  EN: "December",  ES: "Diciembre" },
 }
 
-export default function MonthlyPlaylistsPage() {
-  const [language, setLanguage] = React.useState<"PT" | "EN" | "ES">("EN")
+export function MonthlyPlaylistsContent() {
+  const params = useParams()
+  const router = useRouter()
+  const locale = (params.locale as string) ?? 'en'
+  const language: Language = localeToLanguage(locale)
 
   return (
     <div className="relative flex min-h-dvh w-full flex-col overflow-x-hidden">
@@ -45,7 +50,7 @@ export default function MonthlyPlaylistsPage() {
       <main className="mx-auto flex w-full max-w-(--breakpoint-sm) flex-1 flex-col px-4 pt-20 pb-4 dark:text-[#b4b4b4] text-gray-600">
         <div className="mb-16 flex items-center justify-between">
           <Link
-            href="/"
+            href={`/${locale}`}
             className="inline-flex h-8 w-8 cursor-pointer select-none items-center justify-center rounded-full bg-[#F0F0F0] dark:bg-[#222] text-primary-light-12 outline-none transition-all duration-150 hover:bg-primary-light-4 focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-1 active:scale-[0.97] disabled:pointer-events-none disabled:opacity-60 dark:bg-primary-dark-3 dark:text-primary-dark-1 dark:hover:bg-primary-dark-4 [&_svg]:text-primary-light-12 dark:[&_svg]:text-primary-dark-12"
             aria-label={language === "PT" ? "Voltar" : language === "ES" ? "Volver" : "Back"}
           >
@@ -79,7 +84,13 @@ export default function MonthlyPlaylistsPage() {
           })}
         </div>
       </main>
-      <Footer language={language} onLanguageChange={setLanguage} />
+      <Footer
+        language={language}
+        onLanguageChange={(lang) => {
+          const path = window.location.pathname.replace(/^\/(en|pt-br|es)/, '') || '/'
+          router.push(`/${languageToLocale[lang]}${path}`, { scroll: false })
+        }}
+      />
     </div>
   )
 }

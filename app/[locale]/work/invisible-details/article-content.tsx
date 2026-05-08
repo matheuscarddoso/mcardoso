@@ -2,8 +2,10 @@
 
 import * as React from "react"
 import Link from "next/link"
-import { Undo2, Check, LinkIcon, CheckCircle, CircleCheck } from "lucide-react"
+import { useParams, useRouter } from "next/navigation"
+import { Undo2, Check, LinkIcon } from "lucide-react"
 import { Footer, type Language } from "@/components/footer"
+import { localeToLanguage, languageToLocale } from "@/lib/locale"
 
 function Divider() {
   return (
@@ -63,8 +65,6 @@ function CopyLinkButton() {
     </button>
   )
 }
-
-const c = (text: string) => <code className="code-inline">{text}</code>
 
 function CopyInstallButton({ text }: { text: string }) {
   const [copied, setCopied] = React.useState(false)
@@ -257,6 +257,8 @@ function EasingComparisonDemo() {
 
 // --- Translations ---
 
+const c = (text: string) => <code className="code-inline">{text}</code>
+
 const translations = {
   PT: {
     title: "Detalhes invisíveis que fazem interfaces parecerem certas",
@@ -375,7 +377,10 @@ export function ArticleContent({
   codeStagger,
   codePerformance,
 }: ArticleContentProps) {
-  const [language, setLanguage] = React.useState<Language>("EN")
+  const params = useParams()
+  const router = useRouter()
+  const locale = (params.locale as string) ?? 'en'
+  const language: Language = localeToLanguage(locale)
   const t = translations[language]
 
   return (
@@ -384,7 +389,7 @@ export function ArticleContent({
         <header>
           <div className="mb-24 flex min-h-9 w-full select-none items-center justify-between gap-2">
             <Link
-              href="/"
+              href={`/${locale}`}
               className="group flex size-9 shrink-0 cursor-pointer items-center justify-center rounded-full bg-secondary transition-[scale,background-color] duration-200 ease-out hover:bg-gray-300 active:scale-[0.96]"
               aria-label="Home"
             >
@@ -545,7 +550,13 @@ export function ArticleContent({
           </p>
         </article>
       </main>
-      <Footer language={language} onLanguageChange={setLanguage} />
+      <Footer
+        language={language}
+        onLanguageChange={(lang) => {
+          const path = window.location.pathname.replace(/^\/(en|pt-br|es)/, '') || '/'
+          router.push(`/${languageToLocale[lang]}${path}`, { scroll: false })
+        }}
+      />
     </div>
   )
 }

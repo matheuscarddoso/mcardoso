@@ -2,8 +2,10 @@
 
 import * as React from "react"
 import Link from "next/link"
+import { useParams, useRouter } from "next/navigation"
 import { Undo2, Check, LinkIcon, Download } from "lucide-react"
 import { Footer, type Language } from "@/components/footer"
+import { localeToLanguage, languageToLocale } from "@/lib/locale"
 
 function Divider() {
   return (
@@ -241,8 +243,8 @@ const translations = {
     downloadDesc: (
       <>
         El archivo cubre todos los payloads con límites exactos, estructura del webhook para cada
-        tipo (incluida la diferencia del {c("carousel quick_reply")}), estrategia de fallback y
-        reglas de imagen para carrusel.
+        tipo (incluida la diferencia del {c("carousel quick_reply")}), estrategia de fallback e
+        imágenes para carrusel.
       </>
     ),
     downloadBtn: "Descargar referencia (.md)",
@@ -256,7 +258,10 @@ type ArticleContentProps = {
 }
 
 export function ArticleContent({ codeEndpoint, codeButtons, codeIds }: ArticleContentProps) {
-  const [language, setLanguage] = React.useState<Language>("EN")
+  const params = useParams()
+  const router = useRouter()
+  const locale = (params.locale as string) ?? 'en'
+  const language: Language = localeToLanguage(locale)
   const t = translations[language]
 
   return (
@@ -265,7 +270,7 @@ export function ArticleContent({ codeEndpoint, codeButtons, codeIds }: ArticleCo
         <header>
           <div className="mb-24 flex min-h-9 w-full select-none items-center justify-between gap-2">
             <Link
-              href="/"
+              href={`/${locale}`}
               className="group flex size-9 shrink-0 cursor-pointer items-center justify-center rounded-full bg-secondary transition-[scale,background-color] duration-200 ease-out hover:bg-gray-300 active:scale-[0.96]"
               aria-label="Home"
             >
@@ -352,7 +357,13 @@ export function ArticleContent({ codeEndpoint, codeButtons, codeIds }: ArticleCo
           </a>
         </article>
       </main>
-      <Footer language={language} onLanguageChange={setLanguage} />
+      <Footer
+        language={language}
+        onLanguageChange={(lang) => {
+          const path = window.location.pathname.replace(/^\/(en|pt-br|es)/, '') || '/'
+          router.push(`/${languageToLocale[lang]}${path}`, { scroll: false })
+        }}
+      />
     </div>
   )
 }

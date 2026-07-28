@@ -5,6 +5,7 @@ import Link from "next/link"
 import { useParams, useRouter } from "next/navigation"
 import { Undo2, Check, LinkIcon } from "lucide-react"
 import { Footer, type Language } from "@/components/footer"
+import { ArticleByline } from "@/components/article-byline"
 import { localeToLanguage, languageToLocale } from "@/lib/locale"
 
 function Divider() {
@@ -198,6 +199,8 @@ export function ArticleContent({ codeInstall, codeInit, codeCommands, codeDirect
           <h1 className="mb-2 w-fit scroll-mt-20 text-balance font-[550] article-heading" id="saving-claude-tokens">
             {t.title}
           </h1>
+
+          <ArticleByline slug="saving-claude-tokens" language={language} />
 
           <p className="w-full text-pretty text-muted-foreground">{t.intro}</p>
 

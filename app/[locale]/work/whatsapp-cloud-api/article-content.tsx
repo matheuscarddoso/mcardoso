@@ -5,6 +5,7 @@ import Link from "next/link"
 import { useParams, useRouter } from "next/navigation"
 import { Undo2, Check, LinkIcon, Download } from "lucide-react"
 import { Footer, type Language } from "@/components/footer"
+import { ArticleByline } from "@/components/article-byline"
 import { localeToLanguage, languageToLocale } from "@/lib/locale"
 
 function Divider() {
@@ -284,6 +285,8 @@ export function ArticleContent({ codeEndpoint, codeButtons, codeIds }: ArticleCo
           <h1 className="mb-2 w-fit scroll-mt-20 text-balance font-[550] article-heading" id="whatsapp-cloud-api">
             {t.title}
           </h1>
+
+          <ArticleByline slug="whatsapp-cloud-api" language={language} />
 
           <p className="w-full text-pretty text-muted-foreground">{t.intro}</p>
 

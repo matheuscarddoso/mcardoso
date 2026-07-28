@@ -5,6 +5,7 @@ import Link from "next/link"
 import { useParams, useRouter } from "next/navigation"
 import { Undo2, Check, LinkIcon } from "lucide-react"
 import { Footer, type Language } from "@/components/footer"
+import { ArticleByline } from "@/components/article-byline"
 import { localeToLanguage, languageToLocale } from "@/lib/locale"
 import { ColorExplorer } from "./color-explorer"
 
@@ -185,6 +186,8 @@ export function ArticleContent({ codeStructure, codeGradients, codeBrowser }: Ar
           <h1 className="mb-2 w-fit scroll-mt-20 text-balance font-[550] article-heading" id="what-are-oklch-colors">
             {t.title}
           </h1>
+
+          <ArticleByline slug="oklch-colors" language={language} />
 
           <p className="w-full text-pretty text-muted-foreground">{t.intro}</p>
 

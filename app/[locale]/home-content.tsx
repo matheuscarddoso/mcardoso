@@ -8,8 +8,9 @@ import { AbacatePreview, KuboPreview, ProjectCard } from "@/components/project-c
 import { WorkList } from "@/components/work-list"
 import { CommitHeatmap } from "@/components/commit-heatmap"
 import { LanguageToggle, ThemeToggle, ToggleSeparator } from "@/components/toggles"
-import { BioLink, PlaylistLink } from "@/components/link-preview"
+import { BioLink, GithubLink, PlaylistLink } from "@/components/link-preview"
 import { localeToLanguage, languageToLocale } from "@/lib/locale"
+import type { GithubCardData } from "@/lib/github"
 import { Check, Mail } from "lucide-react"
 import * as TooltipPrimitive from "@radix-ui/react-tooltip"
 import { AnimatePresence, motion, useReducedMotion } from "motion/react"
@@ -160,8 +161,17 @@ function SectionDivider({ className }: { className?: string }) {
   )
 }
 
-const bio = {
-  PT: (link: string, locale: string, lang: Language) => (
+const GITHUB_URL = "https://github.com/matheuscarddoso"
+
+type BioParagraphs = (
+  link: string,
+  locale: string,
+  lang: Language,
+  github: GithubCardData | null
+) => React.ReactNode
+
+const bio: Record<Language, BioParagraphs> = {
+  PT: (link, locale, lang, github) => (
     <>
       <p className="paragraph mb-3">
         Atualmente trabalho na <BioLink href="https://app.4selet.com" target="_blank" className={link} rel="noopener noreferrer">4Selet</BioLink> e na <BioLink href="https://zero7.com.br/home" target="_blank" className={link} rel="noopener noreferrer">Zero7</BioLink>, e meu maior projeto open-source é na <BioLink href="https://www.abacatepay.com/" target="_blank" className={link} rel="noopener noreferrer">Abacate Pay</BioLink>. Me importo com a <span className="font-display">construção</span>, <span className="font-display">detalhes</span> e em fazer interfaces <span className="font-display">parecerem corretas</span>.
@@ -170,11 +180,11 @@ const bio = {
         Anteriormente, colaborei com <BioLink href="https://www.goiasec.com.br/" target="_blank" className={link} rel="noopener noreferrer">Goiás F.C.</BioLink> e outros. Faço curadoria de <PlaylistLink language={lang} className={link} href={`/${locale}/monthly-playlists`}>playlists</PlaylistLink> todo mês e corro todo dia.
       </p>
       <p className="paragraph">
-        Você pode me encontrar no <a href="https://x.com/mattcrdoso" target="_blank" rel="noopener noreferrer" className={link}>X</a> e por <a href="mailto:mathuscardoso@gmail.com" className={link}>email</a>, ou ver meu código no <a href="https://github.com/matheuscarddoso" target="_blank" rel="noopener noreferrer" className={link}>GitHub</a>.
+        Você pode me encontrar no <a href="https://x.com/mattcrdoso" target="_blank" rel="noopener noreferrer" className={link}>X</a> e por <a href="mailto:mathuscardoso@gmail.com" className={link}>email</a>, ou ver meu código no <GithubLink data={github} language={lang} href={GITHUB_URL} target="_blank" rel="noopener noreferrer" className={link}>GitHub</GithubLink>.
       </p>
     </>
   ),
-  EN: (link: string, locale: string, lang: Language) => (
+  EN: (link, locale, lang, github) => (
     <>
       <p className="paragraph mb-3">
         I&apos;m currently working at <BioLink href="https://app.4selet.com" target="_blank" className={link} rel="noopener noreferrer">4Selet</BioLink> and <BioLink href="https://zero7.com.br/home" target="_blank" className={link} rel="noopener noreferrer">Zero7</BioLink>, and my biggest open-source project is at <BioLink href="https://www.abacatepay.com/" target="_blank" className={link} rel="noopener noreferrer">Abacate Pay</BioLink>. I care deeply about <span className="font-display">craft</span>, <span className="font-display">detail</span>, and making interfaces <span className="font-display">feel right</span>.
@@ -183,11 +193,11 @@ const bio = {
         Previously, I collaborated with <BioLink href="https://www.goiasec.com.br/" target="_blank" className={link} rel="noopener noreferrer">Goiás F.C.</BioLink> and others. I curate <PlaylistLink language={lang} className={link} href={`/${locale}/monthly-playlists`}>playlists</PlaylistLink> every month and run every day.
       </p>
       <p className="paragraph">
-        You can reach me on <a href="https://x.com/mattcrdoso" target="_blank" rel="noopener noreferrer" className={link}>X</a> and via <a href="mailto:mathuscardoso@gmail.com" className={link}>email</a>, or see my code on <a href="https://github.com/matheuscarddoso" target="_blank" rel="noopener noreferrer" className={link}>GitHub</a>.
+        You can reach me on <a href="https://x.com/mattcrdoso" target="_blank" rel="noopener noreferrer" className={link}>X</a> and via <a href="mailto:mathuscardoso@gmail.com" className={link}>email</a>, or see my code on <GithubLink data={github} language={lang} href={GITHUB_URL} target="_blank" rel="noopener noreferrer" className={link}>GitHub</GithubLink>.
       </p>
     </>
   ),
-  ES: (link: string, locale: string, lang: Language) => (
+  ES: (link, locale, lang, github) => (
     <>
       <p className="paragraph mb-3">
         Actualmente trabajo en <BioLink href="https://app.4selet.com" target="_blank" className={link} rel="noopener noreferrer">4Selet</BioLink> y <BioLink href="https://zero7.com.br/home" target="_blank" className={link} rel="noopener noreferrer">Zero7</BioLink>, y mi mayor proyecto open-source es en <BioLink href="https://www.abacatepay.com/" target="_blank" className={link} rel="noopener noreferrer">Abacate Pay</BioLink>. Me importa el <span className="font-display">craft</span>, el <span className="font-display">detalle</span> y hacer que las interfaces se <span className="font-display">sientan bien</span>.
@@ -196,13 +206,13 @@ const bio = {
         Anteriormente, colaboré con <BioLink href="https://www.goiasec.com.br/" target="_blank" className={link} rel="noopener noreferrer">Goiás F.C.</BioLink> y otros. Hago curaduría de <PlaylistLink language={lang} className={link} href={`/${locale}/monthly-playlists`}>playlists</PlaylistLink> cada mes y corro todos los días.
       </p>
       <p className="paragraph">
-        Puedes encontrarme en <a href="https://x.com/mattcrdoso" target="_blank" rel="noopener noreferrer" className={link}>X</a> y por <a href="mailto:mathuscardoso@gmail.com" className={link}>email</a>, o ver mi código en <a href="https://github.com/matheuscarddoso" target="_blank" rel="noopener noreferrer" className={link}>GitHub</a>.
+        Puedes encontrarme en <a href="https://x.com/mattcrdoso" target="_blank" rel="noopener noreferrer" className={link}>X</a> y por <a href="mailto:mathuscardoso@gmail.com" className={link}>email</a>, o ver mi código en <GithubLink data={github} language={lang} href={GITHUB_URL} target="_blank" rel="noopener noreferrer" className={link}>GitHub</GithubLink>.
       </p>
     </>
   ),
 }
 
-export function HomeContent() {
+export function HomeContent({ github }: { github: GithubCardData | null }) {
   const params = useParams()
   const router = useRouter()
   const locale = (params.locale as string) ?? 'en'
@@ -216,7 +226,7 @@ export function HomeContent() {
       <CommitHeatmap />
       <main className="mx-auto flex w-full max-w-(--breakpoint-sm) flex-1 flex-col px-4 pt-20 pb-4 dark:text-[#b4b4b4] text-gray-600">
         <div className="mb-8 mt-4 flex items-center gap-4 text-black dark:text-white">
-          <a href="https://github.com/matheuscarddoso" id="github" target="_blank" rel="noopener noreferrer" aria-label={`GitHub`} className="inline-flex transition-transform duration-150 ease-[var(--ease-out-strong)] active:scale-[0.97] motion-reduce:active:scale-100">
+          <a href={GITHUB_URL} id="github" target="_blank" rel="noopener noreferrer" aria-label={`GitHub`} className="inline-flex transition-transform duration-150 ease-[var(--ease-out-strong)] active:scale-[0.97] motion-reduce:active:scale-100">
             <svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" width="1024" className="w-4 h-4" height="1024" fill="none"><path fill="currentColor" fillRule="evenodd" d="M512 0C229.12 0 0 229.12 0 512c0 226.56 146.56 417.92 350.08 485.76 25.6 4.48 35.2-10.88 35.2-24.32 0-12.16-.64-52.48-.64-95.36-128.64 23.68-161.92-31.36-172.16-60.16-5.76-14.72-30.72-60.16-52.48-72.32-17.92-9.6-43.52-33.28-.64-33.92 40.32-.64 69.12 37.12 78.72 52.48 46.08 77.44 119.68 55.68 149.12 42.24 4.48-33.28 17.92-55.68 32.64-68.48-113.92-12.8-232.96-56.96-232.96-252.8 0-55.68 19.84-101.76 52.48-137.6-5.12-12.8-23.04-65.28 5.12-135.68 0 0 42.88-13.44 140.8 52.48 40.96-11.52 84.48-17.28 128-17.28s87.04 5.76 128 17.28c97.92-66.56 140.8-52.48 140.8-52.48 28.16 70.4 10.24 122.88 5.12 135.68 32.64 35.84 52.48 81.28 52.48 137.6 0 196.48-119.68 240-233.6 252.8 18.56 16 34.56 46.72 34.56 94.72 0 68.48-.64 123.52-.64 140.8 0 13.44 9.6 29.44 35.2 24.32C877.44 929.92 1024 737.92 1024 512 1024 229.12 794.88 0 512 0" clipRule="evenodd"/></svg>
           </a>
           <a href="https://x.com/mattcrdoso" id="twitter" target="_blank" rel="noopener noreferrer" aria-label={`X`} className="inline-flex transition-transform duration-150 ease-[var(--ease-out-strong)] active:scale-[0.97] motion-reduce:active:scale-100">
@@ -253,7 +263,7 @@ export function HomeContent() {
           </div>
         </div>
 
-        {bio[language](linkClass, locale, language)}
+        {bio[language](linkClass, locale, language, github)}
 
         <SectionDivider className="my-10" />
 

@@ -6,6 +6,7 @@ import * as HoverCardPrimitive from "@radix-ui/react-hover-card"
 import { ArrowUpRight } from "lucide-react"
 import { AnimatePresence, motion, useReducedMotion } from "motion/react"
 import type { Language } from "@/lib/locale"
+import type { GithubCardData } from "@/lib/github"
 
 type Preview = {
   src: string
@@ -211,6 +212,125 @@ export function PlaylistLink({
           </span>
         </a>
         <p className="px-1.5 py-1 text-[10px] text-gray-1000">{lastPlayedLabel[language]}</p>
+      </div>
+    </HoverPreview>
+  )
+}
+
+/** Cell edge and gutter, in px — the card's width falls out of these. */
+const CELL = 10
+const CELL_GAP = 3
+/** Vertical room for the month row. */
+const MONTH_ROW = 14
+/** Inner panel padding (`p-2`) plus the outer card's `p-1`, doubled. */
+const CARD_CHROME = 8 * 2 + 4 * 2
+
+const columnStep = CELL + CELL_GAP
+const gridWidth = (columns: number) => columns * CELL + Math.max(columns - 1, 0) * CELL_GAP
+
+/** Short month names, held locally so server and client never disagree. */
+const MONTH_NAMES: Record<Language, readonly string[]> = {
+  PT: ["jan", "fev", "mar", "abr", "mai", "jun", "jul", "ago", "set", "out", "nov", "dez"],
+  EN: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+  ES: ["ene", "feb", "mar", "abr", "may", "jun", "jul", "ago", "sep", "oct", "nov", "dic"],
+}
+
+const contributionsLabel = {
+  PT: (total: number) => `${total} contribuições no último ano`,
+  EN: (total: number) => `${total} contributions in the last year`,
+  ES: (total: number) => `${total} contribuciones en el último año`,
+} as const
+
+function ContributionGraph({
+  data,
+  language,
+}: {
+  data: GithubCardData
+  language: Language
+}) {
+  const width = gridWidth(data.weeks.length)
+
+  return (
+    <div className="rounded-lg bg-white p-2 shadow-custom dark:bg-[#222]">
+      {/* The graph is decoration; the sentence below it carries the meaning. */}
+      <div aria-hidden style={{ width }} className="mx-auto">
+        <div className="relative" style={{ height: MONTH_ROW }}>
+          {data.months.map(({ column, month }) => (
+            <span
+              key={`${column}-${month}`}
+              // Left-aligned to the month's first column, like GitHub's own.
+              style={{ left: column * columnStep }}
+              className="absolute top-0 text-[9px] leading-none whitespace-nowrap text-gray-1000"
+            >
+              {MONTH_NAMES[language][month]}
+            </span>
+          ))}
+        </div>
+        <div className="flex" style={{ gap: CELL_GAP }}>
+          {data.weeks.map((week, columnIndex) => (
+            <div key={columnIndex} className="flex flex-col" style={{ gap: CELL_GAP }}>
+              {week.map((day, rowIndex) => (
+                <span
+                  key={day?.date ?? `empty-${rowIndex}`}
+                  style={{ width: CELL, height: CELL }}
+                  // Days past today keep their slot, so the rows stay aligned
+                  // to the weekday they belong to.
+                  className={`contrib-cell ${day ? `level-${day.level}` : "invisible"}`}
+                />
+              ))}
+            </div>
+          ))}
+        </div>
+      </div>
+      <span className="sr-only">{contributionsLabel[language](data.total)}</span>
+    </div>
+  )
+}
+
+export function GithubLink({
+  data,
+  language,
+  href,
+  className,
+  children,
+  ...props
+}: React.ComponentProps<"a"> & { data: GithubCardData | null; language: Language }) {
+  const anchor = (
+    <a href={href} className={className} {...props}>
+      {children}
+    </a>
+  )
+
+  // No data (offline build, rate limit) — the link stands on its own.
+  if (!data) return anchor
+
+  const hasGraph = data.weeks.length > 0
+  const width = hasGraph ? gridWidth(data.weeks.length) + CARD_CHROME : 244
+
+  return (
+    <HoverPreview width={width} trigger={anchor}>
+      {/* Same two-surface build as the playlist card — both fully opaque. */}
+      <div className="rounded-xl bg-[#f4f4f5] p-1 shadow-card-lift dark:bg-[#171717]">
+        {hasGraph && <ContributionGraph data={data} language={language} />}
+        <div className={`flex gap-2 px-1 pb-0.5 ${hasGraph ? "pt-2" : "pt-1"}`}>
+          <Image
+            src={data.avatarUrl}
+            alt=""
+            // Fixed size, so Next emits the 1x/2x pair and nothing larger.
+            width={32}
+            height={32}
+            className="mt-0.5 size-8 shrink-0 rounded-full bg-gray-300 object-cover shadow-custom"
+          />
+          <div className="min-w-0 flex-1">
+            <p className="flex items-baseline gap-1.5">
+              <span className="truncate text-xs font-medium text-gray-1200">{data.name}</span>
+              <span className="truncate text-xs text-gray-1000">{data.login}</span>
+            </p>
+            {data.bio && (
+              <p className="mt-0.5 text-xs leading-[1.35] text-gray-1100">{data.bio}</p>
+            )}
+          </div>
+        </div>
       </div>
     </HoverPreview>
   )

@@ -104,6 +104,16 @@
   --color-text-paragraph: #424242;
   --color-link: #000;
   --color-heading: #000;
+  /*
+   * Contribution graph scale — light mode. Each step is a fixed lightness
+   * apart in OKLCH, so the ramp reads as evenly spaced instead of bunching in
+   * the mid greens the way GitHub's own hex ladder does.
+   */
+  --contrib-0: var(--color-gray-300);
+  --contrib-1: oklch(0.885 0.086 152);
+  --contrib-2: oklch(0.765 0.148 152);
+  --contrib-3: oklch(0.64 0.145 152);
+  --contrib-4: oklch(0.505 0.113 152);
   --shadow-custom: 0px 0px 0px 1px #0000000f, 0px 1px 2px -1px #0000000f, 0px 2px 4px 0px #0000000a;
   --shadow-custom-hover: 0px 0px 0px 1px #00000014, 0px 1px 2px -1px #00000014, 0px 2px 4px 0px #0000000f;
   --shadow-card-lift: 0px 0px 0px 1px #00000014, 0px 6px 16px -4px #0000001f, 0px 2px 6px -2px #00000014;
@@ -159,6 +169,12 @@
   --color-text-paragraph: lab(87.24% -.0000298023 0);
   --color-link: #fff;
   --color-heading: #fff;
+  /* Level 0 has to clear the card's own surface, not the page's. */
+  --contrib-0: var(--color-gray-500);
+  --contrib-1: oklch(0.34 0.075 155);
+  --contrib-2: oklch(0.475 0.115 152);
+  --contrib-3: oklch(0.655 0.16 150);
+  --contrib-4: oklch(0.8 0.185 148);
   --shadow-custom: 0 0 0 1px #ffffff14;
   --shadow-custom-hover: 0 0 0 1px #ffffff21;
   --shadow-card-lift: 0 0 0 1px #ffffff2e, 0 6px 18px -4px #00000099;
@@ -318,6 +334,34 @@
 
 .heatmap-cell.level-4 {
   background-color: var(--color-gray-900);
+}
+
+/*
+ * Real contribution graph inside the GitHub hover card. Unlike the decorative
+ * heatmap above, this one carries data — so it keeps the green scale, the one
+ * meaning viewers already read fluently. Geometry stays in the component;
+ * only colour lives here, as tokens that flip with the theme.
+ */
+.contrib-cell {
+  flex: none;
+  border-radius: 2px;
+  background-color: var(--contrib-0);
+}
+
+.contrib-cell.level-1 {
+  background-color: var(--contrib-1);
+}
+
+.contrib-cell.level-2 {
+  background-color: var(--contrib-2);
+}
+
+.contrib-cell.level-3 {
+  background-color: var(--contrib-3);
+}
+
+.contrib-cell.level-4 {
+  background-color: var(--contrib-4);
 }
 
 @keyframes vinyl-spin {

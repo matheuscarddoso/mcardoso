@@ -21,7 +21,7 @@ type Preview = {
  * so adding a preview is a one-line change.
  */
 const PREVIEWS: Record<string, Preview> = {
-  "https://app.4selet.com": {
+  "https://4selet.com.br": {
     src: "/previews/4selet.webp",
     alt: "4Selet",
     width: 640,

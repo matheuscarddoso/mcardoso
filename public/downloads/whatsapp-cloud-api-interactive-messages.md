@@ -323,7 +323,7 @@ Rate limit padrão: **80 mensagens por segundo** por número de telefone (pode s
 
 ## Referências oficiais
 
-- [WhatsApp Cloud API — Send Messages](https://developers.facebook.com/docs/whatsapp/cloud-api/messages)
-- [Interactive Messages](https://developers.facebook.com/docs/whatsapp/cloud-api/messages/interactive-messages)
-- [Carousel Messages](https://developers.facebook.com/docs/whatsapp/cloud-api/messages/carousel-messages)
-- [Webhooks — Message Object](https://developers.facebook.com/docs/whatsapp/cloud-api/webhooks/components)
+- [WhatsApp Cloud API — Send Messages](https://developers.facebook.com/docs/whatsapp/cloud-api/guides/send-messages)
+- [Message types](https://developers.facebook.com/docs/whatsapp/cloud-api/messages/text-messages)
+- [Message templates](https://developers.facebook.com/docs/whatsapp/cloud-api/guides/send-message-templates)
+- [Webhooks — payload examples](https://developers.facebook.com/docs/whatsapp/cloud-api/webhooks/payload-examples)

@@ -156,12 +156,12 @@ function CopyEmailButton({ label }: { label: string }) {
   )
 }
 
+/** `<hr>`, because a break between two titled sections is a thematic break. */
 function SectionDivider({ className }: { className?: string }) {
   return (
-    <div
-      aria-hidden
+    <hr
       style={{ animationDelay: "80ms" }}
-      className={`fade-in h-px w-full bg-[length:4px_1px] bg-[linear-gradient(90deg,transparent_2px,#d4d4d8_2px,transparent_4px)] dark:bg-[linear-gradient(90deg,transparent_2px,#3a3a3a_2px,transparent_4px)] ${className ?? ""}`}
+      className={`fade-in h-px w-full border-0 bg-[length:4px_1px] bg-[linear-gradient(90deg,transparent_2px,#d4d4d8_2px,transparent_4px)] dark:bg-[linear-gradient(90deg,transparent_2px,#3a3a3a_2px,transparent_4px)] ${className ?? ""}`}
     />
   )
 }
@@ -179,7 +179,7 @@ const bio: Record<Language, BioParagraphs> = {
   PT: (link, locale, lang, github) => (
     <>
       <p className="paragraph mb-3">
-        Atualmente trabalho na <BioLink href="https://app.4selet.com" target="_blank" className={link} rel="noopener noreferrer">4Selet</BioLink> e na <BioLink href="https://zero7.com.br/home" target="_blank" className={link} rel="noopener noreferrer">Zero7</BioLink>, e meu maior projeto open-source é na <BioLink href="https://www.abacatepay.com/" target="_blank" className={link} rel="noopener noreferrer">Abacate Pay</BioLink>. Me importo com a <span className="font-display">construção</span>, <span className="font-display">detalhes</span> e em fazer interfaces <span className="font-display">parecerem corretas</span>.
+        Atualmente trabalho na <BioLink href="https://4selet.com.br" target="_blank" className={link} rel="noopener noreferrer">4Selet</BioLink> e na <BioLink href="https://zero7.com.br/home" target="_blank" className={link} rel="noopener noreferrer">Zero7</BioLink>, e meu maior projeto open-source é na <BioLink href="https://www.abacatepay.com/" target="_blank" className={link} rel="noopener noreferrer">Abacate Pay</BioLink>. Me importo com a <span className="font-display">construção</span>, <span className="font-display">detalhes</span> e em fazer interfaces <span className="font-display">parecerem corretas</span>.
       </p>
       <p className="paragraph mb-3">
         Anteriormente, colaborei com <BioLink href="https://www.goiasec.com.br/" target="_blank" className={link} rel="noopener noreferrer">Goiás F.C.</BioLink> e outros. Faço curadoria de <PlaylistLink language={lang} className={link} href={`/${locale}/monthly-playlists`}>playlists</PlaylistLink> todo mês e corro todo dia.
@@ -192,7 +192,7 @@ const bio: Record<Language, BioParagraphs> = {
   EN: (link, locale, lang, github) => (
     <>
       <p className="paragraph mb-3">
-        I&apos;m currently working at <BioLink href="https://app.4selet.com" target="_blank" className={link} rel="noopener noreferrer">4Selet</BioLink> and <BioLink href="https://zero7.com.br/home" target="_blank" className={link} rel="noopener noreferrer">Zero7</BioLink>, and my biggest open-source project is at <BioLink href="https://www.abacatepay.com/" target="_blank" className={link} rel="noopener noreferrer">Abacate Pay</BioLink>. I care deeply about <span className="font-display">craft</span>, <span className="font-display">detail</span>, and making interfaces <span className="font-display">feel right</span>.
+        I&apos;m currently working at <BioLink href="https://4selet.com.br" target="_blank" className={link} rel="noopener noreferrer">4Selet</BioLink> and <BioLink href="https://zero7.com.br/home" target="_blank" className={link} rel="noopener noreferrer">Zero7</BioLink>, and my biggest open-source project is at <BioLink href="https://www.abacatepay.com/" target="_blank" className={link} rel="noopener noreferrer">Abacate Pay</BioLink>. I care deeply about <span className="font-display">craft</span>, <span className="font-display">detail</span>, and making interfaces <span className="font-display">feel right</span>.
       </p>
       <p className="paragraph mb-3">
         Previously, I collaborated with <BioLink href="https://www.goiasec.com.br/" target="_blank" className={link} rel="noopener noreferrer">Goiás F.C.</BioLink> and others. I curate <PlaylistLink language={lang} className={link} href={`/${locale}/monthly-playlists`}>playlists</PlaylistLink> every month and run every day.
@@ -205,7 +205,7 @@ const bio: Record<Language, BioParagraphs> = {
   ES: (link, locale, lang, github) => (
     <>
       <p className="paragraph mb-3">
-        Actualmente trabajo en <BioLink href="https://app.4selet.com" target="_blank" className={link} rel="noopener noreferrer">4Selet</BioLink> y <BioLink href="https://zero7.com.br/home" target="_blank" className={link} rel="noopener noreferrer">Zero7</BioLink>, y mi mayor proyecto open-source es en <BioLink href="https://www.abacatepay.com/" target="_blank" className={link} rel="noopener noreferrer">Abacate Pay</BioLink>. Me importa el <span className="font-display">craft</span>, el <span className="font-display">detalle</span> y hacer que las interfaces se <span className="font-display">sientan bien</span>.
+        Actualmente trabajo en <BioLink href="https://4selet.com.br" target="_blank" className={link} rel="noopener noreferrer">4Selet</BioLink> y <BioLink href="https://zero7.com.br/home" target="_blank" className={link} rel="noopener noreferrer">Zero7</BioLink>, y mi mayor proyecto open-source es en <BioLink href="https://www.abacatepay.com/" target="_blank" className={link} rel="noopener noreferrer">Abacate Pay</BioLink>. Me importa el <span className="font-display">craft</span>, el <span className="font-display">detalle</span> y hacer que las interfaces se <span className="font-display">sientan bien</span>.
       </p>
       <p className="paragraph mb-3">
         Anteriormente, colaboré con <BioLink href="https://www.goiasec.com.br/" target="_blank" className={link} rel="noopener noreferrer">Goiás F.C.</BioLink> y otros. Hago curaduría de <PlaylistLink language={lang} className={link} href={`/${locale}/monthly-playlists`}>playlists</PlaylistLink> cada mes y corro todos los días.
@@ -265,34 +265,50 @@ export function HomeContent({ github }: { github: GithubCardData | null }) {
 
         <SectionDivider className="my-10" />
 
-        <div className="w-full">
-          <h2 className="mb-5 flex w-full items-center font-medium text-gray-1200">{t.projects}</h2>
-          <div className="grid w-full grid-cols-1 gap-6 sm:grid-cols-2">
-            <ProjectCard
-              href="https://kubofood.app"
-              ariaLabel="Visit KuboFood"
-              title="KuboFood"
-              meta={t.kuboMeta}
-              description={t.kuboDescription}
-              preview={<KuboPreview />}
-            />
-            <ProjectCard
-              href="https://github.com/abacatepay"
-              ariaLabel="Visit Abacate Pay on GitHub"
-              title="Abacate Pay"
-              meta={t.abacateMeta}
-              description={t.abacateDescription}
-              preview={<AbacatePreview />}
-            />
-          </div>
-        </div>
+        {/* `section` + `ul`: two projects and five essays are lists, and saying
+            so is what lets a crawler tell the page's structure from its chrome. */}
+        <section aria-labelledby="projects-heading" className="w-full">
+          <h2
+            id="projects-heading"
+            className="mb-5 flex w-full items-center font-medium text-gray-1200"
+          >
+            {t.projects}
+          </h2>
+          <ul className="grid w-full grid-cols-1 gap-6 sm:grid-cols-2">
+            <li className="flex">
+              <ProjectCard
+                href="https://kubofood.app"
+                ariaLabel="Visit KuboFood"
+                title="KuboFood"
+                meta={t.kuboMeta}
+                description={t.kuboDescription}
+                preview={<KuboPreview />}
+              />
+            </li>
+            <li className="flex">
+              <ProjectCard
+                href="https://github.com/abacatepay"
+                ariaLabel="Visit Abacate Pay on GitHub"
+                title="Abacate Pay"
+                meta={t.abacateMeta}
+                description={t.abacateDescription}
+                preview={<AbacatePreview />}
+              />
+            </li>
+          </ul>
+        </section>
 
         <SectionDivider className="my-10" />
 
-        <div className="mb-4">
-          <h2 className="mb-2 flex w-full items-center font-medium text-gray-1200">{t.writing}</h2>
+        <section aria-labelledby="writing-heading" className="mb-4">
+          <h2
+            id="writing-heading"
+            className="mb-2 flex w-full items-center font-medium text-gray-1200"
+          >
+            {t.writing}
+          </h2>
           <WorkList language={language} locale={locale} />
-        </div>
+        </section>
       </main>
       {/* Toggles live in the header on this page. */}
       <Footer language={language} showToggles={false} />

@@ -50,7 +50,7 @@ export type GithubCardData = {
   total: number
 }
 
-const USER_AGENT = "mcardoso.dev (+https://mcardoso.dev)"
+const USER_AGENT = "ocardoso.com (+https://www.ocardoso.com)"
 
 function attribute(tag: string, name: string): string | undefined {
   return new RegExp(`${name}="([^"]*)"`).exec(tag)?.[1]

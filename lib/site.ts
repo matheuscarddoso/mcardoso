@@ -2,12 +2,20 @@ import type { Metadata } from "next"
 import { LOCALES, type Language, type Locale } from "./locale"
 
 /**
- * Absolute origin. Canonicals, hreflang, the sitemap and every JSON-LD `@id`
- * hang off this — a relative URL in any of those is silently ignored by
- * crawlers, so there is exactly one place it can be wrong.
+ * Absolute origin. Canonicals, hreflang, the sitemap, the Open Graph image URLs
+ * and every JSON-LD `@id` hang off this, so it is the single value that can
+ * invalidate all of them at once — which is exactly what happened when it was
+ * set to a domain that had never been registered.
+ *
+ * `www`, not the apex: ocardoso.com answers 308 to www.ocardoso.com, and a
+ * canonical or hreflang pointing at a redirect is itself an SEO defect.
+ *
+ * Deliberately NOT derived from VERCEL_PROJECT_PRODUCTION_URL: that resolves to
+ * whichever domain Vercel considers primary, which may be the apex, and would
+ * quietly reintroduce the redirect. Override with NEXT_PUBLIC_SITE_URL.
  */
 export const SITE_URL = (
-  process.env.NEXT_PUBLIC_SITE_URL ?? "https://mcardoso.dev"
+  process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.ocardoso.com"
 ).replace(/\/+$/, "")
 
 /** BCP-47 tags. The route segment is lowercase; `hreflang` is not. */
@@ -104,12 +112,38 @@ export const PERSON = {
   } satisfies Record<Language, string>,
   image: "/profile.png",
   worksFor: [
-    { name: "4Selet", url: "https://app.4selet.com" },
+    { name: "4Selet", url: "https://4selet.com.br" },
     { name: "Zero7", url: "https://zero7.com.br/home" },
   ],
 } as const
 
 export const SITE_NAME = "Matheus Cardoso"
+
+/**
+ * One share card for the whole site, served from /public at a stable path.
+ *
+ * Not the `opengraph-image` file convention: that mints a hashed URL per
+ * segment, which the JSON-LD `image` field can't reference without duplicating
+ * the hash. A fixed path means the card, the Open Graph tags and the
+ * structured data all point at the same bytes.
+ */
+export const OG_IMAGE = {
+  url: "/og.png",
+  width: 1200,
+  height: 630,
+  alt: "Matheus Cardoso",
+} as const
+
+function ogImages() {
+  return [
+    {
+      url: absolute(OG_IMAGE.url),
+      width: OG_IMAGE.width,
+      height: OG_IMAGE.height,
+      alt: OG_IMAGE.alt,
+    },
+  ]
+}
 
 /**
  * Home page copy. Titles land in the 50-60 character window search results
@@ -147,9 +181,6 @@ type PageMeta = {
  * Next merges `openGraph` and `twitter` by replacement, not deep merge — a page
  * that sets a title there drops the layout's `siteName`, `locale` and card
  * type with it. So every page builds the whole block, from here, once.
- *
- * `images` is deliberately absent: the `opengraph-image` file convention fills
- * it in from the nearest segment that defines one.
  */
 export function pageMetadata({
   locale,
@@ -172,8 +203,15 @@ export function pageMetadata({
       url: alternates.canonical,
       title,
       description,
+      images: ogImages(),
     },
-    twitter: { card: "summary_large_image", creator: "@mattcrdoso", title, description },
+    twitter: {
+      card: "summary_large_image",
+      creator: "@mattcrdoso",
+      title,
+      description,
+      images: ogImages(),
+    },
   }
 }
 
@@ -193,6 +231,7 @@ export function articleMetadata(
       url: alternates.canonical,
       title: meta.title,
       description: meta.description,
+      images: ogImages(),
       publishedTime: meta.publishedTime,
       modifiedTime: meta.modifiedTime,
       authors: [absolute(`/${meta.locale}`)],

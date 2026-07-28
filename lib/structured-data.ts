@@ -3,6 +3,7 @@ import { localeToLanguage, type Locale } from "./locale"
 import {
   HOME_SEO,
   HREFLANG,
+  OG_IMAGE,
   PERSON,
   PLAYLISTS_SEO,
   SAME_AS,
@@ -122,7 +123,7 @@ export function articleGraph(locale: Locale, article: Article): Node {
         author: { "@id": PERSON_ID },
         publisher: { "@id": PERSON_ID },
         isPartOf: { "@id": WEBSITE_ID },
-        image: [`${url}/opengraph-image`],
+        image: [absolute(OG_IMAGE.url)],
       },
       breadcrumbs(locale, [
         { name: PERSON.name, path: "" },

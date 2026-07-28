@@ -18,6 +18,10 @@ const libreBaskervilleItalic = Libre_Baskerville({
   subsets: ["latin"],
   weight: "400",
   style: "italic",
+  display: "swap",
+  // If the webfont never arrives, the text still has to read as a serif —
+  // next/font's default fallback is sans, which silently loses the treatment.
+  fallback: ["Georgia", "Times New Roman", "serif"],
 });
 
 export const metadata: Metadata = {

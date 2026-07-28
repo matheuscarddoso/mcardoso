@@ -543,10 +543,10 @@ export function ArticleContent({
 
           <p className="mb-6 w-full text-pretty text-muted-foreground">
             {t.moreP2}{" "}
-            <a className="article-underline text-foreground" href="https://emilkowal.ski" target="_blank" rel="noopener noreferrer">Emil Kowalski</a>,{" "}
-            <a className="article-underline text-foreground" href="https://ibelick.com" target="_blank" rel="noopener noreferrer">Ibelick</a>
+            <a className="article-underline" href="https://emilkowal.ski" target="_blank" rel="noopener noreferrer">Emil Kowalski</a>,{" "}
+            <a className="article-underline" href="https://ibelick.com" target="_blank" rel="noopener noreferrer">Ibelick</a>
             {" "}{language === "PT" ? "e" : language === "ES" ? "y" : "and"}{" "}
-            <a className="article-underline text-foreground" href="https://jakub.kr" target="_blank" rel="noopener noreferrer">Jakub Krehel</a>.
+            <a className="article-underline" href="https://jakub.kr" target="_blank" rel="noopener noreferrer">Jakub Krehel</a>.
           </p>
         </article>
       </main>

@@ -1,65 +1,33 @@
 "use client"
 
-import * as React from "react"
-import { useTheme } from "next-themes"
+import { LanguageToggle, ThemeToggle } from "@/components/toggles"
+import { LocalTime } from "@/components/local-time"
+import type { Language } from "@/lib/locale"
 
-const themeLabels = {
-  PT: { system: "Sistema", dark: "Escuro", light: "Claro" },
-  EN: { system: "System", dark: "Dark", light: "Light" },
-  ES: { system: "Sistema", dark: "Oscuro", light: "Claro" },
-} as const
-
-export type Language = "PT" | "EN" | "ES"
+export type { Language }
 
 type FooterProps = {
   language?: Language
   onLanguageChange?: (lang: Language) => void
+  /** Off when the page already exposes the toggles somewhere else, like the home header. */
+  showToggles?: boolean
 }
 
-export function Footer({ language = "EN", onLanguageChange }: FooterProps) {
-  const { theme, setTheme } = useTheme()
-  const t = themeLabels[language]
-
-  const toggleTheme = () => {
-    if (theme === "system") setTheme("dark")
-    else if (theme === "dark") setTheme("light")
-    else setTheme("system")
-  }
-
-  const toggleLanguage = () => {
-    const next: Language = language === "PT" ? "EN" : language === "EN" ? "ES" : "PT"
-    onLanguageChange?.(next)
-  }
-
+export function Footer({
+  language = "EN",
+  onLanguageChange,
+  showToggles = true,
+}: FooterProps) {
   return (
     <footer className="dark:border-primary-dark-4 mx-auto mt-auto w-full max-w-(--breakpoint-sm) px-4 pt-20">
       <div className="flex items-center justify-between px-0 py-12 md:px-0">
         <div className="flex items-center gap-2">
-          <button
-            type="button"
-            onClick={toggleLanguage}
-            className="hover:bg-zinc-50 dark:hover:bg-zinc-800 relative flex h-[28px] items-center gap-2 rounded-xl px-2 py-1.5 transition-[colors,transform] duration-200 active:scale-98"
-          >
-            <span className="text-primary-light-11 dark:text-primary-dark-11 text-xs font-medium select-none">
-              {language}
-            </span>
-          </button>
-          <button
-            type="button"
-            className="h-[28px] cursor-default select-none text-xs text-primary-light-11 dark:text-primary-dark-11"
-          >
-            © {new Date().getFullYear()} Matheus Cardoso
-          </button>
+          {showToggles && (
+            <LanguageToggle language={language} onLanguageChange={onLanguageChange} />
+          )}
+          <LocalTime language={language} />
         </div>
-        <button
-          type="button"
-          onClick={toggleTheme}
-          className="hover:bg-zinc-50 dark:hover:bg-zinc-800 relative flex h-[28px] items-center gap-2 rounded-xl px-2 py-1.5 transition-[colors,transform] duration-200 active:scale-98"
-        >
-          <span className="text-primary-light-11 dark:text-primary-dark-11 text-xs font-medium select-none">
-            {theme === "system" ? t.system : theme === "dark" ? t.dark : t.light}
-          </span>
-        </button>
+        {showToggles && <ThemeToggle language={language} />}
       </div>
     </footer>
   )

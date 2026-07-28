@@ -337,7 +337,7 @@ export function ArticleContent({ codeInstall, codeInit, codeCommands, codeDirect
 
           <p className="mb-6 w-full text-pretty text-muted-foreground">
             {t.moreP}{" "}
-            <a className="article-underline text-foreground" href="https://github.com/rtk-ai/rtk" target="_blank" rel="noopener noreferrer">github.com/rtk-ai/rtk</a>.
+            <a className="article-underline" href="https://github.com/rtk-ai/rtk" target="_blank" rel="noopener noreferrer">github.com/rtk-ai/rtk</a>.
           </p>
         </article>
       </main>

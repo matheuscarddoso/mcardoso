@@ -102,8 +102,10 @@
   --color-preview-bg: #fff;
   --color-preview-border: #e8e8e8;
   --color-text-paragraph: #424242;
+  --color-link: #000;
   --shadow-custom: 0px 0px 0px 1px #0000000f, 0px 1px 2px -1px #0000000f, 0px 2px 4px 0px #0000000a;
   --shadow-custom-hover: 0px 0px 0px 1px #00000014, 0px 1px 2px -1px #00000014, 0px 2px 4px 0px #0000000f;
+  --shadow-card-lift: 0px 0px 0px 1px #00000014, 0px 6px 16px -4px #0000001f, 0px 2px 6px -2px #00000014;
 }
 
 .dark {
@@ -154,8 +156,10 @@
   --color-preview-bg: lab(3.04863% 0 0);
   --color-preview-border: lab(11.724% 0 0);
   --color-text-paragraph: lab(87.24% -.0000298023 0);
+  --color-link: #fff;
   --shadow-custom: 0 0 0 1px #ffffff14;
   --shadow-custom-hover: 0 0 0 1px #ffffff21;
+  --shadow-card-lift: 0 0 0 1px #ffffff2e, 0 6px 18px -4px #00000099;
 }
 
 @layer base {
@@ -207,6 +211,16 @@
     box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
   }
 
+  .shadow-card-lift {
+    --tw-shadow: var(--shadow-card-lift);
+    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
+  }
+
+  .hover\:shadow-card-lift:hover {
+    --tw-shadow: var(--shadow-card-lift);
+    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
+  }
+
   .paragraph {
     --tw-leading: calc(var(--spacing) * 6);
     line-height: calc(var(--spacing) * 6);
@@ -225,28 +239,96 @@
     background-color: var(--color-preview-bg);
   }
 
+  /* Underlined links sit at the strongest end of the scale: black on light, white on dark. */
   .article-underline {
+    color: var(--color-link);
     text-decoration-line: underline;
     text-decoration-color: var(--color-gray-600);
     text-underline-offset: 3px;
     transition-property: color, text-decoration-color;
     transition-duration: 0.2s;
     transition-timing-function: ease;
-    color: var(--color-gray-1200);
   }
 
   .article-underline:hover {
-    color: var(--color-gray-1200);
-    -webkit-text-decoration-color: var(--color-gray-1100);
-    -webkit-text-decoration-color: var(--color-gray-1100);
-    -webkit-text-decoration-color: var(--color-gray-1100);
-    text-decoration-color: var(--color-gray-1100) !important;
+    text-decoration-color: var(--color-gray-900);
   }
-  
+
 }
 
 .corner-squircle {
   corner-shape: squircle;
+}
+
+/*
+ * Only the italic face of the display serif is loaded, so ask for it by name.
+ * Without this the request is font-style: normal, and browsers that don't fall
+ * back across styles (older Safari, several Android WebViews) skip the family
+ * entirely and drop to the next font in the stack.
+ */
+.font-display {
+  font-style: italic;
+}
+
+/* GitHub-style contribution grid used as page-top decoration. */
+.heatmap-cell {
+  width: 11px;
+  height: 11px;
+  flex: none;
+  border-radius: 3px;
+  background-color: var(--color-gray-300);
+}
+
+.heatmap-cell.level-1 {
+  background-color: var(--color-gray-500);
+}
+
+.heatmap-cell.level-2 {
+  background-color: var(--color-gray-700);
+}
+
+.heatmap-cell.level-3 {
+  background-color: var(--color-gray-800);
+}
+
+.heatmap-cell.level-4 {
+  background-color: var(--color-gray-900);
+}
+
+@keyframes vinyl-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.vinyl-spin {
+  animation: vinyl-spin 8s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .vinyl-spin {
+    animation: none;
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Standalone fade — tw-animate-css's `fade-in` only works paired with `animate-in`. */
+.fade-in {
+  animation: fade-in 0.7s var(--ease-out-strong) backwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fade-in {
+    animation: none;
+  }
 }
 
 .text-gray-1100 {

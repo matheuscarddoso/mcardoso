@@ -328,10 +328,10 @@ export function ArticleContent({ codeStructure, codeGradients, codeBrowser }: Ar
 
           <p className="mb-6 w-full text-pretty text-muted-foreground">
             {t.moreP}{" "}
-            <a className="article-underline text-foreground" href="https://oklch.com" target="_blank" rel="noopener noreferrer">oklch.com</a>
+            <a className="article-underline" href="https://oklch.com" target="_blank" rel="noopener noreferrer">oklch.com</a>
             {" "}
             {language === "PT" ? "ou a" : language === "ES" ? "o la" : "or the"}{" "}
-            <a className="article-underline text-foreground" href="https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/oklch" target="_blank" rel="noopener noreferrer">MDN docs</a>.
+            <a className="article-underline" href="https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/oklch" target="_blank" rel="noopener noreferrer">MDN docs</a>.
           </p>
         </article>
       </main>

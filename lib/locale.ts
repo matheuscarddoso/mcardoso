@@ -1,4 +1,4 @@
-import type { Language } from "@/components/footer"
+export type Language = "PT" | "EN" | "ES"
 
 export const LOCALES = ['en', 'pt-br', 'es'] as const
 export type Locale = typeof LOCALES[number]

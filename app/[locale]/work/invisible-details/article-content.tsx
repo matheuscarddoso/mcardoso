@@ -19,7 +19,7 @@ function Divider() {
 
 function SectionHeading({ id, children }: { id: string; children: React.ReactNode }) {
   return (
-    <h2 className="mt-16 mb-2 scroll-mt-20 text-balance font-[550] text-foreground" id={id}>
+    <h2 className="mt-16 mb-2 scroll-mt-20 text-balance font-[550] article-heading" id={id}>
       {children}
     </h2>
   )
@@ -400,7 +400,7 @@ export function ArticleContent({
         </header>
 
         <article>
-          <h1 className="mb-2 w-fit scroll-mt-20 text-balance font-[550] text-foreground" id="invisible-details">
+          <h1 className="mb-2 w-fit scroll-mt-20 text-balance font-[550] article-heading" id="invisible-details">
             {t.title}
           </h1>
 
@@ -530,7 +530,7 @@ export function ArticleContent({
 
           <Divider />
 
-          <h2 className="mt-16 mb-2 w-full text-balance font-[550] text-foreground">{t.more}</h2>
+          <h2 className="mt-16 mb-2 w-full text-balance font-[550] article-heading">{t.more}</h2>
 
           <p className="mb-4 w-full text-pretty text-muted-foreground">{t.moreP1}</p>
 

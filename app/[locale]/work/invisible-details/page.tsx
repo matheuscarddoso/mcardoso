@@ -1,17 +1,28 @@
 import { CodeBlock } from "@/components/code-block"
+import { JsonLd } from "@/components/json-ld"
+import { articleMeta, type ArticlePageProps } from "@/lib/article-page"
+import { getArticle } from "@/lib/articles"
+import { toLocale } from "@/lib/site"
+import { articleGraph } from "@/lib/structured-data"
 import { ArticleContent } from "./article-content"
 
-export function generateStaticParams() {
-  return [{ locale: 'en' }, { locale: 'pt-br' }, { locale: 'es' }]
+const SLUG = "invisible-details"
+
+export async function generateMetadata({ params }: ArticlePageProps) {
+  return articleMeta(SLUG, await params)
 }
 
-export default function InvisibleDetailsPage() {
+export default async function InvisibleDetailsPage({ params }: ArticlePageProps) {
+  const locale = toLocale((await params).locale)
+
   return (
-    <ArticleContent
-      codeEasing={
-        <CodeBlock
-          lang="css"
-          code={`:root {
+    <>
+      <JsonLd data={articleGraph(locale, getArticle(SLUG))} />
+      <ArticleContent
+        codeEasing={
+          <CodeBlock
+            lang="css"
+            code={`:root {
   /* Strong ease-out for UI interactions */
   --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
 
@@ -21,24 +32,24 @@ export default function InvisibleDetailsPage() {
   /* Icon crossfade curve */
   --ease-icon: cubic-bezier(0.2, 0, 0, 1);
 }`}
-        />
-      }
-      codeScalePress={
-        <CodeBlock
-          lang="css"
-          code={`.button {
+          />
+        }
+        codeScalePress={
+          <CodeBlock
+            lang="css"
+            code={`.button {
   transition: scale 150ms ease-out;
 }
 
 .button:active {
   scale: 0.96;
 }`}
-        />
-      }
-      codeIconSwap={
-        <CodeBlock
-          lang="css"
-          code={`.icon-swap {
+          />
+        }
+        codeIconSwap={
+          <CodeBlock
+            lang="css"
+            code={`.icon-swap {
   display: grid;
   place-items: center;
 }
@@ -61,12 +72,12 @@ export default function InvisibleDetailsPage() {
   transform: scale(0.25);
   filter: blur(4px);
 }`}
-        />
-      }
-      codeShadow={
-        <CodeBlock
-          lang="css"
-          code={`:root {
+          />
+        }
+        codeShadow={
+          <CodeBlock
+            lang="css"
+            code={`:root {
   --shadow-border:
     0px 0px 0px 1px rgba(0, 0, 0, 0.06),
     0px 1px 2px -1px rgba(0, 0, 0, 0.06),
@@ -77,12 +88,12 @@ export default function InvisibleDetailsPage() {
 .dark {
   --shadow-border: 0 0 0 1px rgba(255, 255, 255, 0.08);
 }`}
-        />
-      }
-      codeRadius={
-        <CodeBlock
-          lang="css"
-          code={`/* outerRadius = innerRadius + padding */
+          />
+        }
+        codeRadius={
+          <CodeBlock
+            lang="css"
+            code={`/* outerRadius = innerRadius + padding */
 .card {
   border-radius: 20px;
   padding: 8px;
@@ -90,12 +101,12 @@ export default function InvisibleDetailsPage() {
 .card-inner {
   border-radius: 12px; /* 20 - 8 = 12 ✓ */
 }`}
-        />
-      }
-      codeStagger={
-        <CodeBlock
-          lang="css"
-          code={`.stagger-item {
+          />
+        }
+        codeStagger={
+          <CodeBlock
+            lang="css"
+            code={`.stagger-item {
   opacity: 0;
   transform: translateY(12px);
   filter: blur(4px);
@@ -113,12 +124,12 @@ export default function InvisibleDetailsPage() {
     filter: blur(0);
   }
 }`}
-        />
-      }
-      codePerformance={
-        <CodeBlock
-          lang="css"
-          code={`/* Good — only animate what changes */
+          />
+        }
+        codePerformance={
+          <CodeBlock
+            lang="css"
+            code={`/* Good — only animate what changes */
 .card {
   transition: transform 200ms ease-out, opacity 200ms ease-out;
 }
@@ -127,8 +138,9 @@ export default function InvisibleDetailsPage() {
 .card {
   transition: all 200ms ease-out;
 }`}
-        />
-      }
-    />
+          />
+        }
+      />
+    </>
   )
 }

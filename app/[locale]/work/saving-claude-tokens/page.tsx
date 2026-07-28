@@ -1,17 +1,28 @@
 import { CodeBlock } from "@/components/code-block"
+import { JsonLd } from "@/components/json-ld"
+import { articleMeta, type ArticlePageProps } from "@/lib/article-page"
+import { getArticle } from "@/lib/articles"
+import { toLocale } from "@/lib/site"
+import { articleGraph } from "@/lib/structured-data"
 import { ArticleContent } from "./article-content"
 
-export function generateStaticParams() {
-  return [{ locale: 'en' }, { locale: 'pt-br' }, { locale: 'es' }]
+const SLUG = "saving-claude-tokens"
+
+export async function generateMetadata({ params }: ArticlePageProps) {
+  return articleMeta(SLUG, await params)
 }
 
-export default function SavingClaudeTokensPage() {
+export default async function SavingClaudeTokensPage({ params }: ArticlePageProps) {
+  const locale = toLocale((await params).locale)
+
   return (
-    <ArticleContent
-      codeInstall={
-        <CodeBlock
-          lang="bash"
-          code={`# macOS (recommended)
+    <>
+      <JsonLd data={articleGraph(locale, getArticle(SLUG))} />
+      <ArticleContent
+        codeInstall={
+          <CodeBlock
+            lang="bash"
+            code={`# macOS (recommended)
 brew install rtk
 
 # Linux / macOS via curl
@@ -20,22 +31,22 @@ curl -fsSL https://raw.githubusercontent.com/rtk-ai/rtk/refs/heads/master/instal
 # verify
 rtk --version
 rtk gain       # shows token savings stats`}
-        />
-      }
-      codeInit={
-        <CodeBlock
-          lang="bash"
-          code={`# configure the hook for Claude Code
+          />
+        }
+        codeInit={
+          <CodeBlock
+            lang="bash"
+            code={`# configure the hook for Claude Code
 rtk init -g
 
 # restart Claude Code, then test
 git status  # automatically rewritten to rtk git status`}
-        />
-      }
-      codeCommands={
-        <CodeBlock
-          lang="bash"
-          code={`# git — compact output for all operations
+          />
+        }
+        codeCommands={
+          <CodeBlock
+            lang="bash"
+            code={`# git — compact output for all operations
 rtk git status           # grouped changed files
 rtk git log -n 10        # one-line commits
 rtk git diff             # condensed diff
@@ -51,12 +62,12 @@ rtk grep "pattern" .     # grouped search results
 rtk npm test
 rtk cargo test           # -90% vs raw output
 rtk pytest`}
-        />
-      }
-      codeDirect={
-        <CodeBlock
-          lang="bash"
-          code={`# use shell commands instead of native Claude Code tools
+          />
+        }
+        codeDirect={
+          <CodeBlock
+            lang="bash"
+            code={`# use shell commands instead of native Claude Code tools
 # so the hook (and rtk) can intercept them
 
 cat file.ts      # triggers rtk read via hook
@@ -67,8 +78,9 @@ find . -name "*.ts"  # triggers rtk find via hook
 rtk read file.ts
 rtk grep "pattern" .
 rtk find "*.ts" .`}
-        />
-      }
-    />
+          />
+        }
+      />
+    </>
   )
 }

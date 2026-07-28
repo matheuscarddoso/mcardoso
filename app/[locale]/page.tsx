@@ -1,15 +1,33 @@
+import type { Metadata } from "next"
+import { JsonLd } from "@/components/json-ld"
 import { getGithubCard } from "@/lib/github"
+import { localeToLanguage } from "@/lib/locale"
+import { HOME_SEO, pageMetadata, toLocale } from "@/lib/site"
+import { homeGraph } from "@/lib/structured-data"
 import { HomeContent } from "./home-content"
 
 /** Matches the GitHub fetches' own cache window. */
 export const revalidate = 3600
 
-export function generateStaticParams() {
-  return [{ locale: 'en' }, { locale: 'pt-br' }, { locale: 'es' }]
+type PageProps = { params: Promise<{ locale: string }> }
+
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const locale = toLocale((await params).locale)
+  const seo = HOME_SEO[localeToLanguage(locale)]
+
+  // `absoluteTitle`: the home title already ends in the name, so the layout's
+  // "%s — Matheus Cardoso" template would print it twice.
+  return pageMetadata({ locale, title: seo.title, description: seo.description, absoluteTitle: true })
 }
 
-export default async function Page() {
+export default async function Page({ params }: PageProps) {
+  const locale = toLocale((await params).locale)
   const github = await getGithubCard()
 
-  return <HomeContent github={github} />
+  return (
+    <>
+      <JsonLd data={homeGraph(locale)} />
+      <HomeContent github={github} />
+    </>
+  )
 }

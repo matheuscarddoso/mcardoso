@@ -1,25 +1,36 @@
 import { CodeBlock } from "@/components/code-block"
+import { JsonLd } from "@/components/json-ld"
+import { articleMeta, type ArticlePageProps } from "@/lib/article-page"
+import { getArticle } from "@/lib/articles"
+import { toLocale } from "@/lib/site"
+import { articleGraph } from "@/lib/structured-data"
 import { ArticleContent } from "./article-content"
 
-export function generateStaticParams() {
-  return [{ locale: 'en' }, { locale: 'pt-br' }, { locale: 'es' }]
+const SLUG = "whatsapp-cloud-api"
+
+export async function generateMetadata({ params }: ArticlePageProps) {
+  return articleMeta(SLUG, await params)
 }
 
-export default function WhatsAppCloudAPIPage() {
+export default async function WhatsAppCloudAPIPage({ params }: ArticlePageProps) {
+  const locale = toLocale((await params).locale)
+
   return (
-    <ArticleContent
-      codeEndpoint={
-        <CodeBlock
-          lang="bash"
-          code={`POST https://graph.facebook.com/v23.0/{PHONE_NUMBER_ID}/messages
+    <>
+      <JsonLd data={articleGraph(locale, getArticle(SLUG))} />
+      <ArticleContent
+        codeEndpoint={
+          <CodeBlock
+            lang="bash"
+            code={`POST https://graph.facebook.com/v23.0/{PHONE_NUMBER_ID}/messages
 Authorization: Bearer {ACCESS_TOKEN}
 Content-Type: application/json`}
-        />
-      }
-      codeButtons={
-        <CodeBlock
-          lang="json"
-          code={`{
+          />
+        }
+        codeButtons={
+          <CodeBlock
+            lang="json"
+            code={`{
   "messaging_product": "whatsapp",
   "to": "5511999999999",
   "type": "interactive",
@@ -34,12 +45,12 @@ Content-Type: application/json`}
     }
   }
 }`}
-        />
-      }
-      codeIds={
-        <CodeBlock
-          lang="text"
-          code={`restaurant:<uuid>    → selecionar restaurante
+          />
+        }
+        codeIds={
+          <CodeBlock
+            lang="text"
+            code={`restaurant:<uuid>    → selecionar restaurante
 category:<uuid>      → filtrar cardápio
 item:<uuid>          → adicionar ao carrinho
 cart:view            → mostrar carrinho
@@ -47,8 +58,9 @@ cart:checkout        → iniciar checkout
 cart:remove:<n>      → remover item n
 confirm:yes          → confirmar ação
 order:<uuid>         → status do pedido`}
-        />
-      }
-    />
+          />
+        }
+      />
+    </>
   )
 }

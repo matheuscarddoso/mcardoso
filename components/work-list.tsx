@@ -2,17 +2,8 @@
 
 import * as React from "react"
 import Link from "next/link"
+import { articles } from "@/lib/articles"
 import type { Language } from "@/components/footer"
-
-type Localized = Record<Language, string>
-
-type Article = {
-  slug: string
-  year: string
-  title: Localized
-  description: Localized
-  glyph: React.ReactNode
-}
 
 function GlyphDots() {
   return (
@@ -74,84 +65,18 @@ function GlyphBubbles() {
   )
 }
 
-/** Newest first — the year gutter only prints on the first row of each group. */
-const articles: Article[] = [
-  {
-    slug: "ai-bubble",
-    year: "2026",
-    title: {
-      PT: "A IA está perto de quebrar. Eis o motivo.",
-      EN: "AI is close to breaking. Here's why.",
-      ES: "La IA está cerca de quebrar. Este es el motivo.",
-    },
-    description: {
-      PT: "Por que a bolha vai estourar",
-      EN: "Why the bubble will burst",
-      ES: "Por qué la burbuja va a estallar",
-    },
-    glyph: <GlyphBubbles />,
-  },
-  {
-    slug: "whatsapp-cloud-api",
-    year: "2026",
-    title: {
-      PT: "Mensagens interativas com a WhatsApp Cloud API",
-      EN: "Interactive messages with the WhatsApp Cloud API",
-      ES: "Mensajes interactivos con la WhatsApp Cloud API",
-    },
-    description: {
-      PT: "Botões e listas no WhatsApp",
-      EN: "Buttons and lists on WhatsApp",
-      ES: "Botones y listas en WhatsApp",
-    },
-    glyph: <GlyphMessage />,
-  },
-  {
-    slug: "saving-claude-tokens",
-    year: "2026",
-    title: {
-      PT: "Como economizar tokens do Claude Code",
-      EN: "How to save Claude Code tokens",
-      ES: "Cómo ahorrar tokens de Claude Code",
-    },
-    description: {
-      PT: "Gaste menos, entregue mais",
-      EN: "Spend fewer tokens, ship more",
-      ES: "Gasta menos, entrega más",
-    },
-    glyph: <GlyphDescending />,
-  },
-  {
-    slug: "oklch-colors",
-    year: "2026",
-    title: {
-      PT: "O que são cores OKLCH?",
-      EN: "What are OKLCH colors?",
-      ES: "¿Qué son los colores OKLCH?",
-    },
-    description: {
-      PT: "Um espaço de cor melhor",
-      EN: "A better color space for UI",
-      ES: "Un espacio de color mejor",
-    },
-    glyph: <GlyphSwatches />,
-  },
-  {
-    slug: "invisible-details",
-    year: "2026",
-    title: {
-      PT: "Detalhes invisíveis",
-      EN: "Invisible details",
-      ES: "Detalles invisibles",
-    },
-    description: {
-      PT: "O que ninguém nota, mas sente",
-      EN: "What nobody notices, but feels",
-      ES: "Lo que nadie nota, pero siente",
-    },
-    glyph: <GlyphDots />,
-  },
-]
+/**
+ * Copy and dates live in `lib/articles` — the sitemap, page metadata and
+ * JSON-LD all read the same rows, so a title can only be written once. Glyphs
+ * stay here: they are JSX, and nothing on the server side needs them.
+ */
+const GLYPHS: Record<string, React.ReactNode> = {
+  "ai-bubble": <GlyphBubbles />,
+  "whatsapp-cloud-api": <GlyphMessage />,
+  "saving-claude-tokens": <GlyphDescending />,
+  "oklch-colors": <GlyphSwatches />,
+  "invisible-details": <GlyphDots />,
+}
 
 export function WorkList({ language, locale }: { language: Language; locale: string }) {
   return (
@@ -172,12 +97,12 @@ export function WorkList({ language, locale }: { language: Language; locale: str
               className="group/row flex min-w-0 items-center gap-3 py-2.5 transition-[opacity,transform] duration-300 ease-out group-hover/list:opacity-35 group-hover/list:hover:opacity-100 active:scale-[0.99] active:duration-150 active:ease-[var(--ease-out-strong)] motion-reduce:active:scale-100"
             >
               <span className="flex size-9 shrink-0 items-center justify-center rounded-[7px] bg-preview-bg text-gray-800 shadow-custom transition-[color,transform,box-shadow] duration-300 ease-[var(--ease-out-strong)] group-hover/row:scale-[1.06] group-hover/row:text-gray-1000 group-hover/row:shadow-custom-hover">
-                {article.glyph}
+                {GLYPHS[article.slug]}
               </span>
               <div className="flex min-w-0 flex-1 flex-col sm:flex-row sm:items-center sm:justify-between sm:gap-4">
-                <span className="truncate text-[15px] font-[450] text-gray-1200">
+                <h3 className="truncate text-[15px] font-[450] text-gray-1200">
                   {article.title[language]}
-                </span>
+                </h3>
                 <span className="truncate text-[15px] text-gray-1000 sm:text-right">
                   {article.description[language]}
                 </span>

@@ -21,7 +21,14 @@ export function middleware(request: NextRequest) {
   const locale = detectLocale(request)
   const url = request.nextUrl.clone()
   url.pathname = `/${locale}${pathname === '/' ? '' : pathname}`
-  return NextResponse.redirect(url)
+
+  // 307, not 308: the target depends on the request, so it must never be
+  // remembered by the browser. `Vary` says the same thing to shared caches —
+  // without it one visitor's language decides the redirect for everyone
+  // behind that CDN node.
+  const response = NextResponse.redirect(url, 307)
+  response.headers.set('vary', 'accept-language')
+  return response
 }
 
 export const config = {

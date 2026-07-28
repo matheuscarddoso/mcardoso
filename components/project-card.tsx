@@ -77,7 +77,7 @@ export function ProjectCard({
     >
       <PreviewDeck>{preview}</PreviewDeck>
       <div className="mt-3 flex items-center gap-2">
-        <span className="text-base font-medium tracking-[-0.01em] text-gray-1200">{title}</span>
+        <h3 className="text-base font-medium tracking-[-0.01em] text-gray-1200">{title}</h3>
         <span className="shrink-0 rounded-full px-1.5 py-0.5 text-xs leading-5 text-gray-1100 shadow-custom">
           {meta}
         </span>
@@ -104,10 +104,13 @@ function Screenshot({ src, alt }: { src: string; alt: string }) {
   )
 }
 
+/* Described rather than left decorative: the card's link label says where it
+   goes, not what the product looks like, so the screenshot carries meaning of
+   its own that a non-sighted reader would otherwise lose. */
 export function KuboPreview() {
-  return <Screenshot src="/projects/kubofood.webp" alt="" />
+  return <Screenshot src="/projects/kubofood.webp" alt="KuboFood order screen" />
 }
 
 export function AbacatePreview() {
-  return <Screenshot src="/projects/abacate-pay.webp" alt="" />
+  return <Screenshot src="/projects/abacate-pay.webp" alt="Abacate Pay checkout screen" />
 }

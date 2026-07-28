@@ -8,6 +8,12 @@ import { useParams, useRouter } from "next/navigation"
 import { Footer, type Language } from "@/components/footer"
 import { localeToLanguage, languageToLocale } from "@/lib/locale"
 
+const titleByLang = {
+  PT: "Playlists mensais",
+  EN: "Monthly playlists",
+  ES: "Playlists mensuales",
+}
+
 const introByLang = {
   PT: "Todo mês, crio uma playlist com minhas músicas favoritas do momento.",
   EN: "Every month, I create a playlist with my favorite songs of the moment.",
@@ -57,6 +63,9 @@ export function MonthlyPlaylistsContent() {
             <Undo2 className="size-4" strokeWidth={1.5} />
           </Link>
         </div>
+        {/* The page shipped with no heading at all — nothing for a crawler or a
+            screen reader to hang the page's subject on. */}
+        <h1 className="mb-2 text-balance font-[550] article-heading">{titleByLang[language]}</h1>
         <p className="paragraph mb-10">{introByLang[language]}</p>
         <div className="grid grid-cols-2 gap-x-8 gap-y-8 pb-20 sm:grid-cols-3">
           {playlists.map((pl) => {

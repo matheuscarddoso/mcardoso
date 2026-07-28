@@ -1,6 +1,7 @@
 "use client"
 
 import * as React from "react"
+import Link from "next/link"
 import { useParams, useRouter } from "next/navigation"
 import { AvatarLightbox } from "@/components/avatar-lightbox"
 import { Footer, type Language } from "@/components/footer"
@@ -9,7 +10,9 @@ import { WorkList } from "@/components/work-list"
 import { CommitHeatmap } from "@/components/commit-heatmap"
 import { LanguageToggle, ThemeToggle, ToggleSeparator } from "@/components/toggles"
 import { BioLink, GithubLink, PlaylistLink } from "@/components/link-preview"
+import { SocialLinks } from "@/components/social-links"
 import { localeToLanguage, languageToLocale } from "@/lib/locale"
+import { HEADER_SOCIAL } from "@/lib/site"
 import type { GithubCardData } from "@/lib/github"
 import { Check, Mail } from "lucide-react"
 import * as TooltipPrimitive from "@radix-ui/react-tooltip"
@@ -105,7 +108,9 @@ function CopyEmailButton({ label }: { label: string }) {
             type="button"
             id="email"
             onClick={handleCopy}
-            className="cursor-pointer transition-transform duration-150 ease-[cubic-bezier(0.23,1,0.32,1)] active:scale-[0.97]"
+            // Same -m-2/p-2 trick as the social row: a 32px touch target that
+            // grows into the gap instead of widening the layout.
+            className="-m-2 cursor-pointer p-2 transition-transform duration-150 ease-[cubic-bezier(0.23,1,0.32,1)] active:scale-[0.97]"
             aria-label={label}
           >
             <Mail className="h-4 w-4" />
@@ -226,15 +231,7 @@ export function HomeContent({ github }: { github: GithubCardData | null }) {
       <CommitHeatmap />
       <main className="mx-auto flex w-full max-w-(--breakpoint-sm) flex-1 flex-col px-4 pt-20 pb-4 dark:text-[#b4b4b4] text-gray-600">
         <div className="mb-8 mt-4 flex items-center gap-4 text-black dark:text-white">
-          <a href={GITHUB_URL} id="github" target="_blank" rel="noopener noreferrer" aria-label={`GitHub`} className="inline-flex transition-transform duration-150 ease-[var(--ease-out-strong)] active:scale-[0.97] motion-reduce:active:scale-100">
-            <svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" width="1024" className="w-4 h-4" height="1024" fill="none"><path fill="currentColor" fillRule="evenodd" d="M512 0C229.12 0 0 229.12 0 512c0 226.56 146.56 417.92 350.08 485.76 25.6 4.48 35.2-10.88 35.2-24.32 0-12.16-.64-52.48-.64-95.36-128.64 23.68-161.92-31.36-172.16-60.16-5.76-14.72-30.72-60.16-52.48-72.32-17.92-9.6-43.52-33.28-.64-33.92 40.32-.64 69.12 37.12 78.72 52.48 46.08 77.44 119.68 55.68 149.12 42.24 4.48-33.28 17.92-55.68 32.64-68.48-113.92-12.8-232.96-56.96-232.96-252.8 0-55.68 19.84-101.76 52.48-137.6-5.12-12.8-23.04-65.28 5.12-135.68 0 0 42.88-13.44 140.8 52.48 40.96-11.52 84.48-17.28 128-17.28s87.04 5.76 128 17.28c97.92-66.56 140.8-52.48 140.8-52.48 28.16 70.4 10.24 122.88 5.12 135.68 32.64 35.84 52.48 81.28 52.48 137.6 0 196.48-119.68 240-233.6 252.8 18.56 16 34.56 46.72 34.56 94.72 0 68.48-.64 123.52-.64 140.8 0 13.44 9.6 29.44 35.2 24.32C877.44 929.92 1024 737.92 1024 512 1024 229.12 794.88 0 512 0" clipRule="evenodd"/></svg>
-          </a>
-          <a href="https://x.com/mattcrdoso" id="twitter" target="_blank" rel="noopener noreferrer" aria-label={`X`} className="inline-flex transition-transform duration-150 ease-[var(--ease-out-strong)] active:scale-[0.97] motion-reduce:active:scale-100">
-            <svg xmlns="http://www.w3.org/2000/svg" width="1200" className="w-3 h-3" height="1227" fill="none" viewBox="0 0 1200 1227"><path fill="currentColor" d="M714.163 519.284 1160.89 0h-105.86L667.137 450.887 357.328 0H0l468.492 681.821L0 1226.37h105.866l409.625-476.152 327.181 476.152H1200L714.137 519.284h.026ZM569.165 687.828l-47.468-67.894-377.686-540.24h162.604l304.797 435.991 47.468 67.894 396.2 566.721H892.476L569.165 687.854v-.026Z"/></svg>
-          </a>
-          <a href="https://stackoverflow.com/users/18957537/matheus-cardoso" id="stackoverflow" target="_blank" rel="noopener noreferrer" aria-label={`Stack Overflow`} className="inline-flex transition-transform duration-150 ease-[var(--ease-out-strong)] active:scale-[0.97] motion-reduce:active:scale-100">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 169.61 200" width="2120" className="w-4 h-4" height="2500"><path d="M140.44 178.38v-48.65h21.61V200H0v-70.27h21.61v48.65z" fill="currentColor"/><path d="M124.24 140.54l4.32-16.22-86.97-17.83-3.78 17.83zM49.7 82.16L130.72 120l7.56-16.22-81.02-37.83zm22.68-40l68.06 57.3 11.35-13.51-68.6-57.3-11.35 13.51zM116.14 0l-14.59 10.81 53.48 71.89 14.58-10.81zM37.81 162.16h86.43v-16.21H37.81z" fill="currentColor"/></svg>
-          </a>
+          <SocialLinks include={HEADER_SOCIAL} />
           <CopyEmailButton label={t.copyEmail} />
           <ToggleSeparator />
           <LanguageToggle
@@ -255,11 +252,12 @@ export function HomeContent({ github }: { github: GithubCardData | null }) {
           </div>
           <div className="ml-4">
             <h1 className="font-semibold text-gray-1200 leading-snug text-lg">
-              <a href={`/${locale}`}>Matheus Cardoso</a>
+              <Link href={`/${locale}`}>Matheus Cardoso</Link>
             </h1>
-            <p className="whitespace-nowrap font-medium text-gray-1100 leading-snug">
-              <span>{t.title}</span>
-            </p>
+            {/* No `whitespace-nowrap`: the Portuguese and Spanish roles are
+                the longest strings on the page, and a 320px viewport has to
+                wrap them rather than push the column sideways. */}
+            <p className="font-medium text-gray-1100 leading-snug">{t.title}</p>
           </div>
         </div>
 
@@ -268,7 +266,7 @@ export function HomeContent({ github }: { github: GithubCardData | null }) {
         <SectionDivider className="my-10" />
 
         <div className="w-full">
-          <div className="mb-5 flex w-full items-center font-medium text-gray-1200">{t.projects}</div>
+          <h2 className="mb-5 flex w-full items-center font-medium text-gray-1200">{t.projects}</h2>
           <div className="grid w-full grid-cols-1 gap-6 sm:grid-cols-2">
             <ProjectCard
               href="https://kubofood.app"
@@ -292,7 +290,7 @@ export function HomeContent({ github }: { github: GithubCardData | null }) {
         <SectionDivider className="my-10" />
 
         <div className="mb-4">
-          <div className="mb-2 flex w-full items-center font-medium text-gray-1200">{t.writing}</div>
+          <h2 className="mb-2 flex w-full items-center font-medium text-gray-1200">{t.writing}</h2>
           <WorkList language={language} locale={locale} />
         </div>
       </main>

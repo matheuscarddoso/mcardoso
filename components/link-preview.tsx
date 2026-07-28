@@ -2,6 +2,7 @@
 
 import * as React from "react"
 import Image from "next/image"
+import Link from "next/link"
 import * as HoverCardPrimitive from "@radix-ui/react-hover-card"
 import { ArrowUpRight } from "lucide-react"
 import { AnimatePresence, motion, useReducedMotion } from "motion/react"
@@ -155,11 +156,13 @@ export function PlaylistLink({
   className,
   children,
   ...props
-}: React.ComponentProps<"a"> & { language: Language }) {
+}: Omit<React.ComponentProps<"a">, "href"> & { language: Language; href: string }) {
+  // Internal route, so `Link` — a plain anchor here threw away the client
+  // navigation and reloaded the whole document to move one page across.
   const anchor = (
-    <a href={href} className={className} {...props}>
+    <Link href={href} className={className} {...props}>
       {children}
-    </a>
+    </Link>
   )
 
   return (
@@ -192,9 +195,11 @@ export function PlaylistLink({
               </span>
             </span>
             <span className="absolute top-0 left-0 size-10 overflow-hidden rounded-md shadow-custom">
+              {/* The sleeve is the one that carries the meaning; the record
+                  behind it is the same art, spinning, and stays decorative. */}
               <Image
                 src={NOW_PLAYING.thumbnail}
-                alt=""
+                alt={`${NOW_PLAYING.title} — ${NOW_PLAYING.artist}`}
                 fill
                 sizes="40px"
                 className="object-cover"
@@ -315,7 +320,7 @@ export function GithubLink({
         <div className={`flex gap-2 px-1 pb-0.5 ${hasGraph ? "pt-2" : "pt-1"}`}>
           <Image
             src={data.avatarUrl}
-            alt=""
+            alt={`${data.name} on GitHub`}
             // Fixed size, so Next emits the 1x/2x pair and nothing larger.
             width={32}
             height={32}

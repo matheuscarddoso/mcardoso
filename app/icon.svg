@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
+  <title>Matheus Cardoso</title>
+  <rect width="32" height="32" rx="7" fill="#111"/>
+  <rect x="3" y="3" width="7" height="7" rx="2" fill="#fff" fill-opacity="1"/>
+  <rect x="12.5" y="3" width="7" height="7" rx="2" fill="#fff" fill-opacity="0.42"/>
+  <rect x="22" y="3" width="7" height="7" rx="2" fill="#fff" fill-opacity="0.25"/>
+  <rect x="3" y="12.5" width="7" height="7" rx="2" fill="#fff" fill-opacity="0.42"/>
+  <rect x="12.5" y="12.5" width="7" height="7" rx="2" fill="#fff" fill-opacity="0.78"/>
+  <rect x="22" y="12.5" width="7" height="7" rx="2" fill="#fff" fill-opacity="0.42"/>
+  <rect x="3" y="22" width="7" height="7" rx="2" fill="#fff" fill-opacity="0.25"/>
+  <rect x="12.5" y="22" width="7" height="7" rx="2" fill="#fff" fill-opacity="0.42"/>
+  <rect x="22" y="22" width="7" height="7" rx="2" fill="#fff" fill-opacity="0.6"/>
+</svg>

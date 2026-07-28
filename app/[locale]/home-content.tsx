@@ -1,8 +1,8 @@
 "use client"
 
 import * as React from "react"
-import Image from "next/image"
 import { useParams, useRouter } from "next/navigation"
+import { AvatarLightbox } from "@/components/avatar-lightbox"
 import { Footer, type Language } from "@/components/footer"
 import { AbacatePreview, KuboPreview, ProjectCard } from "@/components/project-card"
 import { WorkList } from "@/components/work-list"
@@ -24,6 +24,8 @@ const EMAIL = "mathuscardoso@gmail.com"
 const translations = {
   PT: {
     imageAlt: "Foto de Matheus Cardoso",
+    openPhoto: "Ampliar a foto de perfil",
+    closePhoto: "Fechar a foto",
     title: "Engenheiro de Software",
     projects: "Projetos",
     writing: "Escrita",
@@ -35,6 +37,8 @@ const translations = {
   },
   EN: {
     imageAlt: "Photo of Matheus Cardoso",
+    openPhoto: "Expand profile photo",
+    closePhoto: "Close photo",
     title: "Software Engineer",
     projects: "Projects",
     writing: "Writing",
@@ -46,6 +50,8 @@ const translations = {
   },
   ES: {
     imageAlt: "Foto de Matheus Cardoso",
+    openPhoto: "Ampliar la foto de perfil",
+    closePhoto: "Cerrar la foto",
     title: "Ingeniero de Software",
     projects: "Proyectos",
     writing: "Escritura",
@@ -230,11 +236,12 @@ export function HomeContent() {
         
         <div className="relative z-10 mb-8 flex items-center">
           <div className="relative z-10">
-            <a href={`/${locale}`}>
-              <div className="z-10 cursor-default">
-                <Image src="/profile.png" alt={t.imageAlt} width={47} height={47} className="pointer-events-none h-[47px] w-[47px] rounded-full outline-black/5 outline-offset-2 dark:outline-white/5" />
-              </div>
-            </a>
+            <AvatarLightbox
+              src="/profile.png"
+              alt={t.imageAlt}
+              triggerLabel={t.openPhoto}
+              closeLabel={t.closePhoto}
+            />
           </div>
           <div className="ml-4">
             <h1 className="font-semibold text-gray-1200 leading-snug text-lg">

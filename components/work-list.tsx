@@ -64,8 +64,33 @@ function GlyphMessage() {
   )
 }
 
+function GlyphBubbles() {
+  return (
+    <div className="flex items-end gap-[3px]">
+      <span className="size-1.5 rounded-full bg-current opacity-50" />
+      <span className="size-2.5 rounded-full bg-current" />
+      <span className="size-1 rounded-full bg-current opacity-40" />
+    </div>
+  )
+}
+
 /** Newest first — the year gutter only prints on the first row of each group. */
 const articles: Article[] = [
+  {
+    slug: "ai-bubble",
+    year: "2026",
+    title: {
+      PT: "A IA está perto de quebrar. Eis o motivo.",
+      EN: "AI is close to breaking. Here's why.",
+      ES: "La IA está cerca de quebrar. Este es el motivo.",
+    },
+    description: {
+      PT: "Por que a bolha vai estourar",
+      EN: "Why the bubble will burst",
+      ES: "Por qué la burbuja va a estallar",
+    },
+    glyph: <GlyphBubbles />,
+  },
   {
     slug: "whatsapp-cloud-api",
     year: "2026",

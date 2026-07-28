@@ -256,6 +256,23 @@
 
 }
 
+/*
+ * Highlighter-pen selection, identical in both themes — the yellow carries the
+ * contrast, so the text goes black regardless of what colour it started as.
+ * Kept as two rules: a browser that chokes on one prefix would drop the pair.
+ */
+::selection {
+  background-color: #fde047;
+  color: #000;
+  text-shadow: none;
+}
+
+::-moz-selection {
+  background-color: #fde047;
+  color: #000;
+  text-shadow: none;
+}
+
 .corner-squircle {
   corner-shape: squircle;
 }

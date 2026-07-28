@@ -20,6 +20,21 @@ const introByLang = {
   ES: "Cada mes, creo una playlist con mis canciones favoritas del momento.",
 }
 
+/** Says what the ritual actually is — the one-liner above didn't. */
+const aboutByLang = {
+  PT: "Não é retrospectiva nem lista de melhores: é o que realmente tocou enquanto eu programava, corria e viajava naquele mês. Fecho no último dia e não mexo mais, então cada uma vira um registro honesto do período. Costuma dar entre trinta e quarenta minutos.",
+  EN: "It isn't a retrospective or a best-of: it's what actually played while I was coding, running and travelling that month. I close it on the last day and never touch it again, so each one ends up an honest record of the period. They usually run thirty to forty minutes.",
+  ES: "No es una retrospectiva ni una lista de lo mejor: es lo que realmente sonó mientras programaba, corría y viajaba ese mes. La cierro el último día y no la toco más, así que cada una queda como un registro honesto del período. Suelen durar entre treinta y cuarenta minutos.",
+}
+
+const backToWritingByLang = {
+  PT: "Se veio pela música, a escrita fica",
+  EN: "If the music brought you here, the writing lives",
+  ES: "Si te trajo la música, la escritura está",
+}
+
+const hereByLang = { PT: "aqui", EN: "here", ES: "aquí" }
+
 const spotifyFeb2026 = "https://open.spotify.com/playlist/7taNw0eVv4qK5QPb2G4mtn?si=qNSyjXcUSWezUSoUsjM5Uw"
 
 const playlists = [
@@ -66,13 +81,14 @@ export function MonthlyPlaylistsContent() {
         {/* The page shipped with no heading at all — nothing for a crawler or a
             screen reader to hang the page's subject on. */}
         <h1 className="mb-2 text-balance font-[550] article-heading">{titleByLang[language]}</h1>
-        <p className="paragraph mb-10">{introByLang[language]}</p>
-        <div className="grid grid-cols-2 gap-x-8 gap-y-8 pb-20 sm:grid-cols-3">
+        <p className="paragraph mb-3">{introByLang[language]}</p>
+        <p className="paragraph mb-10">{aboutByLang[language]}</p>
+        <ul className="grid grid-cols-2 gap-x-8 gap-y-8 pb-20 sm:grid-cols-3">
           {playlists.map((pl) => {
             const label = `${monthLabels[pl.month]?.[language] ?? pl.month} ${pl.year}`
             return (
+              <li key={`${pl.month}-${pl.year}`}>
               <a
-                key={`${pl.month}-${pl.year}`}
                 href={pl.url}
                 target="_blank"
                 rel="noopener noreferrer"
@@ -89,9 +105,19 @@ export function MonthlyPlaylistsContent() {
                 </div>
                 <span className="text-sm font-[450] text-zinc-700 dark:text-zinc-300">{label}</span>
               </a>
+              </li>
             )
           })}
-        </div>
+        </ul>
+        {/* This page was a dead end: every link on it pointed off-site to
+            Spotify. One route back into the writing keeps it part of the site. */}
+        <p className="paragraph pb-20">
+          {backToWritingByLang[language]}{" "}
+          <Link className="article-underline" href={`/${locale}`}>
+            {hereByLang[language]}
+          </Link>
+          .
+        </p>
       </main>
       <Footer
         language={language}

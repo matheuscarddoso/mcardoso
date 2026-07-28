@@ -73,7 +73,9 @@ export function ProjectCard({
       href={href}
       target="_blank"
       rel="noopener noreferrer"
-      className="group flex flex-col overflow-hidden rounded-xl bg-preview-bg px-3.5 pt-5 pb-3.5 shadow-custom transition-[box-shadow,transform] duration-300 ease-[var(--ease-out-strong)] hover:scale-[1.015] hover:shadow-card-lift active:scale-[0.985] motion-reduce:hover:scale-100 motion-reduce:active:scale-100"
+      // `w-full`: the card is now a grid item's only child, so it has to fill
+      // the cell rather than shrink-wrap its content.
+      className="group flex w-full flex-col overflow-hidden rounded-xl bg-preview-bg px-3.5 pt-5 pb-3.5 shadow-custom transition-[box-shadow,transform] duration-300 ease-[var(--ease-out-strong)] hover:scale-[1.015] hover:shadow-card-lift active:scale-[0.985] motion-reduce:hover:scale-100 motion-reduce:active:scale-100"
     >
       <PreviewDeck>{preview}</PreviewDeck>
       <div className="mt-3 flex items-center gap-2">

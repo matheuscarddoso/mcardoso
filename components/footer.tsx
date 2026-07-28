@@ -1,10 +1,20 @@
 "use client"
 
+import Link from "next/link"
+import { useParams, usePathname } from "next/navigation"
 import { LanguageToggle, ThemeToggle } from "@/components/toggles"
 import { LocalTime } from "@/components/local-time"
 import { SocialLinks } from "@/components/social-links"
 import { FOOTER_SOCIAL } from "@/lib/site"
 import type { Language } from "@/lib/locale"
+
+const PLAYLISTS_PATH = "/monthly-playlists"
+
+const playlistsLabel = {
+  PT: "Playlists",
+  EN: "Playlists",
+  ES: "Playlists",
+} as const
 
 export type { Language }
 
@@ -20,6 +30,13 @@ export function Footer({
   onLanguageChange,
   showToggles = true,
 }: FooterProps) {
+  const params = useParams()
+  const pathname = usePathname()
+  const locale = (params.locale as string) ?? "en"
+  // Reachable from every page except itself. It used to hang off a single
+  // sentence in the home page bio, which left it with one inbound link.
+  const showPlaylists = !pathname?.endsWith(PLAYLISTS_PATH)
+
   return (
     <footer className="dark:border-primary-dark-4 mx-auto mt-auto w-full max-w-(--breakpoint-sm) px-4 pt-20">
       {/* Wraps rather than squeezes: on a 320px phone the Spanish clock line
@@ -34,6 +51,14 @@ export function Footer({
         </div>
         {/* The profiles the header has no room for. Same -m-2/p-2 targets. */}
         <div className="flex items-center gap-4">
+          {showPlaylists && (
+            <Link
+              href={`/${locale}${PLAYLISTS_PATH}`}
+              className="text-xs text-gray-1000 transition-colors duration-200 hover:text-gray-1200"
+            >
+              {playlistsLabel[language]}
+            </Link>
+          )}
           <SocialLinks include={FOOTER_SOCIAL} />
           {showToggles && <ThemeToggle language={language} />}
         </div>

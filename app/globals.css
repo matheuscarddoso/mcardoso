@@ -365,6 +365,31 @@
   background-color: var(--contrib-4);
 }
 
+/*
+ * The six-dash break between article sections, drawn on the <hr> itself.
+ * Six 16px dashes with 4px gutters — 6*16 + 5*4 = 116px. The dashes lose the
+ * 1px cap radius they had as individual divs, which at 2px tall is not a
+ * difference anyone can see, and buys back six divs per break.
+ */
+.section-divider {
+  border: 0;
+  width: 116px;
+  height: 2px;
+  margin: 4rem auto;
+  border-radius: 1px;
+  /*
+   * `currentColor`, not the token inline: the minifier drops the space in
+   * `var(--x) 0`, and while that survives CSS tokenisation it is a needless
+   * bet on it. Two idents can never be merged, so this form is unambiguous.
+   */
+  color: var(--color-gray-400);
+  background-image: repeating-linear-gradient(
+    to right,
+    currentColor 0 16px,
+    transparent 16px 20px
+  );
+}
+
 @keyframes vinyl-spin {
   to {
     transform: rotate(360deg);

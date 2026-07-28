@@ -22,8 +22,11 @@ export async function CodeBlock({
     ],
   })
 
+  // `<figure>`, not `<div>`: a code listing is self-contained content the prose
+  // refers to, which is the definition of a figure. Shiki's own output is
+  // already `<pre><code>`, so the wrapper was the only unsemantic part left.
   return (
-    <div
+    <figure
       className="preview-code my-8 w-full overflow-x-auto rounded-xl p-4 font-mono text-[13px] [&_*]:font-mono"
       dangerouslySetInnerHTML={{ __html: html }}
     />

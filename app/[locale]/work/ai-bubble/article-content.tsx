@@ -6,16 +6,17 @@ import { useParams, useRouter } from "next/navigation"
 import { Undo2, Check, LinkIcon } from "lucide-react"
 import { Footer, type Language } from "@/components/footer"
 import { ArticleByline } from "@/components/article-byline"
+import { ArticleNav } from "@/components/article-nav"
 import { localeToLanguage, languageToLocale } from "@/lib/locale"
 
+/**
+ * A thematic break, which is what `<hr>` means — and it replaces seven divs
+ * (a flex row plus six dashes) with one semantic tag. Multiplied by the five
+ * to nine breaks in each of these essays, that is most of the div soup that
+ * was drowning out the real structure of the page.
+ */
 function Divider() {
-  return (
-    <div className="my-16 flex w-full items-center justify-center gap-1" aria-hidden>
-      {[...Array(6)].map((_, i) => (
-        <div key={i} className="h-0.5 w-4 rounded-full bg-gray-400" />
-      ))}
-    </div>
-  )
+  return <hr className="section-divider" />
 }
 
 function SectionHeading({ id, children }: { id: string; children: React.ReactNode }) {
@@ -325,6 +326,8 @@ export function ArticleContent() {
             {t.outro}{" "}
             <a className="article-underline" href="https://x.com/mattcrdoso" target="_blank" rel="noopener noreferrer">X</a>.
           </p>
+
+          <ArticleNav slug="ai-bubble" language={language} locale={locale} />
         </article>
       </main>
       <Footer

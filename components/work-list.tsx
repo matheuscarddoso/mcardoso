@@ -80,11 +80,11 @@ const GLYPHS: Record<string, React.ReactNode> = {
 
 export function WorkList({ language, locale }: { language: Language; locale: string }) {
   return (
-    <div className="group/list flex flex-col">
+    <ul className="group/list flex flex-col">
       {articles.map((article, index) => {
         const startsYear = index === 0 || articles[index - 1].year !== article.year
         return (
-          <div
+          <li
             key={article.slug}
             className="grid grid-cols-[2.75rem_1fr] items-center gap-3 sm:grid-cols-[3.25rem_1fr]"
           >
@@ -108,9 +108,9 @@ export function WorkList({ language, locale }: { language: Language; locale: str
                 </span>
               </div>
             </Link>
-          </div>
+          </li>
         )
       })}
-    </div>
+    </ul>
   )
 }

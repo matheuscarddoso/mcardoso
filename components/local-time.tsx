@@ -18,19 +18,47 @@ type Clock = {
   offset: string
 }
 
+/*
+ * `Intl.DateTimeFormat` is expensive to construct and stateless once built, so
+ * both formatters are made once and reused. They used to be rebuilt on every
+ * tick — sixty constructions a minute on the main thread, for a value that
+ * changes once.
+ *
+ * Lazily, not at module scope: `shortOffset` throws on older engines, and that
+ * has to degrade to the fallback below rather than fail the import.
+ */
+let clockFormat: Intl.DateTimeFormat | undefined
+let offsetFormat: Intl.DateTimeFormat | null | undefined
+
+function clockFormatter(): Intl.DateTimeFormat {
+  return (clockFormat ??= new Intl.DateTimeFormat("en-US", {
+    timeZone: TIME_ZONE,
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: true,
+  }))
+}
+
+function offsetFormatter(): Intl.DateTimeFormat | null {
+  if (offsetFormat === undefined) {
+    try {
+      offsetFormat = new Intl.DateTimeFormat("en-US", {
+        timeZone: TIME_ZONE,
+        timeZoneName: "shortOffset",
+      })
+    } catch {
+      offsetFormat = null
+    }
+  }
+  return offsetFormat
+}
+
 /** "UTC-3" — read from the zone itself, so a DST change would follow along. */
 function offsetLabel(date: Date): string {
-  try {
-    const name = new Intl.DateTimeFormat("en-US", {
-      timeZone: TIME_ZONE,
-      timeZoneName: "shortOffset",
-    })
-      .formatToParts(date)
-      .find((part) => part.type === "timeZoneName")?.value
-    if (name) return name.replace("GMT", "UTC")
-  } catch {
-    // `shortOffset` predates Safari 15.4 — fall through to the manual read.
-  }
+  const name = offsetFormatter()
+    ?.formatToParts(date)
+    .find((part) => part.type === "timeZoneName")?.value
+  if (name) return name.replace("GMT", "UTC")
 
   const utc = new Date(date.toLocaleString("en-US", { timeZone: "UTC" }))
   const zoned = new Date(date.toLocaleString("en-US", { timeZone: TIME_ZONE }))
@@ -41,12 +69,7 @@ function offsetLabel(date: Date): string {
 function readClock(): Clock {
   const now = new Date()
   const parts = Object.fromEntries(
-    new Intl.DateTimeFormat("en-US", {
-      timeZone: TIME_ZONE,
-      hour: "2-digit",
-      minute: "2-digit",
-      hour12: true,
-    })
+    clockFormatter()
       .formatToParts(now)
       .map((part) => [part.type, part.value])
   )
@@ -59,32 +82,33 @@ function readClock(): Clock {
   }
 }
 
+const MINUTE = 60_000
+
 export function LocalTime({ language }: { language: Language }) {
-  // Null until mounted: the server has no business guessing the viewer's clock,
-  // and rendering one would desync on hydration.
   const [clock, setClock] = React.useState<Clock | null>(null)
 
   React.useEffect(() => {
-    setClock(readClock())
+    let timeout: ReturnType<typeof setTimeout>
 
-    const id = setInterval(() => {
-      setClock((previous) => {
-        const next = readClock()
-        // Only the displayed minute matters — skip the other 59 re-renders.
-        return previous && previous.hour === next.hour && previous.minute === next.minute
-          ? previous
-          : next
-      })
-    }, 1000)
+    /*
+     * Wakes on the minute boundary instead of every second. The display only
+     * has minute resolution, so a 1s interval was 59 wasted main-thread tasks
+     * a minute — each one competing with a tap for the same thread.
+     */
+    const tick = () => {
+      setClock(readClock())
+      // Re-derived each time rather than accumulated, so drift can't build up.
+      timeout = setTimeout(tick, MINUTE - (Date.now() % MINUTE) + 50)
+    }
 
-    return () => clearInterval(id)
+    tick()
+    return () => clearTimeout(timeout)
   }, [])
 
   return (
     <div className="flex flex-col gap-0.5 text-xs select-none">
       <span className="text-primary-light-11 dark:text-primary-dark-11">{motto[language]}</span>
       <span
-        // Placeholder holds the width so the footer doesn't jump on mount.
         className={`flex items-baseline gap-0.5 ${clock ? "" : "invisible"}`}
       >
         <span className="tabular-nums text-gray-1200">{clock?.hour ?? "00"}</span>

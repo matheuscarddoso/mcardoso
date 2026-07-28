@@ -311,29 +311,30 @@
   font-style: italic;
 }
 
-/* GitHub-style contribution grid used as page-top decoration. */
-.heatmap-cell {
-  width: 11px;
-  height: 11px;
-  flex: none;
-  border-radius: 3px;
-  background-color: var(--color-gray-300);
+/*
+ * GitHub-style contribution grid used as page-top decoration. Geometry lives
+ * in the component's path data; only the ramp lives here. `color` rather than
+ * `fill`, because each path paints with both fill and stroke — see the
+ * component for why the stroke is what rounds the corners.
+ */
+.heatmap-level-0 {
+  color: var(--color-gray-300);
 }
 
-.heatmap-cell.level-1 {
-  background-color: var(--color-gray-500);
+.heatmap-level-1 {
+  color: var(--color-gray-500);
 }
 
-.heatmap-cell.level-2 {
-  background-color: var(--color-gray-700);
+.heatmap-level-2 {
+  color: var(--color-gray-700);
 }
 
-.heatmap-cell.level-3 {
-  background-color: var(--color-gray-800);
+.heatmap-level-3 {
+  color: var(--color-gray-800);
 }
 
-.heatmap-cell.level-4 {
-  background-color: var(--color-gray-900);
+.heatmap-level-4 {
+  color: var(--color-gray-900);
 }
 
 /*

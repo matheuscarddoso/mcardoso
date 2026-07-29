@@ -36,6 +36,13 @@ const nextConfig: NextConfig = {
         hostname: "avatars.githubusercontent.com",
         pathname: "/u/**",
       },
+      // GitHub's own social cards, for the repository links in the writing.
+      // Scoped to the one path shape it serves them from.
+      {
+        protocol: "https",
+        hostname: "opengraph.githubassets.com",
+        pathname: "/*/**",
+      },
     ],
   },
 

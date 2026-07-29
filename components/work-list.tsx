@@ -55,6 +55,20 @@ function GlyphMessage() {
   )
 }
 
+/** A fork: one node branching into two. */
+function GlyphFork() {
+  return (
+    <div className="flex items-center gap-[3px]">
+      <span className="size-1.5 rounded-full bg-current" />
+      <span className="h-[3px] w-1.5 rounded-full bg-current opacity-50" />
+      <div className="flex flex-col gap-[3px]">
+        <span className="size-1.5 rounded-full bg-current" />
+        <span className="size-1.5 rounded-full bg-current opacity-60" />
+      </div>
+    </div>
+  )
+}
+
 function GlyphBubbles() {
   return (
     <div className="flex items-end gap-[3px]">
@@ -71,6 +85,7 @@ function GlyphBubbles() {
  * stay here: they are JSX, and nothing on the server side needs them.
  */
 const GLYPHS: Record<string, React.ReactNode> = {
+  "ai-ml-github-repos": <GlyphFork />,
   "ai-bubble": <GlyphBubbles />,
   "whatsapp-cloud-api": <GlyphMessage />,
   "saving-claude-tokens": <GlyphDescending />,

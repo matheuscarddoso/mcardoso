@@ -32,6 +32,31 @@ export type Article = {
 /** Newest first — the writing list prints the year gutter on each group's first row. */
 export const articles: Article[] = [
   {
+    slug: "ai-ml-github-repos",
+    year: "2026",
+    publishedAt: "2026-07-29",
+    title: {
+      PT: "5 repositórios do GitHub que te dão uma vantagem injusta em IA",
+      EN: "5 GitHub repos that give you an unfair advantage in AI",
+      ES: "5 repositorios de GitHub que te dan una ventaja injusta en IA",
+    },
+    description: {
+      PT: "Cinco repos grátis, meses ganhos",
+      EN: "Five free repos, months saved",
+      ES: "Cinco repos gratis, meses ganados",
+    },
+    seoTitle: {
+      PT: "5 repositórios do GitHub para aprender IA",
+      EN: "5 GitHub repos for learning AI and ML",
+      ES: "5 repositorios de GitHub para aprender IA",
+    },
+    seoDescription: {
+      PT: "Da primeira linha de Python a projetos de ML de verdade: os cinco repositórios gratuitos que valem um bookmark, e a ordem para percorrê-los.",
+      EN: "From your first line of Python to real ML projects: the five free GitHub repositories worth bookmarking, and the order to work through them in.",
+      ES: "De tu primera línea de Python a proyectos de ML reales: los cinco repositorios gratuitos que vale marcar, y el orden para recorrerlos.",
+    },
+  },
+  {
     slug: "ai-bubble",
     year: "2026",
     publishedAt: "2026-07-28",

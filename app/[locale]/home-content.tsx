@@ -2,7 +2,7 @@
 
 import * as React from "react"
 import Link from "next/link"
-import { useParams, useRouter } from "next/navigation"
+import { useParams } from "next/navigation"
 import { AvatarLightbox } from "@/components/avatar-lightbox"
 import { Footer, type Language } from "@/components/footer"
 import { AbacatePreview, KuboPreview, ProjectCard } from "@/components/project-card"
@@ -11,7 +11,9 @@ import { CommitHeatmap } from "@/components/commit-heatmap"
 import { LanguageToggle, ThemeToggle, ToggleSeparator } from "@/components/toggles"
 import { BioLink, GithubLink, PlaylistLink } from "@/components/link-preview"
 import { SocialLinks } from "@/components/social-links"
-import { localeToLanguage, languageToLocale } from "@/lib/locale"
+import { SectionDivider } from "@/components/section-divider"
+import { localeToLanguage } from "@/lib/locale"
+import { switchLocale } from "@/lib/switch-locale"
 import { HEADER_SOCIAL } from "@/lib/site"
 import type { GithubCardData } from "@/lib/github"
 import { Check, Mail } from "lucide-react"
@@ -156,16 +158,6 @@ function CopyEmailButton({ label }: { label: string }) {
   )
 }
 
-/** `<hr>`, because a break between two titled sections is a thematic break. */
-function SectionDivider({ className }: { className?: string }) {
-  return (
-    <hr
-      style={{ animationDelay: "80ms" }}
-      className={`fade-in h-px w-full border-0 bg-[length:4px_1px] bg-[linear-gradient(90deg,transparent_2px,#d4d4d8_2px,transparent_4px)] dark:bg-[linear-gradient(90deg,transparent_2px,#3a3a3a_2px,transparent_4px)] ${className ?? ""}`}
-    />
-  )
-}
-
 const GITHUB_URL = "https://github.com/matheuscarddoso"
 
 type BioParagraphs = (
@@ -219,7 +211,6 @@ const bio: Record<Language, BioParagraphs> = {
 
 export function HomeContent({ github }: { github: GithubCardData | null }) {
   const params = useParams()
-  const router = useRouter()
   const locale = (params.locale as string) ?? 'en'
   const language: Language = localeToLanguage(locale)
   const t = translations[language]
@@ -236,7 +227,7 @@ export function HomeContent({ github }: { github: GithubCardData | null }) {
           <ToggleSeparator />
           <LanguageToggle
             language={language}
-            onLanguageChange={(lang) => router.push(`/${languageToLocale[lang]}`, { scroll: false })}
+            onLanguageChange={switchLocale}
           />
           <ThemeToggle language={language} />
         </div>
@@ -310,8 +301,8 @@ export function HomeContent({ github }: { github: GithubCardData | null }) {
           <WorkList language={language} locale={locale} />
         </section>
       </main>
-      {/* Toggles live in the header on this page. */}
-      <Footer language={language} showToggles={false} />
+      {/* Both toggles live in the header on this page. */}
+      <Footer language={language} showLanguageToggle={false} showThemeToggle={false} />
     </div>
   )
 }

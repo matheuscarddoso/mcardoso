@@ -1,21 +1,51 @@
 import Link from "next/link"
-import { articles } from "@/lib/articles"
+import { articles, type Article } from "@/lib/articles"
 import type { Language } from "@/lib/locale"
 
-const HEADING = {
-  PT: "Continue lendo",
-  EN: "Keep reading",
-  ES: "Sigue leyendo",
+const LABELS = {
+  PT: { nav: "Mais textos", previous: "Anterior", next: "Próximo" },
+  EN: { nav: "More writing", previous: "Previous", next: "Next" },
+  ES: { nav: "Más textos", previous: "Anterior", next: "Siguiente" },
 } as const
 
+function Side({
+  article,
+  label,
+  language,
+  locale,
+  align,
+}: {
+  article: Article
+  label: string
+  language: Language
+  locale: string
+  align: "left" | "right"
+}) {
+  return (
+    <Link
+      href={`/${locale}/work/${article.slug}`}
+      className={`group flex flex-col gap-1 ${align === "right" ? "items-end text-right" : "items-start"}`}
+    >
+      <span className="text-sm text-gray-1000">{label}</span>
+      <span className="text-pretty text-base font-[450] text-gray-1200 transition-opacity duration-200 ease-out group-hover:opacity-70">
+        {article.title[language]}
+      </span>
+    </Link>
+  )
+}
+
 /**
- * Two sibling essays at the foot of every article.
+ * Previous and next, chronologically: `articles` is newest-first, so the piece
+ * published before this one sits *after* it in the array, and vice versa.
  *
- * Before this, each piece had exactly one inbound internal link — the writing
- * list on the home page. A page reachable by a single route reads as
- * peripheral to a crawler, and AI search in particular infers importance from
- * how densely a page is linked inside the site. This wires the five essays into
- * a ring, so each one gains two more.
+ * The ends are asymmetric on purpose — the newest essay has no next and the
+ * oldest has no previous. The two-column grid keeps whichever exists on its own
+ * side rather than recentring it, so "previous" is always on the left.
+ *
+ * This is also what keeps the essays linked to each other. Before there was any
+ * nav here, each one had exactly one inbound internal link — the list on the
+ * home page — which reads as peripheral to a crawler, and AI search infers
+ * importance from how densely a page is linked inside its own site.
  */
 export function ArticleNav({
   slug,
@@ -29,37 +59,38 @@ export function ArticleNav({
   const index = articles.findIndex((article) => article.slug === slug)
   if (index === -1) return null
 
-  // A ring rather than prev/next, so the first and last pieces are as connected
-  // as the middle ones and nothing ends up with a dead edge.
-  const related = [
-    articles[(index + 1) % articles.length],
-    articles[(index + 2) % articles.length],
-  ].filter((article) => article.slug !== slug)
+  const previous = articles[index + 1]
+  const next = articles[index - 1]
+  if (!previous && !next) return null
 
-  if (related.length === 0) return null
+  const t = LABELS[language]
 
   return (
-    <nav aria-labelledby="keep-reading" className="mt-16">
-      <h2 id="keep-reading" className="mb-4 text-balance font-[550] article-heading">
-        {HEADING[language]}
-      </h2>
-      <ul className="flex flex-col gap-3">
-        {related.map((article) => (
-          <li key={article.slug}>
-            <Link
-              href={`/${locale}/work/${article.slug}`}
-              className="group flex flex-col gap-0.5 transition-opacity duration-200 ease-out hover:opacity-100"
-            >
-              <span className="text-[15px] font-[450] text-gray-1200">
-                {article.title[language]}
-              </span>
-              <span className="text-[15px] text-gray-1000">
-                {article.description[language]}
-              </span>
-            </Link>
-          </li>
-        ))}
-      </ul>
+    <nav aria-label={t.nav} className="mt-20 grid grid-cols-2 gap-6 border-t pt-8">
+      {/* Empty cell rather than no cell: the grid columns are what hold each
+          link to its own side when only one of the two exists. */}
+      <div>
+        {previous && (
+          <Side
+            article={previous}
+            label={t.previous}
+            language={language}
+            locale={locale}
+            align="left"
+          />
+        )}
+      </div>
+      <div className="flex justify-end">
+        {next && (
+          <Side
+            article={next}
+            label={t.next}
+            language={language}
+            locale={locale}
+            align="right"
+          />
+        )}
+      </div>
     </nav>
   )
 }

@@ -2,22 +2,20 @@
 
 import * as React from "react"
 import Link from "next/link"
-import { useParams, useRouter } from "next/navigation"
+import { useParams } from "next/navigation"
 import { Undo2, Check, LinkIcon } from "lucide-react"
 import { Footer, type Language } from "@/components/footer"
+import { LanguageToggle, ThemeToggle } from "@/components/toggles"
 import { ArticleByline } from "@/components/article-byline"
 import { ArticleNav } from "@/components/article-nav"
-import { localeToLanguage, languageToLocale } from "@/lib/locale"
+import { SectionDivider } from "@/components/section-divider"
+import { localeToLanguage } from "@/lib/locale"
+import { switchLocale } from "@/lib/switch-locale"
 import { ColorExplorer } from "./color-explorer"
 
-/**
- * A thematic break, which is what `<hr>` means — and it replaces seven divs
- * (a flex row plus six dashes) with one semantic tag. Multiplied by the five
- * to nine breaks in each of these essays, that is most of the div soup that
- * was drowning out the real structure of the page.
- */
+/** Same dotted rule the home page uses, at the spacing these essays had. */
 function Divider() {
-  return <hr className="section-divider" />
+  return <SectionDivider className="my-16" />
 }
 
 function SectionHeading({ id, children }: { id: string; children: React.ReactNode }) {
@@ -162,7 +160,6 @@ type ArticleContentProps = {
 
 export function ArticleContent({ codeStructure, codeGradients, codeBrowser }: ArticleContentProps) {
   const params = useParams()
-  const router = useRouter()
   const locale = (params.locale as string) ?? 'en'
   const language: Language = localeToLanguage(locale)
   const t = translations[language]
@@ -179,7 +176,11 @@ export function ArticleContent({ codeStructure, codeGradients, codeBrowser }: Ar
             >
               <Undo2 className="mr-0.5 size-4 text-muted-foreground transition-colors duration-200 ease-out group-hover:text-foreground" strokeWidth={1.5} />
             </Link>
-            <CopyLinkButton />
+            <div className="flex items-center gap-2">
+              <LanguageToggle language={language} onLanguageChange={switchLocale} />
+              <ThemeToggle language={language} />
+              <CopyLinkButton />
+            </div>
           </div>
         </header>
 
@@ -341,13 +342,9 @@ export function ArticleContent({ codeStructure, codeGradients, codeBrowser }: Ar
           <ArticleNav slug="oklch-colors" language={language} locale={locale} />
         </article>
       </main>
-      <Footer
-        language={language}
-        onLanguageChange={(lang) => {
-          const path = window.location.pathname.replace(/^\/(en|pt-br|es)/, '') || '/'
-          router.push(`/${languageToLocale[lang]}${path}`, { scroll: false })
-        }}
-      />
+      {/* Language moved up beside the copy-link button; theme stays here. */}
+      {/* Both toggles live in the article header, beside copy-link. */}
+      <Footer language={language} showLanguageToggle={false} showThemeToggle={false} />
     </div>
   )
 }

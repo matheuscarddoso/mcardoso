@@ -18,17 +18,23 @@ const playlistsLabel = {
 
 export type { Language }
 
+/**
+ * The two toggles are controlled independently rather than by one flag: the
+ * articles surface language in their own header, beside the copy-link button,
+ * but keep theme down here.
+ */
 type FooterProps = {
   language?: Language
   onLanguageChange?: (lang: Language) => void
-  /** Off when the page already exposes the toggles somewhere else, like the home header. */
-  showToggles?: boolean
+  showLanguageToggle?: boolean
+  showThemeToggle?: boolean
 }
 
 export function Footer({
   language = "EN",
   onLanguageChange,
-  showToggles = true,
+  showLanguageToggle = true,
+  showThemeToggle = true,
 }: FooterProps) {
   const params = useParams()
   const pathname = usePathname()
@@ -44,7 +50,7 @@ export function Footer({
           no margin at all once font metrics vary. */}
       <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-6 px-0 py-12 md:px-0">
         <div className="flex items-center gap-2">
-          {showToggles && (
+          {showLanguageToggle && (
             <LanguageToggle language={language} onLanguageChange={onLanguageChange} />
           )}
           <LocalTime language={language} />
@@ -60,7 +66,7 @@ export function Footer({
             </Link>
           )}
           <SocialLinks include={FOOTER_SOCIAL} />
-          {showToggles && <ThemeToggle language={language} />}
+          {showThemeToggle && <ThemeToggle language={language} />}
         </div>
       </div>
     </footer>

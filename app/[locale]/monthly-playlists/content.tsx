@@ -4,9 +4,10 @@ import * as React from "react"
 import Image from "next/image"
 import Link from "next/link"
 import { Undo2 } from "lucide-react"
-import { useParams, useRouter } from "next/navigation"
+import { useParams } from "next/navigation"
 import { Footer, type Language } from "@/components/footer"
-import { localeToLanguage, languageToLocale } from "@/lib/locale"
+import { localeToLanguage } from "@/lib/locale"
+import { switchLocale } from "@/lib/switch-locale"
 
 const titleByLang = {
   PT: "Playlists mensais",
@@ -58,7 +59,6 @@ const monthLabels: Record<string, { PT: string; EN: string; ES: string }> = {
 
 export function MonthlyPlaylistsContent() {
   const params = useParams()
-  const router = useRouter()
   const locale = (params.locale as string) ?? 'en'
   const language: Language = localeToLanguage(locale)
 
@@ -119,13 +119,7 @@ export function MonthlyPlaylistsContent() {
           .
         </p>
       </main>
-      <Footer
-        language={language}
-        onLanguageChange={(lang) => {
-          const path = window.location.pathname.replace(/^\/(en|pt-br|es)/, '') || '/'
-          router.push(`/${languageToLocale[lang]}${path}`, { scroll: false })
-        }}
-      />
+      <Footer language={language} onLanguageChange={switchLocale} />
     </div>
   )
 }

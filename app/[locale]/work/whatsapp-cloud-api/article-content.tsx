@@ -8,6 +8,7 @@ import { Footer, type Language } from "@/components/footer"
 import { LanguageToggle, ThemeToggle } from "@/components/toggles"
 import { ArticleByline } from "@/components/article-byline"
 import { ArticleNav } from "@/components/article-nav"
+import { ArticleTimeline } from "@/components/article-timeline"
 import { SectionDivider } from "@/components/section-divider"
 import { localeToLanguage } from "@/lib/locale"
 import { switchLocale } from "@/lib/switch-locale"
@@ -265,6 +266,7 @@ export function ArticleContent({ codeEndpoint, codeButtons, codeIds }: ArticleCo
 
   return (
     <div className="relative flex min-h-[100dvh] w-full flex-col overflow-x-hidden">
+      <ArticleTimeline language={language} />
       <main className="mx-auto w-full max-w-(--breakpoint-sm) flex-1 px-4 py-12 leading-relaxed sm:py-20">
         <header>
           <div className="mb-24 flex min-h-9 w-full select-none items-center justify-between gap-2">

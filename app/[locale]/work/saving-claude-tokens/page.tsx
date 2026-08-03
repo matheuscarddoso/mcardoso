@@ -46,19 +46,19 @@ git status  # automatically rewritten to rtk git status`}
         codeCommands={
           <CodeBlock
             lang="bash"
-            code={`# git — compact output for all operations
+            code={`# git: compact output for all operations
 rtk git status           # grouped changed files
 rtk git log -n 10        # one-line commits
 rtk git diff             # condensed diff
 rtk git commit -m "msg"  # returns "ok abc1234"
 rtk git push             # returns "ok main"
 
-# files — filtered and truncated
+# files: filtered and truncated
 rtk ls .                 # token-optimized directory tree
 rtk read file.ts         # smart file reading
 rtk grep "pattern" .     # grouped search results
 
-# tests — failures only
+# tests: failures only
 rtk npm test
 rtk cargo test           # -90% vs raw output
 rtk pytest`}

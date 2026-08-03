@@ -84,7 +84,7 @@ export default async function InvisibleDetailsPage({ params }: ArticlePageProps)
     0px 2px 4px 0px rgba(0, 0, 0, 0.04);
 }
 
-/* Dark mode — single white ring */
+/* Dark mode: single white ring */
 .dark {
   --shadow-border: 0 0 0 1px rgba(255, 255, 255, 0.08);
 }`}
@@ -129,12 +129,12 @@ export default async function InvisibleDetailsPage({ params }: ArticlePageProps)
         codePerformance={
           <CodeBlock
             lang="css"
-            code={`/* Good — only animate what changes */
+            code={`/* Good: only animate what changes */
 .card {
   transition: transform 200ms ease-out, opacity 200ms ease-out;
 }
 
-/* Bad — transition everything */
+/* Bad: transition everything */
 .card {
   transition: all 200ms ease-out;
 }`}

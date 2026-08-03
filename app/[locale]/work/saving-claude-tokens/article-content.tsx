@@ -72,14 +72,14 @@ const c = (text: string) => <code className="code-inline">{text}</code>
 const translations = {
   PT: {
     title: "Como economizar tokens do Claude Code",
-    intro: <>Cada comando que o Claude Code executa no terminal consome tokens. Um {c("git status")} verboso, logs de teste com centenas de linhas, listagens de diretório completas — tudo vai direto pro contexto do modelo. O {c("rtk")} é um proxy de linha de comando que filtra e comprime esse output antes que ele chegue ao LLM, reduzindo o consumo em 60-90%.</>,
+    intro: <>Cada comando que o Claude Code executa no terminal consome tokens. Um {c("git status")} verboso, logs de teste com centenas de linhas, listagens de diretório completas, tudo vai direto pro contexto do modelo. O {c("rtk")} é um proxy de linha de comando que filtra e comprime esse output antes que ele chegue ao LLM, reduzindo o consumo em 60-90%.</>,
 
     problem: "O problema",
-    problemP1: <>O Claude Code usa a ferramenta Bash para interagir com o projeto. Cada output bruto de comando — espaços, metadados, boilerplate — é contado como tokens. Em um projeto TypeScript médio, uma sessão de 30 minutos consume cerca de 118.000 tokens só em comandos de shell.</>,
+    problemP1: <>O Claude Code usa a ferramenta Bash para interagir com o projeto. Cada output bruto de comando (espaços, metadados, boilerplate) é contado como tokens. Em um projeto TypeScript médio, uma sessão de 30 minutos consume cerca de 118.000 tokens só em comandos de shell.</>,
     problemP2: <>Tokens desperdiçados com ruído de output são custo sem valor. O Claude não precisa ver 3.000 tokens de {c("git status")} quando 200 tokens com as informações relevantes são suficientes.</>,
 
     howItWorks: "Como funciona",
-    howItWorksP1: <>O rtk age como um proxy transparente entre o Claude e o shell. O hook instalado reescreve automaticamente comandos Bash — {c("git status")} vira {c("rtk git status")} — antes da execução. O Claude nunca vê a reescrita, apenas recebe o output comprimido.</>,
+    howItWorksP1: <>O rtk age como um proxy transparente entre o Claude e o shell. O hook instalado reescreve automaticamente comandos Bash, trocando {c("git status")} por {c("rtk git status")} antes da execução. O Claude nunca vê a reescrita, apenas recebe o output comprimido.</>,
     howItWorksP2: <>Quatro estratégias são aplicadas por tipo de comando: filtragem inteligente (remove ruído, comentários, boilerplate), agrupamento (agrega itens similares), truncamento (mantém contexto relevante) e deduplicação (colapsa linhas repetidas com contagem).</>,
 
     install: "Instalação",
@@ -93,7 +93,7 @@ const translations = {
     savingsP1: "Estimativas em um projeto TypeScript/Rust médio, sessão de 30 minutos:",
 
     commands: "Comandos principais",
-    commandsP1: <>Os comandos mais usados no desenvolvimento diário — todos com output comprimido automaticamente via hook:</>,
+    commandsP1: <>Os comandos mais usados no desenvolvimento diário, todos com output comprimido automaticamente via hook:</>,
 
     note: "Ferramentas nativas",
     noteP1: <>O hook funciona apenas em chamadas de ferramenta Bash. Ferramentas nativas do Claude Code como {c("Read")}, {c("Grep")} e {c("Glob")} não passam pelo hook. Para esses casos, use comandos de shell ({c("cat")}, {c("rg")}, {c("find")}) ou chame o rtk diretamente:</>,
@@ -103,14 +103,14 @@ const translations = {
   },
   EN: {
     title: "How to save Claude Code tokens",
-    intro: <>Every command Claude Code runs in the terminal consumes tokens. A verbose {c("git status")}, test logs with hundreds of lines, full directory listings — all go straight into the model context. {c("rtk")} is a CLI proxy that filters and compresses command output before it reaches the LLM, reducing consumption by 60-90%.</>,
+    intro: <>Every command Claude Code runs in the terminal consumes tokens. A verbose {c("git status")}, test logs with hundreds of lines, full directory listings, all go straight into the model context. {c("rtk")} is a CLI proxy that filters and compresses command output before it reaches the LLM, reducing consumption by 60-90%.</>,
 
     problem: "The problem",
-    problemP1: <>Claude Code uses the Bash tool to interact with your project. Every raw command output — whitespace, metadata, boilerplate — is counted as tokens. On a medium TypeScript project, a 30-minute session consumes around 118,000 tokens from shell commands alone.</>,
+    problemP1: <>Claude Code uses the Bash tool to interact with your project. Every raw command output (whitespace, metadata, boilerplate) is counted as tokens. On a medium TypeScript project, a 30-minute session consumes around 118,000 tokens from shell commands alone.</>,
     problemP2: <>Tokens wasted on output noise are cost without value. Claude doesn&apos;t need 3,000 tokens of {c("git status")} when 200 tokens with the relevant information are enough.</>,
 
     howItWorks: "How it works",
-    howItWorksP1: <>rtk acts as a transparent proxy between Claude and the shell. The installed hook automatically rewrites Bash commands — {c("git status")} becomes {c("rtk git status")} — before execution. Claude never sees the rewrite, it just gets compressed output.</>,
+    howItWorksP1: <>rtk acts as a transparent proxy between Claude and the shell. The installed hook automatically rewrites Bash commands, turning {c("git status")} into {c("rtk git status")} before execution. Claude never sees the rewrite, it just gets compressed output.</>,
     howItWorksP2: <>Four strategies are applied per command type: smart filtering (removes noise, comments, boilerplate), grouping (aggregates similar items), truncation (keeps relevant context), and deduplication (collapses repeated log lines with counts).</>,
 
     install: "Installation",
@@ -124,7 +124,7 @@ const translations = {
     savingsP1: "Estimates on a medium TypeScript/Rust project, 30-minute session:",
 
     commands: "Key commands",
-    commandsP1: <>The most commonly used commands in daily development — all with output automatically compressed via hook:</>,
+    commandsP1: <>The most commonly used commands in daily development, all with output automatically compressed via hook:</>,
 
     note: "Native tools",
     noteP1: <>The hook only runs on Bash tool calls. Claude Code&apos;s native tools like {c("Read")}, {c("Grep")}, and {c("Glob")} don&apos;t pass through the hook. For those, use shell commands ({c("cat")}, {c("rg")}, {c("find")}) or call rtk directly:</>,
@@ -134,14 +134,14 @@ const translations = {
   },
   ES: {
     title: "Cómo ahorrar tokens de Claude Code",
-    intro: <>Cada comando que Claude Code ejecuta en la terminal consume tokens. Un {c("git status")} verboso, logs de pruebas con cientos de líneas, listados completos de directorio — todo va directo al contexto del modelo. {c("rtk")} es un proxy de línea de comandos que filtra y comprime ese output antes de que llegue al LLM, reduciendo el consumo en 60-90%.</>,
+    intro: <>Cada comando que Claude Code ejecuta en la terminal consume tokens. Un {c("git status")} verboso, logs de pruebas con cientos de líneas, listados completos de directorio, todo va directo al contexto del modelo. {c("rtk")} es un proxy de línea de comandos que filtra y comprime ese output antes de que llegue al LLM, reduciendo el consumo en 60-90%.</>,
 
     problem: "El problema",
-    problemP1: <>Claude Code usa la herramienta Bash para interactuar con el proyecto. Cada output crudo de comando — espacios, metadatos, boilerplate — se cuenta como tokens. En un proyecto TypeScript medio, una sesión de 30 minutos consume alrededor de 118.000 tokens solo en comandos de shell.</>,
+    problemP1: <>Claude Code usa la herramienta Bash para interactuar con el proyecto. Cada output crudo de comando (espacios, metadatos, boilerplate) se cuenta como tokens. En un proyecto TypeScript medio, una sesión de 30 minutos consume alrededor de 118.000 tokens solo en comandos de shell.</>,
     problemP2: <>Los tokens desperdiciados en ruido de output son costo sin valor. Claude no necesita 3.000 tokens de {c("git status")} cuando 200 tokens con la información relevante son suficientes.</>,
 
     howItWorks: "Cómo funciona",
-    howItWorksP1: <>rtk actúa como un proxy transparente entre Claude y el shell. El hook instalado reescribe automáticamente los comandos Bash — {c("git status")} se convierte en {c("rtk git status")} — antes de la ejecución. Claude nunca ve la reescritura, solo recibe el output comprimido.</>,
+    howItWorksP1: <>rtk actúa como un proxy transparente entre Claude y el shell. El hook instalado reescribe automáticamente los comandos Bash, cambiando {c("git status")} por {c("rtk git status")} antes de la ejecución. Claude nunca ve la reescritura, solo recibe el output comprimido.</>,
     howItWorksP2: <>Se aplican cuatro estrategias por tipo de comando: filtrado inteligente (elimina ruido, comentarios, boilerplate), agrupamiento (agrega elementos similares), truncamiento (mantiene contexto relevante) y deduplicación (colapsa líneas repetidas con conteo).</>,
 
     install: "Instalación",
@@ -155,7 +155,7 @@ const translations = {
     savingsP1: "Estimaciones en un proyecto TypeScript/Rust medio, sesión de 30 minutos:",
 
     commands: "Comandos principales",
-    commandsP1: <>Los comandos más usados en el desarrollo diario — todos con output comprimido automáticamente vía hook:</>,
+    commandsP1: <>Los comandos más usados en el desarrollo diario, todos con output comprimido automáticamente vía hook:</>,
 
     note: "Herramientas nativas",
     noteP1: <>El hook solo funciona en llamadas de herramienta Bash. Las herramientas nativas de Claude Code como {c("Read")}, {c("Grep")} y {c("Glob")} no pasan por el hook. Para esos casos, usa comandos de shell ({c("cat")}, {c("rg")}, {c("find")}) o llama a rtk directamente:</>,

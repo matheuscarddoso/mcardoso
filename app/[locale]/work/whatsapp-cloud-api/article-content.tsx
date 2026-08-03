@@ -74,7 +74,7 @@ const translations = {
     title: "Mensagens interativas com a WhatsApp Cloud API",
     intro: (
       <>
-        A API oficial do WhatsApp — Cloud API da Meta — permite enviar botões, listas e carrosséis
+        A Cloud API da Meta, a API oficial do WhatsApp, permite enviar botões, listas e carrosséis
         nativos sem BSP intermediário. Aqui vai o essencial para integrar e o padrão que mantém o
         estado da conversa fora do servidor.
       </>
@@ -97,7 +97,7 @@ const translations = {
     buttons: "Botões interativos",
     buttonsDesc: (
       <>
-        O campo {c("reply.id")} é retornado exato no webhook — use-o para identificar a ação sem
+        O campo {c("reply.id")} é retornado exato no webhook, use-o para identificar a ação sem
         estado no servidor.
       </>
     ),
@@ -106,7 +106,7 @@ const translations = {
     idsDesc: (
       <>
         A forma mais limpa de gerenciar fluxo de conversa é codificar a ação direto no {c("id")} do
-        botão com prefixos. No webhook, parse o prefixo e execute a ação — o botão carrega a
+        botão com prefixos. No webhook, parse o prefixo e execute a ação: o botão carrega a
         intenção, o servidor não precisa guardar nada.
       </>
     ),
@@ -114,8 +114,8 @@ const translations = {
     checklist: "Checklist essencial",
     checklistItems: [
       <>Credenciais em variáveis de ambiente, nunca no código</>,
-      <>Responder ao webhook com HTTP 200 imediatamente — a Meta retenta se não receber em 20s</>,
-      <>Deduplicar por {c("message.id")} — a Meta pode entregar a mesma mensagem mais de uma vez</>,
+      <>Responder ao webhook com HTTP 200 imediatamente, a Meta retenta se não receber em 20s</>,
+      <>Deduplicar por {c("message.id")}, a Meta pode entregar a mesma mensagem mais de uma vez</>,
       <>Envolver sends interativos em {c("try/catch")} com fallback para texto simples</>,
       <>Carrossel: mínimo 2 cards, todos com o mesmo número de botões, imagens JPEG 1:1</>,
     ],
@@ -134,7 +134,7 @@ const translations = {
     title: "Interactive messages with the WhatsApp Cloud API",
     intro: (
       <>
-        Meta&apos;s official WhatsApp API lets you send native buttons, lists, and carousels — no
+        Meta&apos;s official WhatsApp API lets you send native buttons, lists and carousels, with no
         middleware BSP required. Here&apos;s what you need to integrate and the ID pattern that keeps
         conversation state off the server.
       </>
@@ -157,7 +157,7 @@ const translations = {
     buttons: "Interactive buttons",
     buttonsDesc: (
       <>
-        The {c("reply.id")} field is returned exactly as sent in the webhook — use it to identify
+        The {c("reply.id")} field is returned exactly as sent in the webhook, use it to identify
         the action without any server-side state.
       </>
     ),
@@ -166,7 +166,7 @@ const translations = {
     idsDesc: (
       <>
         The cleanest way to manage conversation flow is to encode the action directly in the button{" "}
-        {c("id")} with prefixes. In the webhook, parse the prefix and execute the action — the
+        {c("id")} with prefixes. In the webhook, parse the prefix and execute the action: the
         button carries the intent, no server state needed.
       </>
     ),
@@ -174,8 +174,8 @@ const translations = {
     checklist: "Essential checklist",
     checklistItems: [
       <>Credentials in environment variables, never in code</>,
-      <>Respond to the webhook with HTTP 200 immediately — Meta retries if it doesn&apos;t receive a response in 20s</>,
-      <>Deduplicate by {c("message.id")} — Meta may deliver the same message more than once</>,
+      <>Respond to the webhook with HTTP 200 immediately, Meta retries if it doesn&apos;t receive a response in 20s</>,
+      <>Deduplicate by {c("message.id")}, Meta may deliver the same message more than once</>,
       <>Wrap interactive sends in {c("try/catch")} with plain text fallback</>,
       <>Carousel: minimum 2 cards, all with the same number of buttons, JPEG 1:1 images</>,
     ],
@@ -194,7 +194,7 @@ const translations = {
     title: "Mensajes interactivos con la WhatsApp Cloud API",
     intro: (
       <>
-        La API oficial de WhatsApp — Cloud API de Meta — permite enviar botones, listas y carruseles
+        La Cloud API de Meta, la API oficial de WhatsApp, permite enviar botones, listas y carruseles
         nativos sin BSP intermediario. Aquí va lo esencial para integrar y el patrón que mantiene el
         estado de conversación fuera del servidor.
       </>
@@ -217,7 +217,7 @@ const translations = {
     buttons: "Botones interactivos",
     buttonsDesc: (
       <>
-        El campo {c("reply.id")} se devuelve exacto en el webhook — úsalo para identificar la acción
+        El campo {c("reply.id")} se devuelve exacto en el webhook, úsalo para identificar la acción
         sin estado en el servidor.
       </>
     ),
@@ -227,15 +227,15 @@ const translations = {
       <>
         La forma más limpia de gestionar el flujo de conversación es codificar la acción
         directamente en el {c("id")} del botón con prefijos. En el webhook, parsea el prefijo y
-        ejecuta la acción — el botón lleva la intención, el servidor no necesita guardar nada.
+        ejecuta la acción: el botón lleva la intención, el servidor no necesita guardar nada.
       </>
     ),
 
     checklist: "Checklist esencial",
     checklistItems: [
       <>Credenciales en variables de entorno, nunca en el código</>,
-      <>Responder al webhook con HTTP 200 inmediatamente — Meta reintenta si no recibe respuesta en 20s</>,
-      <>Deduplicar por {c("message.id")} — Meta puede entregar el mismo mensaje más de una vez</>,
+      <>Responder al webhook con HTTP 200 inmediatamente, Meta reintenta si no recibe respuesta en 20s</>,
+      <>Deduplicar por {c("message.id")}, Meta puede entregar el mismo mensaje más de una vez</>,
       <>Envolver sends interactivos en {c("try/catch")} con fallback a texto simple</>,
       <>Carrusel: mínimo 2 cards, todos con el mismo número de botones, imágenes JPEG 1:1</>,
     ],

@@ -101,8 +101,8 @@ export const articles: Article[] = [
       ES: "La IA está cerca de quebrar: el motivo",
     },
     seoDescription: {
-      PT: "Três trilhões em dívida, modelos chineses abertos e ganhos de produtividade que não chegaram. A conta da bolha da IA não fecha — e eis o porquê.",
-      EN: "Three trillion in debt, open Chinese models, and productivity gains that never arrived. The AI bubble's maths does not add up — here is why.",
+      PT: "Três trilhões em dívida, modelos chineses abertos e ganhos de produtividade que não chegaram. A conta da bolha da IA não fecha, e eis o porquê.",
+      EN: "Three trillion in debt, open Chinese models, and productivity gains that never arrived. The AI bubble's maths does not add up, and here is why.",
       ES: "Tres billones en deuda, modelos chinos abiertos y ganancias de productividad que no llegaron. Las cuentas de la burbuja de la IA no cuadran.",
     },
   },

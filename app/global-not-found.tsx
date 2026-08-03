@@ -13,7 +13,7 @@ const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] })
 const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"] })
 
 export const metadata: Metadata = {
-  title: `404 — ${SITE_NAME}`,
+  title: `404 · ${SITE_NAME}`,
   description: "This page doesn't exist.",
   // Noindex, but still follow: the link home is the point of the page.
   robots: { index: false, follow: true },

@@ -135,7 +135,7 @@ const translations = {
     title: "5 repositórios do GitHub que te dão uma vantagem injusta em IA",
     intro: (
       <>
-        A maioria de quem está aprendendo IA não sabe que esses repositórios existem — e eles
+        A maioria de quem está aprendendo IA não sabe que esses repositórios existem, e eles
         economizariam meses. São os cinco que eu manteria nos favoritos se estivesse começando
         machine learning hoje: da primeira linha de Python até construir projetos de verdade.
         Todos completamente gratuitos.
@@ -173,7 +173,7 @@ const translations = {
 
     advice: "A ordem que eu seguiria",
     adviceP1:
-      "Não abra os cinco de uma vez — é a forma mais rápida de não terminar nenhum. Comece pelo 30 Days of Python, migre pro curso da Microsoft, mantenha as cheat sheets do lado e, quando o básico estiver firme, comece a construir a partir do repositório de projetos.",
+      "Não abra os cinco de uma vez: é a forma mais rápida de não terminar nenhum. Comece pelo 30 Days of Python, migre pro curso da Microsoft, mantenha as cheat sheets do lado e, quando o básico estiver firme, comece a construir a partir do repositório de projetos.",
     adviceP2: "Se tiver qualquer dúvida, me chama no",
   },
   EN: {
@@ -214,8 +214,8 @@ const translations = {
 
     advice: "The order I'd go in",
     adviceP1:
-      "Don't open all five at once — that's the fastest way to finish none of them. Start with 30 Days of Python, move into the Microsoft course, keep the cheat sheets next to you, and once you've got the basics start building from the projects repo.",
-    adviceP2: "As always, feel free to reach out if you have any questions —",
+      "Don't open all five at once: that's the fastest way to finish none of them. Start with 30 Days of Python, move into the Microsoft course, keep the cheat sheets next to you, and once you've got the basics start building from the projects repo.",
+    adviceP2: "As always, feel free to reach out if you have any questions on",
   },
   ES: {
     title: "5 repositorios de GitHub que te dan una ventaja injusta en IA",
@@ -255,8 +255,8 @@ const translations = {
 
     advice: "El orden que yo seguiría",
     adviceP1:
-      "No abras los cinco a la vez — es la forma más rápida de no terminar ninguno. Empieza con 30 Days of Python, pasa al curso de Microsoft, mantén las cheat sheets al lado y, cuando las bases estén firmes, empieza a construir desde el repositorio de proyectos.",
-    adviceP2: "Como siempre, escríbeme si tienes cualquier duda —",
+      "No abras los cinco a la vez: es la forma más rápida de no terminar ninguno. Empieza con 30 Days of Python, pasa al curso de Microsoft, mantén las cheat sheets al lado y, cuando las bases estén firmes, empieza a construir desde el repositorio de proyectos.",
+    adviceP2: "Como siempre, escríbeme si tienes cualquier duda en",
   },
 }
 

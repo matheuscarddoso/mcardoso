@@ -75,7 +75,7 @@ export async function generateMetadata({
     // has to remember to do it, and the home page opts out with `absolute`.
     title: {
       default: seo.title,
-      template: `%s — ${SITE_NAME}`,
+      template: `%s · ${SITE_NAME}`,
     },
     description: seo.description,
     applicationName: SITE_NAME,

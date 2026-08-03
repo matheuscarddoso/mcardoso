@@ -151,17 +151,17 @@ function ogImages() {
  */
 export const HOME_SEO = {
   PT: {
-    title: "Matheus Cardoso — Engenheiro de Software e Interfaces",
+    title: "Matheus Cardoso · Engenheiro de Software e Interfaces",
     description:
       "Engenheiro de software na 4Selet e na Zero7, e contribuidor open-source na Abacate Pay. Escrevo sobre construção de interfaces, cor e IA.",
   },
   EN: {
-    title: "Matheus Cardoso — Software Engineer & Interface Design",
+    title: "Matheus Cardoso · Software Engineer & Interface Design",
     description:
       "Software engineer at 4Selet and Zero7, and an open-source contributor at Abacate Pay. I write about interface craft, colour and AI.",
   },
   ES: {
-    title: "Matheus Cardoso — Ingeniero de Software e Interfaces",
+    title: "Matheus Cardoso · Ingeniero de Software e Interfaces",
     description:
       "Ingeniero de software en 4Selet y Zero7, y colaborador open-source en Abacate Pay. Escribo sobre construcción de interfaces, color e IA.",
   },
@@ -241,17 +241,17 @@ export function articleMetadata(
 
 export const PLAYLISTS_SEO = {
   PT: {
-    title: "Playlists mensais — o que eu andei ouvindo",
+    title: "Playlists mensais: o que eu andei ouvindo",
     description:
       "Todo mês eu monto uma playlist com as músicas que estiveram em repeat. O arquivo completo, mês a mês, com link direto pro Spotify.",
   },
   EN: {
-    title: "Monthly Playlists — What I Listened To",
+    title: "Monthly Playlists: What I Listened To",
     description:
       "Every month I put together a playlist of the songs that were on repeat. The full archive, month by month, linked straight to Spotify.",
   },
   ES: {
-    title: "Playlists mensuales — lo que escuché",
+    title: "Playlists mensuales: lo que escuché",
     description:
       "Cada mes armo una playlist con las canciones que estuvieron en repeat. El archivo completo, mes a mes, con enlace directo a Spotify.",
   },

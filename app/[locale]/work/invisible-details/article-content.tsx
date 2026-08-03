@@ -263,17 +263,17 @@ const c = (text: string) => <code className="code-inline">{text}</code>
 const translations = {
   PT: {
     title: "Detalhes invisíveis que fazem interfaces parecerem certas",
-    intro: <>A maioria dos detalhes de uma interface os usuários nunca percebem conscientemente. Esse é o ponto. Quando um botão responde exatamente como alguém espera, quando uma transição não chama atenção, quando tudo simplesmente {c("funciona")} — isso é o resultado de centenas de decisões invisíveis trabalhando juntas.</>,
+    intro: <>A maioria dos detalhes de uma interface os usuários nunca percebem conscientemente. Esse é o ponto. Quando um botão responde exatamente como alguém espera, quando uma transição não chama atenção, quando tudo simplesmente {c("funciona")}, isso é o resultado de centenas de decisões invisíveis trabalhando juntas.</>,
     whyDetails: "Por que detalhes importam",
-    whyDetailsP1: <>Em um mundo onde todo software é &quot;bom o suficiente&quot;, gosto é o diferencial. As pessoas escolhem ferramentas baseadas na experiência geral, não apenas na funcionalidade. Beleza é subutilizada em software — use-a como alavanca.</>,
+    whyDetailsP1: <>Em um mundo onde todo software é &quot;bom o suficiente&quot;, gosto é o diferencial. As pessoas escolhem ferramentas baseadas na experiência geral, não apenas na funcionalidade. Beleza é subutilizada em software. Use-a como alavanca.</>,
     whyDetailsP2: <>Bom gosto não é preferência pessoal. É um instinto treinado: a habilidade de ver além do óbvio e reconhecer o que eleva. Você o desenvolve cercando-se de trabalhos excelentes e pensando profundamente sobre por que algo parece bom.</>,
     animations: "Animações",
     animationsP1: <>Nem tudo precisa animar. Se o usuário vê uma ação 100 vezes por dia, não anime. Se vê ocasionalmente (modais, drawers), anime. A regra: animações de UI devem ficar abaixo de {c("300ms")}.</>,
-    animationsP2: <>Nunca use {c("ease-in")} para animações de UI — começa devagar, fazendo a interface parecer lenta. Use {c("ease-out")} ou curvas customizadas mais fortes:</>,
+    animationsP2: <>Nunca use {c("ease-in")} para animações de UI: começa devagar, fazendo a interface parecer lenta. Use {c("ease-out")} ou curvas customizadas mais fortes:</>,
     scaleOnPress: "Scale on press",
-    scaleOnPressP: <>Um sutil {c("scale(0.96)")} no clique dá aos botões feedback tátil. Sempre use {c("0.96")}. Nunca abaixo de {c("0.95")} — qualquer coisa menor parece exagerado. Experimente:</>,
+    scaleOnPressP: <>Um sutil {c("scale(0.96)")} no clique dá aos botões feedback tátil. Sempre use {c("0.96")}. Nunca abaixo de {c("0.95")}, qualquer coisa menor parece exagerado. Experimente:</>,
     iconTransitions: "Transições de ícones",
-    iconTransitionsP1: <>Quando ícones mudam de estado (menu → X, link → check), não apenas troque a visibilidade. Anime com {c("opacity")}, {c("scale")} e {c("blur")} — a desfocagem mascara a transição imperfeita entre duas formas distintas, criando a ilusão de uma transformação suave.</>,
+    iconTransitionsP1: <>Quando ícones mudam de estado (menu → X, link → check), não apenas troque a visibilidade. Anime com {c("opacity")}, {c("scale")} e {c("blur")}: a desfocagem mascara a transição imperfeita entre duas formas distintas, criando a ilusão de uma transformação suave.</>,
     iconTransitionsP2: <>Os valores exatos: scale de {c("0.25")} para {c("1")}, blur de {c("4px")} para {c("0px")}, opacidade de {c("0")} para {c("1")}. Sem motion library, use CSS transitions com {c("cubic-bezier(0.2, 0, 0, 1)")}:</>,
     stagger: "Entrada escalonada",
     staggerP: <>Não anime um container inteiro. Quebre o conteúdo em pedaços semânticos e escalone cada um com ~100ms de delay. Combine {c("opacity")}, {c("translateY")} e {c("blur")} para o efeito de entrada:</>,
@@ -281,12 +281,12 @@ const translations = {
     concentricRadius: "Border-radius concêntrico",
     concentricP: <>Quando elementos arredondados estão aninhados, o raio externo deve ser igual ao raio interno mais o padding entre eles: {c("outer = inner + padding")}. Raios iguais em pai e filho é a coisa mais comum que faz interfaces parecerem erradas.</>,
     shadowsOverBorders: "Sombras ao invés de bordas",
-    shadowsP: <>Para cards, botões e containers, prefira {c("box-shadow")} em camadas ao invés de bordas sólidas. Sombras se adaptam a qualquer fundo via transparência — bordas sólidas não.</>,
+    shadowsP: <>Para cards, botões e containers, prefira {c("box-shadow")} em camadas ao invés de bordas sólidas. Sombras se adaptam a qualquer fundo via transparência. Bordas sólidas não.</>,
     typography: "Tipografia",
     typographyP1: <>Três regras simples que fazem toda a diferença: {c("text-wrap: balance")} em headings para quebras de linha equilibradas, {c("text-wrap: pretty")} em parágrafos para evitar órfãos, e {c("font-variant-numeric: tabular-nums")} em qualquer número que muda dinamicamente para evitar layout shift.</>,
     typographyP2: <>Aplique {c("-webkit-font-smoothing: antialiased")} no root para texto mais nítido no macOS.</>,
     performance: "Performance",
-    performanceP1: <>Anime apenas {c("transform")} e {c("opacity")} — essas propriedades pulam layout e pintura, rodando na GPU. Animar {c("width")}, {c("height")}, {c("padding")} ou {c("margin")} dispara os três passos de renderização.</>,
+    performanceP1: <>Anime apenas {c("transform")} e {c("opacity")}: essas propriedades pulam layout e pintura, rodando na GPU. Animar {c("width")}, {c("height")}, {c("padding")} ou {c("margin")} dispara os três passos de renderização.</>,
     performanceP2: <>Nunca use {c("transition: all")}. Sempre especifique as propriedades exatas:</>,
     more: "Skill file",
     moreP1: <>Essas recomendações estão compiladas em um skill file para Claude Code, Cursor e ferramentas similares. Funciona com Laravel Blade, Livewire e qualquer projeto com CSS:</>,
@@ -295,17 +295,17 @@ const translations = {
   },
   EN: {
     title: "Invisible details that make interfaces feel right",
-    intro: <>Most interface details users never consciously notice. That is the point. When a button responds exactly as someone expects, when a transition doesn&apos;t draw attention, when everything just {c("works")} — that is the result of hundreds of invisible decisions working together.</>,
+    intro: <>Most interface details users never consciously notice. That is the point. When a button responds exactly as someone expects, when a transition doesn&apos;t draw attention, when everything just {c("works")}, that is the result of hundreds of invisible decisions working together.</>,
     whyDetails: "Why details matter",
-    whyDetailsP1: <>In a world where everyone&apos;s software is &quot;good enough,&quot; taste is the differentiator. People select tools based on the overall experience, not just functionality. Beauty is underutilized in software — use it as leverage.</>,
+    whyDetailsP1: <>In a world where everyone&apos;s software is &quot;good enough,&quot; taste is the differentiator. People select tools based on the overall experience, not just functionality. Beauty is underutilized in software. Use it as leverage.</>,
     whyDetailsP2: <>Good taste is not personal preference. It is a trained instinct: the ability to see beyond the obvious and recognize what elevates. You develop it by surrounding yourself with great work and thinking deeply about why something feels good.</>,
     animations: "Animations",
     animationsP1: <>Not everything needs to animate. If the user sees an action 100 times a day, don&apos;t animate it. If they see it occasionally (modals, drawers), animate. The rule: UI animations should stay under {c("300ms")}.</>,
-    animationsP2: <>Never use {c("ease-in")} for UI animations — it starts slow, making the interface feel sluggish. Use {c("ease-out")} or stronger custom curves:</>,
+    animationsP2: <>Never use {c("ease-in")} for UI animations: it starts slow, making the interface feel sluggish. Use {c("ease-out")} or stronger custom curves:</>,
     scaleOnPress: "Scale on press",
-    scaleOnPressP: <>A subtle {c("scale(0.96)")} on click gives buttons tactile feedback. Always use {c("0.96")}. Never below {c("0.95")} — anything smaller feels exaggerated. Try it:</>,
+    scaleOnPressP: <>A subtle {c("scale(0.96)")} on click gives buttons tactile feedback. Always use {c("0.96")}. Never below {c("0.95")}, anything smaller feels exaggerated. Try it:</>,
     iconTransitions: "Icon transitions",
-    iconTransitionsP1: <>When icons change state (menu → X, link → check), don&apos;t just toggle visibility. Animate with {c("opacity")}, {c("scale")}, and {c("blur")} — the blur masks the imperfect transition between two distinct shapes, creating the illusion of a smooth morph.</>,
+    iconTransitionsP1: <>When icons change state (menu → X, link → check), don&apos;t just toggle visibility. Animate with {c("opacity")}, {c("scale")}, and {c("blur")}: the blur masks the imperfect transition between two distinct shapes, creating the illusion of a smooth morph.</>,
     iconTransitionsP2: <>The exact values: scale from {c("0.25")} to {c("1")}, blur from {c("4px")} to {c("0px")}, opacity from {c("0")} to {c("1")}. Without a motion library, use CSS transitions with {c("cubic-bezier(0.2, 0, 0, 1)")}:</>,
     stagger: "Staggered enter",
     staggerP: <>Don&apos;t animate an entire container. Break content into semantic chunks and stagger each with ~100ms delay. Combine {c("opacity")}, {c("translateY")}, and {c("blur")} for the enter effect:</>,
@@ -313,12 +313,12 @@ const translations = {
     concentricRadius: "Concentric border-radius",
     concentricP: <>When rounded elements are nested, the outer radius must equal the inner radius plus the padding between them: {c("outer = inner + padding")}. Same radius on parent and child is the most common thing that makes interfaces feel off.</>,
     shadowsOverBorders: "Shadows over borders",
-    shadowsP: <>For cards, buttons, and containers, prefer layered {c("box-shadow")} over solid borders. Shadows adapt to any background via transparency — solid borders don&apos;t.</>,
+    shadowsP: <>For cards, buttons, and containers, prefer layered {c("box-shadow")} over solid borders. Shadows adapt to any background via transparency. Solid borders don&apos;t.</>,
     typography: "Typography",
     typographyP1: <>Three simple rules that make all the difference: {c("text-wrap: balance")} on headings for even line breaks, {c("text-wrap: pretty")} on paragraphs to avoid orphans, and {c("font-variant-numeric: tabular-nums")} on any dynamically changing number to prevent layout shift.</>,
     typographyP2: <>Apply {c("-webkit-font-smoothing: antialiased")} on the root for crisper text on macOS.</>,
     performance: "Performance",
-    performanceP1: <>Only animate {c("transform")} and {c("opacity")} — these properties skip layout and paint, running on the GPU. Animating {c("width")}, {c("height")}, {c("padding")}, or {c("margin")} triggers all three rendering steps.</>,
+    performanceP1: <>Only animate {c("transform")} and {c("opacity")}: these properties skip layout and paint, running on the GPU. Animating {c("width")}, {c("height")}, {c("padding")}, or {c("margin")} triggers all three rendering steps.</>,
     performanceP2: <>Never use {c("transition: all")}. Always specify the exact properties:</>,
     more: "Skill file",
     moreP1: <>These recommendations are compiled into a skill file for Claude Code, Cursor, and similar tools. Works with Laravel Blade, Livewire, and any CSS project:</>,
@@ -327,17 +327,17 @@ const translations = {
   },
   ES: {
     title: "Detalles invisibles que hacen que las interfaces se sientan bien",
-    intro: <>La mayoría de los detalles de una interfaz los usuarios nunca los notan conscientemente. Ese es el punto. Cuando un botón responde exactamente como alguien espera, cuando una transición no llama la atención, cuando todo simplemente {c("funciona")} — eso es el resultado de cientos de decisiones invisibles trabajando juntas.</>,
+    intro: <>La mayoría de los detalles de una interfaz los usuarios nunca los notan conscientemente. Ese es el punto. Cuando un botón responde exactamente como alguien espera, cuando una transición no llama la atención, cuando todo simplemente {c("funciona")}, eso es el resultado de cientos de decisiones invisibles trabajando juntas.</>,
     whyDetails: "Por qué importan los detalles",
-    whyDetailsP1: <>En un mundo donde todo software es &quot;suficientemente bueno,&quot; el gusto es el diferencial. Las personas eligen herramientas basándose en la experiencia general, no solo en la funcionalidad. La belleza está subutilizada en software — úsala como palanca.</>,
+    whyDetailsP1: <>En un mundo donde todo software es &quot;suficientemente bueno,&quot; el gusto es el diferencial. Las personas eligen herramientas basándose en la experiencia general, no solo en la funcionalidad. La belleza está subutilizada en software. Úsala como palanca.</>,
     whyDetailsP2: <>El buen gusto no es preferencia personal. Es un instinto entrenado: la habilidad de ver más allá de lo obvio y reconocer lo que eleva. Lo desarrollas rodeándote de trabajo excelente y pensando profundamente sobre por qué algo se siente bien.</>,
     animations: "Animaciones",
     animationsP1: <>No todo necesita animarse. Si el usuario ve una acción 100 veces al día, no la anime. Si la ve ocasionalmente (modales, drawers), anime. La regla: las animaciones de UI deben estar por debajo de {c("300ms")}.</>,
-    animationsP2: <>Nunca use {c("ease-in")} para animaciones de UI — empieza lento, haciendo que la interfaz se sienta perezosa. Use {c("ease-out")} o curvas personalizadas más fuertes:</>,
+    animationsP2: <>Nunca use {c("ease-in")} para animaciones de UI: empieza lento, haciendo que la interfaz se sienta perezosa. Use {c("ease-out")} o curvas personalizadas más fuertes:</>,
     scaleOnPress: "Scale on press",
-    scaleOnPressP: <>Un sutil {c("scale(0.96)")} al hacer clic da a los botones feedback táctil. Siempre use {c("0.96")}. Nunca por debajo de {c("0.95")} — cualquier cosa menor se siente exagerado. Pruébelo:</>,
+    scaleOnPressP: <>Un sutil {c("scale(0.96)")} al hacer clic da a los botones feedback táctil. Siempre use {c("0.96")}. Nunca por debajo de {c("0.95")}, cualquier cosa menor se siente exagerado. Pruébelo:</>,
     iconTransitions: "Transiciones de íconos",
-    iconTransitionsP1: <>Cuando los íconos cambian de estado (menú → X, enlace → check), no solo cambie la visibilidad. Anime con {c("opacity")}, {c("scale")} y {c("blur")} — el desenfoque enmascara la transición imperfecta entre dos formas distintas, creando la ilusión de una transformación suave.</>,
+    iconTransitionsP1: <>Cuando los íconos cambian de estado (menú → X, enlace → check), no solo cambie la visibilidad. Anime con {c("opacity")}, {c("scale")} y {c("blur")}: el desenfoque enmascara la transición imperfecta entre dos formas distintas, creando la ilusión de una transformación suave.</>,
     iconTransitionsP2: <>Los valores exactos: scale de {c("0.25")} a {c("1")}, blur de {c("4px")} a {c("0px")}, opacidad de {c("0")} a {c("1")}. Sin librería de motion, use transiciones CSS con {c("cubic-bezier(0.2, 0, 0, 1)")}:</>,
     stagger: "Entrada escalonada",
     staggerP: <>No anime un container entero. Divida el contenido en bloques semánticos y escalone cada uno con ~100ms de delay. Combine {c("opacity")}, {c("translateY")} y {c("blur")} para el efecto de entrada:</>,
@@ -345,12 +345,12 @@ const translations = {
     concentricRadius: "Border-radius concéntrico",
     concentricP: <>Cuando elementos redondeados están anidados, el radio externo debe ser igual al radio interno más el padding entre ellos: {c("outer = inner + padding")}. Radios iguales en padre e hijo es lo más común que hace que las interfaces se sientan mal.</>,
     shadowsOverBorders: "Sombras en vez de bordes",
-    shadowsP: <>Para cards, botones y containers, prefiera {c("box-shadow")} en capas sobre bordes sólidos. Las sombras se adaptan a cualquier fondo via transparencia — los bordes sólidos no.</>,
+    shadowsP: <>Para cards, botones y containers, prefiera {c("box-shadow")} en capas sobre bordes sólidos. Las sombras se adaptan a cualquier fondo via transparencia. Los bordes sólidos no.</>,
     typography: "Tipografía",
     typographyP1: <>Tres reglas simples que hacen toda la diferencia: {c("text-wrap: balance")} en headings para quiebres de línea equilibrados, {c("text-wrap: pretty")} en párrafos para evitar huérfanos, y {c("font-variant-numeric: tabular-nums")} en cualquier número que cambia dinámicamente para evitar layout shift.</>,
     typographyP2: <>Aplique {c("-webkit-font-smoothing: antialiased")} en el root para texto más nítido en macOS.</>,
     performance: "Rendimiento",
-    performanceP1: <>Solo anime {c("transform")} y {c("opacity")} — estas propiedades saltan layout y pintura, corriendo en la GPU. Animar {c("width")}, {c("height")}, {c("padding")} o {c("margin")} dispara los tres pasos de renderizado.</>,
+    performanceP1: <>Solo anime {c("transform")} y {c("opacity")}: estas propiedades saltan layout y pintura, corriendo en la GPU. Animar {c("width")}, {c("height")}, {c("padding")} o {c("margin")} dispara los tres pasos de renderizado.</>,
     performanceP2: <>Nunca use {c("transition: all")}. Siempre especifique las propiedades exactas:</>,
     more: "Skill file",
     moreP1: <>Estas recomendaciones están compiladas en un skill file para Claude Code, Cursor y herramientas similares. Funciona con Laravel Blade, Livewire y cualquier proyecto con CSS:</>,
@@ -424,7 +424,7 @@ export function ArticleContent({
             <div className="preview-card flex w-full items-center justify-center px-4 py-8">
               <blockquote className="text-pretty text-center text-sm text-muted-foreground italic">
                 &ldquo;All those unseen details combine to produce something that&apos;s just stunning, like a thousand barely audible voices all singing in tune.&rdquo;
-                <span className="mt-2 block text-xs not-italic text-muted-foreground/70">— Paul Graham</span>
+                <span className="mt-2 block text-xs not-italic text-muted-foreground/70">Paul Graham</span>
               </blockquote>
             </div>
           </div>
@@ -525,7 +525,7 @@ export function ArticleContent({
               ].map((item, i) => (
                 <div key={item.prop} className={`flex flex-col gap-1 px-4 py-3 ${i === 0 ? "border-b sm:border-b-0 sm:border-r" : ""}`}>
                   <span className="font-mono text-sm font-medium text-foreground">{item.prop}</span>
-                  <span className="text-sm text-muted-foreground">GPU: {item.gpu} — {item.note}</span>
+                  <span className="text-sm text-muted-foreground">GPU: {item.gpu} · {item.note}</span>
                 </div>
               ))}
             </div>

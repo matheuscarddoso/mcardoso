@@ -199,7 +199,7 @@ export function PlaylistLink({
                   behind it is the same art, spinning, and stays decorative. */}
               <Image
                 src={NOW_PLAYING.thumbnail}
-                alt={`${NOW_PLAYING.title} — ${NOW_PLAYING.artist}`}
+                alt={`${NOW_PLAYING.title} · ${NOW_PLAYING.artist}`}
                 fill
                 sizes="40px"
                 className="object-cover"

@@ -69,6 +69,20 @@ function GlyphFork() {
   )
 }
 
+/** A diamond: one step fanning out to two, then joining back into one. */
+function GlyphDiamond() {
+  return (
+    <div className="flex flex-col items-center gap-[3px]">
+      <span className="size-1.5 rounded-full bg-current" />
+      <div className="flex gap-[7px]">
+        <span className="size-1.5 rounded-full bg-current opacity-60" />
+        <span className="size-1.5 rounded-full bg-current opacity-60" />
+      </div>
+      <span className="size-1.5 rounded-full bg-current" />
+    </div>
+  )
+}
+
 function GlyphBubbles() {
   return (
     <div className="flex items-end gap-[3px]">
@@ -85,6 +99,7 @@ function GlyphBubbles() {
  * stay here: they are JSX, and nothing on the server side needs them.
  */
 const GLYPHS: Record<string, React.ReactNode> = {
+  "agent-loops-harness-graphs": <GlyphDiamond />,
   "ai-ml-github-repos": <GlyphFork />,
   "ai-bubble": <GlyphBubbles />,
   "whatsapp-cloud-api": <GlyphMessage />,

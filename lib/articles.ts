@@ -32,6 +32,31 @@ export type Article = {
 /** Newest first — the writing list prints the year gutter on each group's first row. */
 export const articles: Article[] = [
   {
+    slug: "agent-loops-harness-graphs",
+    year: "2026",
+    publishedAt: "2026-08-03",
+    title: {
+      PT: "Loops, harness e grafos",
+      EN: "Loops, harnesses and graphs",
+      ES: "Loops, harness y grafos",
+    },
+    description: {
+      PT: "Três formas de rodar um agente",
+      EN: "Three ways to run an agent",
+      ES: "Tres formas de ejecutar un agente",
+    },
+    seoTitle: {
+      PT: "Agent loop, harness e grafo: o guia simples",
+      EN: "Agent loops, harnesses and graphs explained",
+      ES: "Agent loop, harness y grafo: guía simple",
+    },
+    seoDescription: {
+      PT: "Por que um agente de IA insiste no mesmo erro, e o que muda quando o plano sai do prompt e vira um grafo que o código lê. Sem matemática, com código.",
+      EN: "Why an AI agent keeps repeating the same mistake, and what changes when the plan leaves the prompt and becomes a graph your code can read. No maths.",
+      ES: "Por qué un agente de IA insiste en el mismo error, y qué cambia cuando el plan sale del prompt y se vuelve un grafo que el código lee. Sin matemáticas.",
+    },
+  },
+  {
     slug: "ai-ml-github-repos",
     year: "2026",
     publishedAt: "2026-07-29",

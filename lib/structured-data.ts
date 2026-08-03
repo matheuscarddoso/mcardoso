@@ -3,7 +3,7 @@ import { localeToLanguage, type Locale } from "./locale"
 import {
   HOME_SEO,
   HREFLANG,
-  OG_IMAGE,
+  ogCardPath,
   PERSON,
   PLAYLISTS_SEO,
   SAME_AS,
@@ -123,7 +123,10 @@ export function articleGraph(locale: Locale, article: Article): Node {
         author: { "@id": PERSON_ID },
         publisher: { "@id": PERSON_ID },
         isPartOf: { "@id": WEBSITE_ID },
-        image: [absolute(OG_IMAGE.url)],
+        // The article's own generated card, matching what the Open Graph tags
+        // point at. Google treats a `BlogPosting` image as representing the
+        // piece, so the site-wide card was the wrong bytes here.
+        image: [absolute(ogCardPath(locale, article.slug))],
       },
       breadcrumbs(locale, [
         { name: PERSON.name, path: "" },

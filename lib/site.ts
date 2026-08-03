@@ -134,13 +134,24 @@ export const OG_IMAGE = {
   alt: "Matheus Cardoso",
 } as const
 
-function ogImages() {
+/**
+ * The generated card for one article. Same reasoning as the fixed `/og.png`
+ * path above: a URL we spell ourselves is one the Open Graph tags, the Twitter
+ * tags and the JSON-LD `image` can all name, and `app/og/[locale]/[slug]`
+ * prerenders every one of them at build time.
+ */
+export function ogCardPath(locale: Locale, slug: string): string {
+  return `/og/${locale}/${slug}`
+}
+
+/** Defaults to the site-wide card; articles pass their generated one. */
+function ogImages(url: string = OG_IMAGE.url, alt: string = OG_IMAGE.alt) {
   return [
     {
-      url: absolute(OG_IMAGE.url),
+      url: absolute(url),
       width: OG_IMAGE.width,
       height: OG_IMAGE.height,
-      alt: OG_IMAGE.alt,
+      alt,
     },
   ]
 }
@@ -215,11 +226,19 @@ export function pageMetadata({
   }
 }
 
+/**
+ * `slug` is what makes the card specific: it names the prerendered image that
+ * prints this article's own title, rather than the site-wide `/og.png`. The
+ * `twitter` block comes from `pageMetadata`, so it has to be rebuilt here too
+ * — Next replaces rather than merges it, which is the same trap the note above
+ * `pageMetadata` describes.
+ */
 export function articleMetadata(
-  meta: PageMeta & { publishedTime: string; modifiedTime: string }
+  meta: PageMeta & { slug: string; publishedTime: string; modifiedTime: string }
 ): Metadata {
   const base = pageMetadata(meta)
   const alternates = alternatesFor(meta.locale, meta.path)
+  const card = ogImages(ogCardPath(meta.locale, meta.slug), meta.title)
 
   return {
     ...base,
@@ -231,10 +250,17 @@ export function articleMetadata(
       url: alternates.canonical,
       title: meta.title,
       description: meta.description,
-      images: ogImages(),
+      images: card,
       publishedTime: meta.publishedTime,
       modifiedTime: meta.modifiedTime,
       authors: [absolute(`/${meta.locale}`)],
+    },
+    twitter: {
+      card: "summary_large_image",
+      creator: "@mattcrdoso",
+      title: meta.title,
+      description: meta.description,
+      images: card,
     },
   }
 }

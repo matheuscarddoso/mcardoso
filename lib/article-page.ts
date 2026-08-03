@@ -16,6 +16,7 @@ export async function articleMeta(
 
   return articleMetadata({
     locale,
+    slug,
     path: `/work/${slug}`,
     title: article.seoTitle[language],
     description: article.seoDescription[language],

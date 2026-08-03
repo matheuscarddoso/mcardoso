@@ -32,5 +32,9 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/((?!_next|api|.*\\..*).*)'],
+  // `og` carries its own locale segment and is an image, not a page: sending a
+  // scraper a 307 on `og:image` costs a round trip at best, and the ones that
+  // don't follow redirects for images just render no card. The dot rule
+  // already covers `/og.png`; this covers the generated `/og/<locale>/<slug>`.
+  matcher: ['/((?!_next|api|og/|.*\\..*).*)'],
 }

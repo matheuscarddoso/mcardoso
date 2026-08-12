@@ -5,80 +5,66 @@ import type { Language } from "@/lib/locale"
 
 const TIME_ZONE = "America/Sao_Paulo"
 
-const motto = {
-  PT: "Consistência é tudo",
-  EN: "Consistency is key",
-  ES: "La consistencia es clave",
-} as const
+/** Goiânia keeps São Paulo's clock; Goiás has had no DST of its own since 2019. */
+const PLACE = "Goiânia, Goiás"
+
+/** Kept apart from the time so tabular figures can wrap the clock alone. */
+const preposition = { PT: "em", EN: "in", ES: "en" } as const
+
+/** Brazil writes the time on a 24-hour clock; the other two locales don't. */
+const TWENTY_FOUR_HOUR: Record<Language, boolean> = { PT: true, EN: false, ES: false }
 
 type Clock = {
   hour: string
   minute: string
+  /** Empty on a 24-hour clock. */
   dayPeriod: string
-  offset: string
 }
 
 /*
  * `Intl.DateTimeFormat` is expensive to construct and stateless once built, so
- * both formatters are made once and reused. They used to be rebuilt on every
- * tick — sixty constructions a minute on the main thread, for a value that
- * changes once.
- *
- * Lazily, not at module scope: `shortOffset` throws on older engines, and that
- * has to degrade to the fallback below rather than fail the import.
+ * formatters are made once and reused. They used to be rebuilt on every tick:
+ * sixty constructions a minute on the main thread, for a value that changes
+ * once. Keyed by language now, since the two clocks are different formats.
  */
-let clockFormat: Intl.DateTimeFormat | undefined
-let offsetFormat: Intl.DateTimeFormat | null | undefined
+const formatters = new Map<Language, Intl.DateTimeFormat>()
 
-function clockFormatter(): Intl.DateTimeFormat {
-  return (clockFormat ??= new Intl.DateTimeFormat("en-US", {
+function clockFormatter(language: Language): Intl.DateTimeFormat {
+  const cached = formatters.get(language)
+  if (cached) return cached
+
+  const isDay = TWENTY_FOUR_HOUR[language]
+  const format = new Intl.DateTimeFormat("en-US", {
     timeZone: TIME_ZONE,
-    hour: "2-digit",
+    /*
+     * Zero-padded on a 24-hour clock, bare on a 12-hour one: "09:05" is how
+     * 24-hour time is written, and "9:05 AM" is how 12-hour time is.
+     */
+    hour: isDay ? "2-digit" : "numeric",
     minute: "2-digit",
-    hour12: true,
-  }))
+    /*
+     * `hourCycle: h23` rather than `hour12: false`. They are not the same:
+     * `hour12: false` maps to the h24 cycle in some ICU builds, which prints
+     * midnight as "24:00" instead of "00:00".
+     */
+    ...(isDay ? { hourCycle: "h23" as const } : { hour12: true }),
+  })
+
+  formatters.set(language, format)
+  return format
 }
 
-function offsetFormatter(): Intl.DateTimeFormat | null {
-  if (offsetFormat === undefined) {
-    try {
-      offsetFormat = new Intl.DateTimeFormat("en-US", {
-        timeZone: TIME_ZONE,
-        timeZoneName: "shortOffset",
-      })
-    } catch {
-      offsetFormat = null
-    }
-  }
-  return offsetFormat
-}
-
-/** "UTC-3" — read from the zone itself, so a DST change would follow along. */
-function offsetLabel(date: Date): string {
-  const name = offsetFormatter()
-    ?.formatToParts(date)
-    .find((part) => part.type === "timeZoneName")?.value
-  if (name) return name.replace("GMT", "UTC")
-
-  const utc = new Date(date.toLocaleString("en-US", { timeZone: "UTC" }))
-  const zoned = new Date(date.toLocaleString("en-US", { timeZone: TIME_ZONE }))
-  const hours = Math.round((zoned.getTime() - utc.getTime()) / 3_600_000)
-  return `UTC${hours < 0 ? "-" : "+"}${Math.abs(hours)}`
-}
-
-function readClock(): Clock {
-  const now = new Date()
+function readClock(language: Language): Clock {
   const parts = Object.fromEntries(
-    clockFormatter()
-      .formatToParts(now)
+    clockFormatter(language)
+      .formatToParts(new Date())
       .map((part) => [part.type, part.value])
   )
 
   return {
     hour: parts.hour ?? "--",
     minute: parts.minute ?? "--",
-    dayPeriod: (parts.dayPeriod ?? "").toUpperCase(),
-    offset: offsetLabel(now),
+    dayPeriod: parts.dayPeriod ?? "",
   }
 }
 
@@ -96,27 +82,33 @@ export function LocalTime({ language }: { language: Language }) {
      * a minute — each one competing with a tap for the same thread.
      */
     const tick = () => {
-      setClock(readClock())
+      setClock(readClock(language))
       // Re-derived each time rather than accumulated, so drift can't build up.
       timeout = setTimeout(tick, MINUTE - (Date.now() % MINUTE) + 50)
     }
 
     tick()
     return () => clearTimeout(timeout)
-  }, [])
+    // Re-reads on a language switch, which is what changes the clock's format.
+  }, [language])
+
+  const isDay = TWENTY_FOUR_HOUR[language]
+  const placeholder = isDay ? { hour: "00", minute: "00", period: "" } : { hour: "12", minute: "00", period: " AM" }
+  const period = clock ? (clock.dayPeriod ? ` ${clock.dayPeriod.toUpperCase()}` : "") : placeholder.period
+  const time = `${clock?.hour ?? placeholder.hour}:${clock?.minute ?? placeholder.minute}${period}`
 
   return (
-    <div className="flex flex-col gap-0.5 text-xs select-none">
-      <span className="text-primary-light-11 dark:text-primary-dark-11">{motto[language]}</span>
-      <span
-        className={`flex items-baseline gap-0.5 ${clock ? "" : "invisible"}`}
-      >
-        <span className="tabular-nums text-gray-1200">{clock?.hour ?? "00"}</span>
-        <span className="tabular-nums text-gray-1200">:{clock?.minute ?? "00"}</span>
-        <span className="ml-1 text-gray-1000">
-          {clock?.dayPeriod ?? "AM"} {clock?.offset ?? "UTC-3"}
-        </span>
-      </span>
-    </div>
+    /*
+     * Hidden rather than absent until the clock is read. The server renders in
+     * whatever zone the build machine is in, so printing a time during SSR is
+     * a hydration mismatch waiting to happen. `invisible` holds the line's
+     * space, so nothing below it moves when the real time arrives.
+     */
+    <span className={`text-sm font-normal select-none ${clock ? "" : "invisible"}`}>
+      {/* Tabular figures only on the clock: without them the line twitches
+          sideways every minute as digit widths change. */}
+      <span className="tabular-nums">{time}</span>
+      {` ${preposition[language]} ${PLACE}`}
+    </span>
   )
 }

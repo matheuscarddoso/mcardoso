@@ -7,23 +7,22 @@ import { AvatarLightbox } from "@/components/avatar-lightbox"
 import { Footer, type Language } from "@/components/footer"
 import { AbacatePreview, KuboPreview, ProjectCard } from "@/components/project-card"
 import { WorkList } from "@/components/work-list"
-import { CommitHeatmap } from "@/components/commit-heatmap"
-import { LanguageToggle, ThemeToggle, ToggleSeparator } from "@/components/toggles"
+import { ContributionGraph } from "@/components/contribution-graph"
+import { LanguageToggle, ThemeToggle } from "@/components/toggles"
 import { BioLink, GithubLink, PlaylistLink } from "@/components/link-preview"
 import { SocialLinks } from "@/components/social-links"
 import { SectionDivider } from "@/components/section-divider"
 import { localeToLanguage } from "@/lib/locale"
 import { switchLocale } from "@/lib/switch-locale"
 import { HEADER_SOCIAL } from "@/lib/site"
-import type { GithubCardData } from "@/lib/github"
-import { Check, Mail } from "lucide-react"
-import * as TooltipPrimitive from "@radix-ui/react-tooltip"
+import type { ContributionYear, GithubCardData } from "@/lib/github"
+import { VerifiedBadge } from "@/components/verified-badge"
+import { BrandMark } from "@/components/brand-marks"
+import { AvatarStack } from "@/components/avatar-stack"
+import { FileTextIcon } from "@/components/file-text-icon"
+import { Mail } from "lucide-react"
 import { AnimatePresence, motion, useReducedMotion } from "motion/react"
-import {
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip"
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
 
 const EMAIL = "mathuscardoso@gmail.com"
 
@@ -34,8 +33,13 @@ const translations = {
     closePhoto: "Fechar a foto",
     title: "Engenheiro de Software",
     projects: "Projetos",
+    contributions: "Contribuições",
     writing: "Escrita",
     copyEmail: "Copiar e-mail",
+    copy: "Copiar",
+    copied: "Copiado!",
+    verified: "Perfil verificado",
+    resume: "Currículo",
     kuboMeta: "No ar",
     kuboDescription: "Plataforma de food service, do pedido à cozinha.",
     abacateMeta: "Open-source",
@@ -47,8 +51,13 @@ const translations = {
     closePhoto: "Close photo",
     title: "Software Engineer",
     projects: "Projects",
+    contributions: "Contributions",
     writing: "Writing",
     copyEmail: "Copy email",
+    copy: "Copy",
+    copied: "Copied!",
+    verified: "Verified profile",
+    resume: "Resume",
     kuboMeta: "Live",
     kuboDescription: "Food service platform, from order to kitchen.",
     abacateMeta: "Open-source",
@@ -60,8 +69,13 @@ const translations = {
     closePhoto: "Cerrar la foto",
     title: "Ingeniero de Software",
     projects: "Proyectos",
+    contributions: "Contribuciones",
     writing: "Escritura",
     copyEmail: "Copiar correo",
+    copy: "Copiar",
+    copied: "¡Copiado!",
+    verified: "Perfil verificado",
+    resume: "Currículum",
     kuboMeta: "En vivo",
     kuboDescription: "Plataforma de food service, del pedido a la cocina.",
     abacateMeta: "Open-source",
@@ -69,7 +83,25 @@ const translations = {
   },
 }
 
-function CopyEmailButton({ label }: { label: string }) {
+/**
+ * Apple-style spring for the box, which has to travel between two label
+ * widths. A duration can't stay in step with text whose length changes per
+ * language; a spring settles on whatever distance it is handed.
+ */
+const COPY_SPRING = { type: "spring" as const, duration: 0.42, bounce: 0.12 }
+
+/** Barely any bounce on the swap itself — the box is the thing in motion. */
+const COPY_SWAP = { type: "spring" as const, duration: 0.34, bounce: 0 }
+
+function CopyEmailButton({
+  ariaLabel,
+  copyLabel,
+  copiedLabel,
+}: {
+  ariaLabel: string
+  copyLabel: string
+  copiedLabel: string
+}) {
   const [open, setOpen] = React.useState(false)
   const [copied, setCopied] = React.useState(false)
   const resetTimeoutRef = React.useRef<ReturnType<typeof setTimeout>>(undefined)
@@ -83,6 +115,8 @@ function CopyEmailButton({ label }: { label: string }) {
 
   const handleOpenChange = (next: boolean) => {
     setOpen(next)
+    // Reset only once the tooltip is on its way out, so "Copiado!" never
+    // flips back to "Copiar" while it is still under the pointer.
     if (!next) {
       if (resetTimeoutRef.current) clearTimeout(resetTimeoutRef.current)
       resetTimeoutRef.current = setTimeout(() => setCopied(false), 150)
@@ -92,73 +126,113 @@ function CopyEmailButton({ label }: { label: string }) {
   const handleCopy = React.useCallback(async () => {
     await navigator.clipboard.writeText(EMAIL)
     setCopied(true)
+    // Clicking a control that was already hovered keeps its tooltip up; this
+    // covers the tap, where there was never a hover to begin with.
     setOpen(true)
 
     if (resetTimeoutRef.current) clearTimeout(resetTimeoutRef.current)
     resetTimeoutRef.current = setTimeout(() => setCopied(false), 2000)
   }, [])
 
-  const contentTransition = shouldReduceMotion
-    ? { duration: 0.12 }
-    : { type: "spring" as const, duration: 0.45, bounce: 0.08 }
+  const box = shouldReduceMotion ? { duration: 0.12 } : COPY_SPRING
+  const swap = shouldReduceMotion ? { duration: 0.12 } : COPY_SWAP
+
+  // Blur bridges the two labels: without it the eye catches two separate
+  // words crossing over each other rather than one becoming the other.
+  const hidden = shouldReduceMotion
+    ? { opacity: 0 }
+    : { opacity: 0, scale: 0.92, filter: "blur(5px)" }
 
   return (
-    <TooltipProvider delayDuration={300}>
-      <TooltipPrimitive.Root open={open} onOpenChange={handleOpenChange}>
-        <TooltipTrigger asChild>
-          <button
-            type="button"
-            id="email"
-            onClick={handleCopy}
-            // Same -m-2/p-2 trick as the social row: a 32px touch target that
-            // grows into the gap instead of widening the layout.
-            className="-m-2 cursor-pointer p-2 transition-transform duration-150 ease-[cubic-bezier(0.23,1,0.32,1)] active:scale-[0.97]"
-            aria-label={label}
-          >
-            <Mail className="h-4 w-4" />
-          </button>
-        </TooltipTrigger>
-        <TooltipContent side="top" sideOffset={8} className="overflow-hidden px-2.5 py-1.5">
-          <motion.div
-            layout
-            transition={contentTransition}
-            className="flex items-center justify-center"
-          >
-            <AnimatePresence mode="popLayout" initial={false}>
-              {copied ? (
-                <motion.span
-                  key="check"
-                  layout
-                  initial={{ opacity: 0, scale: 0.88, filter: "blur(6px)" }}
-                  animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
-                  exit={{ opacity: 0, scale: 0.88, filter: "blur(6px)" }}
-                  transition={contentTransition}
-                  className="flex items-center justify-center"
-                >
-                  <Check className="size-3.5" strokeWidth={2.5} />
-                </motion.span>
-              ) : (
-                <motion.span
-                  key="label"
-                  layout
-                  initial={{ opacity: 0, scale: 0.88, filter: "blur(6px)" }}
-                  animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
-                  exit={{ opacity: 0, scale: 0.88, filter: "blur(6px)" }}
-                  transition={contentTransition}
-                  className="whitespace-nowrap"
-                >
-                  {label}
-                </motion.span>
-              )}
-            </AnimatePresence>
-          </motion.div>
-        </TooltipContent>
-      </TooltipPrimitive.Root>
-    </TooltipProvider>
+    <Tooltip open={open} onOpenChange={handleOpenChange} delayDuration={300}>
+      <TooltipTrigger asChild>
+        <button
+          type="button"
+          id="email"
+          onClick={handleCopy}
+          // Same -m-2/p-2 trick as the social row: a 32px touch target that
+          // grows into the gap instead of widening the layout.
+          className="-m-2 cursor-pointer p-2 transition-transform duration-150 ease-[cubic-bezier(0.23,1,0.32,1)] active:scale-[0.97] motion-reduce:active:scale-100"
+          aria-label={ariaLabel}
+        >
+          <Mail className="h-4 w-4" />
+        </button>
+      </TooltipTrigger>
+      {/*
+        The surface is painted on the motion node inside, not on the content
+        itself. A layout animation resizes the element's box immediately and
+        only fakes the difference with a transform — so whichever node carries
+        the background is the one that must be animating, or the panel snaps
+        to its new width while the word inside is still travelling.
+      */}
+      <TooltipContent
+        side="top"
+        sideOffset={8}
+        className="bg-transparent p-0 shadow-none"
+      >
+        <motion.div
+          layout
+          transition={box}
+          className="flex items-center justify-center overflow-hidden rounded-md bg-foreground px-2.5 py-1.5"
+        >
+          {/* `popLayout` takes the outgoing word out of flow, so the box
+              measures the incoming one and resizes with it rather than after it. */}
+          <AnimatePresence mode="popLayout" initial={false}>
+            <motion.span
+              key={copied ? "copied" : "copy"}
+              layout
+              initial={hidden}
+              animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
+              exit={hidden}
+              transition={swap}
+              className="whitespace-nowrap"
+            >
+              {copied ? copiedLabel : copyLabel}
+            </motion.span>
+          </AnimatePresence>
+        </motion.div>
+      </TooltipContent>
+    </Tooltip>
   )
 }
 
 const GITHUB_URL = "https://github.com/matheuscarddoso"
+
+/**
+ * Two documents, not one translated label: the Portuguese file is a currículo
+ * written in Portuguese, and the other is the English résumé. Spanish readers
+ * get the English one because a Spanish version doesn't exist yet — better a
+ * document they can read than a link to one they can't.
+ */
+const CV: Record<Language, string> = {
+  PT: "/cv/matheus-cardoso-curriculo.pdf",
+  EN: "/cv/matheus-cardoso-resume.pdf",
+  ES: "/cv/matheus-cardoso-resume.pdf",
+}
+
+/**
+ * Opens the PDF rather than forcing a download: a résumé is read before it is
+ * kept, and the browser's own viewer already offers to save it.
+ *
+ * Painted with the inverted pair rather than a literal black: `gray-1200` is
+ * this palette's strongest ink and `preview-bg` its paper, so the button is
+ * near-black on white in the light theme and flips to near-white on black in
+ * the dark one. A hard-coded black would sink into a #111 page.
+ */
+function ResumeButton({ language, label }: { language: Language; label: string }) {
+  return (
+    <a
+      href={CV[language]}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="inline-flex w-fit items-center gap-2 rounded-xl bg-gray-1200 py-2 pr-3.5 pl-3 text-sm font-medium text-preview-bg shadow-custom transition-[box-shadow,transform] duration-300 ease-[var(--ease-out-strong)] hover:scale-[1.02] hover:shadow-card-lift active:scale-[0.98] motion-reduce:hover:scale-100 motion-reduce:active:scale-100"
+    >
+      {/* No colour of its own — it takes the button's ink. */}
+      <FileTextIcon aria-hidden loop size={18} className="shrink-0" />
+      {label}
+    </a>
+  )
+}
 
 type BioParagraphs = (
   link: string,
@@ -171,45 +245,60 @@ const bio: Record<Language, BioParagraphs> = {
   PT: (link, locale, lang, github) => (
     <>
       <p className="paragraph mb-3">
-        Atualmente trabalho na <BioLink href="https://4selet.com.br" target="_blank" className={link} rel="noopener noreferrer">4Selet</BioLink> e na <BioLink href="https://zero7.com.br/home" target="_blank" className={link} rel="noopener noreferrer">Zero7</BioLink>, e meu maior projeto open-source é na <BioLink href="https://www.abacatepay.com/" target="_blank" className={link} rel="noopener noreferrer">Abacate Pay</BioLink>. Me importo com a <span className="font-display">construção</span>, <span className="font-display">detalhes</span> e em fazer interfaces <span className="font-display">parecerem corretas</span>.
+        Sou engenheiro de software na <BioLink href="https://4selet.com.br" target="_blank" className={link} rel="noopener noreferrer"><BrandMark name="4selet" />4Selet</BioLink>, onde criadores vendem cursos e assinaturas, e na <BioLink href="https://zero7.com.br/home" target="_blank" className={link} rel="noopener noreferrer"><BrandMark name="zero7" />Zero7</BioLink>, uma mesa proprietária de day trade. Quase tudo que eu construo é fluxo de pagamento: checkout, cobrança e repasse. O <span className="font-display">caminho feliz</span> é a parte fácil. O trabalho está em decidir o que acontece quando ela falha, duplica ou chega fora de ordem.
       </p>
       <p className="paragraph mb-3">
-        Anteriormente, colaborei com <BioLink href="https://www.goiasec.com.br/" target="_blank" className={link} rel="noopener noreferrer">Goiás F.C.</BioLink> e outros. Faço curadoria de <PlaylistLink language={lang} className={link} href={`/${locale}/monthly-playlists`}>playlists</PlaylistLink> todo mês e corro todo dia.
+        Meu maior projeto open-source é a <BioLink href="https://www.abacatepay.com/" target="_blank" className={link} rel="noopener noreferrer"><BrandMark name="abacate" />Abacate Pay</BioLink>, um método de pagamento feito para o Brasil por <AvatarStack /> 23 desenvolvedores. Também construo o <BioLink href="https://kubofood.app" target="_blank" className={link} rel="noopener noreferrer"><BrandMark name="kubo" />KuboFood</BioLink>, que leva o pedido do celular do cliente até a tela da cozinha sem ninguém redigitar nada.
+      </p>
+      <p className="paragraph mb-3">
+        Antes disso trabalhei com o <BioLink href="https://www.goiasec.com.br/" target="_blank" className={link} rel="noopener noreferrer"><BrandMark name="goias" />Goiás F.C.</BioLink> e outros. Monto uma <PlaylistLink language={lang} className={link} href={`/${locale}/monthly-playlists`}><BrandMark name="spotify" />playlist</PlaylistLink> por mês e corro todo dia.
       </p>
       <p className="paragraph">
-        Você pode me encontrar no <a href="https://x.com/mattcrdoso" target="_blank" rel="noopener noreferrer" className={link}>X</a> e por <a href="mailto:mathuscardoso@gmail.com" className={link}>email</a>, ou ver meu código no <GithubLink data={github} language={lang} href={GITHUB_URL} target="_blank" rel="noopener noreferrer" className={link}>GitHub</GithubLink>.
+        Você pode me encontrar no <a href="https://x.com/mattcrdoso" target="_blank" rel="noopener noreferrer" className={link}><BrandMark name="twitter" />Twitter</a> e por <a href="mailto:mathuscardoso@gmail.com" className={link}>email</a>, ou ver meu código no <GithubLink data={github} language={lang} href={GITHUB_URL} target="_blank" rel="noopener noreferrer" className={link}><BrandMark name="github" />GitHub</GithubLink>.
       </p>
     </>
   ),
   EN: (link, locale, lang, github) => (
     <>
       <p className="paragraph mb-3">
-        I&apos;m currently working at <BioLink href="https://4selet.com.br" target="_blank" className={link} rel="noopener noreferrer">4Selet</BioLink> and <BioLink href="https://zero7.com.br/home" target="_blank" className={link} rel="noopener noreferrer">Zero7</BioLink>, and my biggest open-source project is at <BioLink href="https://www.abacatepay.com/" target="_blank" className={link} rel="noopener noreferrer">Abacate Pay</BioLink>. I care deeply about <span className="font-display">craft</span>, <span className="font-display">detail</span>, and making interfaces <span className="font-display">feel right</span>.
+        I&apos;m a software engineer at <BioLink href="https://4selet.com.br" target="_blank" className={link} rel="noopener noreferrer"><BrandMark name="4selet" />4Selet</BioLink>, where creators sell courses and subscriptions, and at <BioLink href="https://zero7.com.br/home" target="_blank" className={link} rel="noopener noreferrer"><BrandMark name="zero7" />Zero7</BioLink>, a proprietary trading desk. Almost everything I build is a payment flow: checkout, billing, payouts. The <span className="font-display">happy path</span> is the easy part. The work is deciding what happens when a charge fails, fires twice, or arrives out of order.
       </p>
       <p className="paragraph mb-3">
-        Previously, I collaborated with <BioLink href="https://www.goiasec.com.br/" target="_blank" className={link} rel="noopener noreferrer">Goiás F.C.</BioLink> and others. I curate <PlaylistLink language={lang} className={link} href={`/${locale}/monthly-playlists`}>playlists</PlaylistLink> every month and run every day.
+        My biggest open-source project is <BioLink href="https://www.abacatepay.com/" target="_blank" className={link} rel="noopener noreferrer"><BrandMark name="abacate" />Abacate Pay</BioLink>, a payment method built for Brazil by <AvatarStack /> 23 developers. I also build <BioLink href="https://kubofood.app" target="_blank" className={link} rel="noopener noreferrer"><BrandMark name="kubo" />KuboFood</BioLink>, which carries an order from the customer&apos;s phone to the kitchen screen without anyone retyping it.
+      </p>
+      <p className="paragraph mb-3">
+        Before that I worked with <BioLink href="https://www.goiasec.com.br/" target="_blank" className={link} rel="noopener noreferrer"><BrandMark name="goias" />Goiás F.C.</BioLink> and a few others. I put together a <PlaylistLink language={lang} className={link} href={`/${locale}/monthly-playlists`}><BrandMark name="spotify" />playlist</PlaylistLink> every month and run every day.
       </p>
       <p className="paragraph">
-        You can reach me on <a href="https://x.com/mattcrdoso" target="_blank" rel="noopener noreferrer" className={link}>X</a> and via <a href="mailto:mathuscardoso@gmail.com" className={link}>email</a>, or see my code on <GithubLink data={github} language={lang} href={GITHUB_URL} target="_blank" rel="noopener noreferrer" className={link}>GitHub</GithubLink>.
+        You can reach me on <a href="https://x.com/mattcrdoso" target="_blank" rel="noopener noreferrer" className={link}><BrandMark name="twitter" />Twitter</a> and via <a href="mailto:mathuscardoso@gmail.com" className={link}>email</a>, or see my code on <GithubLink data={github} language={lang} href={GITHUB_URL} target="_blank" rel="noopener noreferrer" className={link}><BrandMark name="github" />GitHub</GithubLink>.
       </p>
     </>
   ),
   ES: (link, locale, lang, github) => (
     <>
       <p className="paragraph mb-3">
-        Actualmente trabajo en <BioLink href="https://4selet.com.br" target="_blank" className={link} rel="noopener noreferrer">4Selet</BioLink> y <BioLink href="https://zero7.com.br/home" target="_blank" className={link} rel="noopener noreferrer">Zero7</BioLink>, y mi mayor proyecto open-source es en <BioLink href="https://www.abacatepay.com/" target="_blank" className={link} rel="noopener noreferrer">Abacate Pay</BioLink>. Me importa el <span className="font-display">craft</span>, el <span className="font-display">detalle</span> y hacer que las interfaces se <span className="font-display">sientan bien</span>.
+        Soy ingeniero de software en <BioLink href="https://4selet.com.br" target="_blank" className={link} rel="noopener noreferrer"><BrandMark name="4selet" />4Selet</BioLink>, donde creadores venden cursos y suscripciones, y en <BioLink href="https://zero7.com.br/home" target="_blank" className={link} rel="noopener noreferrer"><BrandMark name="zero7" />Zero7</BioLink>, una mesa propietaria de day trade. Casi todo lo que construyo es flujo de pago: checkout, cobros y pagos. El <span className="font-display">camino feliz</span> es la parte fácil. El trabajo está en decidir qué pasa cuando un cobro falla, se duplica o llega fuera de orden.
       </p>
       <p className="paragraph mb-3">
-        Anteriormente, colaboré con <BioLink href="https://www.goiasec.com.br/" target="_blank" className={link} rel="noopener noreferrer">Goiás F.C.</BioLink> y otros. Hago curaduría de <PlaylistLink language={lang} className={link} href={`/${locale}/monthly-playlists`}>playlists</PlaylistLink> cada mes y corro todos los días.
+        Mi mayor proyecto open-source es <BioLink href="https://www.abacatepay.com/" target="_blank" className={link} rel="noopener noreferrer"><BrandMark name="abacate" />Abacate Pay</BioLink>, un método de pago hecho para Brasil por <AvatarStack /> 23 desarrolladores. También construyo <BioLink href="https://kubofood.app" target="_blank" className={link} rel="noopener noreferrer"><BrandMark name="kubo" />KuboFood</BioLink>, que lleva el pedido del móvil del cliente hasta la pantalla de la cocina sin que nadie lo reescriba.
+      </p>
+      <p className="paragraph mb-3">
+        Antes trabajé con <BioLink href="https://www.goiasec.com.br/" target="_blank" className={link} rel="noopener noreferrer"><BrandMark name="goias" />Goiás F.C.</BioLink> y algunos otros. Armo una <PlaylistLink language={lang} className={link} href={`/${locale}/monthly-playlists`}><BrandMark name="spotify" />playlist</PlaylistLink> cada mes y corro todos los días.
       </p>
       <p className="paragraph">
-        Puedes encontrarme en <a href="https://x.com/mattcrdoso" target="_blank" rel="noopener noreferrer" className={link}>X</a> y por <a href="mailto:mathuscardoso@gmail.com" className={link}>email</a>, o ver mi código en <GithubLink data={github} language={lang} href={GITHUB_URL} target="_blank" rel="noopener noreferrer" className={link}>GitHub</GithubLink>.
+        Puedes encontrarme en <a href="https://x.com/mattcrdoso" target="_blank" rel="noopener noreferrer" className={link}><BrandMark name="twitter" />Twitter</a> y por <a href="mailto:mathuscardoso@gmail.com" className={link}>email</a>, o ver mi código en <GithubLink data={github} language={lang} href={GITHUB_URL} target="_blank" rel="noopener noreferrer" className={link}><BrandMark name="github" />GitHub</GithubLink>.
       </p>
     </>
   ),
 }
 
-export function HomeContent({ github }: { github: GithubCardData | null }) {
+export function HomeContent({
+  github,
+  contributions,
+}: {
+  github: GithubCardData | null
+  contributions: ContributionYear | null
+}) {
   const params = useParams()
   const locale = (params.locale as string) ?? 'en'
   const language: Language = localeToLanguage(locale)
@@ -219,12 +308,10 @@ export function HomeContent({ github }: { github: GithubCardData | null }) {
 
   return (
     <div className="relative flex min-h-dvh w-full flex-col overflow-x-hidden">
-      <CommitHeatmap />
       <main className="mx-auto flex w-full max-w-(--breakpoint-sm) flex-1 flex-col px-4 pt-20 pb-4 dark:text-[#b4b4b4] text-gray-600">
+        {/* Just the two controls now. No `ToggleSeparator`: with the profile
+            links moved down there is nothing left for it to separate. */}
         <div className="mb-8 mt-4 flex items-center gap-4 text-black dark:text-white">
-          <SocialLinks include={HEADER_SOCIAL} />
-          <CopyEmailButton label={t.copyEmail} />
-          <ToggleSeparator />
           <LanguageToggle
             language={language}
             onLanguageChange={switchLocale}
@@ -242,8 +329,13 @@ export function HomeContent({ github }: { github: GithubCardData | null }) {
             />
           </div>
           <div className="ml-4">
+            {/* `inline-flex` on the link, not the heading: the badge belongs to
+                the name, so it has to sit on the last line if the name wraps. */}
             <h1 className="font-semibold text-gray-1200 leading-snug text-lg">
-              <Link href={`/${locale}`}>Matheus Cardoso</Link>
+              <Link href={`/${locale}`} className="inline-flex items-center gap-1">
+                Matheus Cardoso
+                <VerifiedBadge label={t.verified} />
+              </Link>
             </h1>
             {/* No `whitespace-nowrap`: the Portuguese and Spanish roles are
                 the longest strings on the page, and a 320px viewport has to
@@ -253,6 +345,20 @@ export function HomeContent({ github }: { github: GithubCardData | null }) {
         </div>
 
         {bio[language](linkClass, locale, language, github)}
+
+        {/*
+          `flex-wrap` with a row gap rather than a bet that it fits: the
+          Spanish label is the longest, and it plus five 32px targets lands
+          within about ten pixels of a 320px column. When it doesn't fit the
+          links drop to their own line instead of pushing the page sideways.
+        */}
+        <div className="mt-5 flex flex-wrap items-center justify-between gap-x-4 gap-y-4">
+          <ResumeButton language={language} label={t.resume} />
+          <div className="flex items-center gap-4 text-black dark:text-white">
+            <SocialLinks include={HEADER_SOCIAL} />
+            <CopyEmailButton ariaLabel={t.copyEmail} copyLabel={t.copy} copiedLabel={t.copied} />
+          </div>
+        </div>
 
         <SectionDivider className="my-10" />
 
@@ -288,6 +394,23 @@ export function HomeContent({ github }: { github: GithubCardData | null }) {
             </li>
           </ul>
         </section>
+
+        {/* Dropped entirely when the calendar can't be read — an empty grid
+            would claim a year of no work rather than a failed fetch. */}
+        {contributions && (
+          <>
+            <SectionDivider className="my-10" />
+            <section aria-labelledby="contributions-heading" className="w-full">
+              <h2
+                id="contributions-heading"
+                className="mb-5 flex w-full items-center font-medium text-gray-1200"
+              >
+                {t.contributions}
+              </h2>
+              <ContributionGraph data={contributions} language={language} />
+            </section>
+          </>
+        )}
 
         <SectionDivider className="my-10" />
 

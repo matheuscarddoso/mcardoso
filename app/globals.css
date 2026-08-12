@@ -312,36 +312,10 @@
 }
 
 /*
- * GitHub-style contribution grid used as page-top decoration. Geometry lives
- * in the component's path data; only the ramp lives here. `color` rather than
- * `fill`, because each path paints with both fill and stroke — see the
- * component for why the stroke is what rounds the corners.
- */
-.heatmap-level-0 {
-  color: var(--color-gray-300);
-}
-
-.heatmap-level-1 {
-  color: var(--color-gray-500);
-}
-
-.heatmap-level-2 {
-  color: var(--color-gray-700);
-}
-
-.heatmap-level-3 {
-  color: var(--color-gray-800);
-}
-
-.heatmap-level-4 {
-  color: var(--color-gray-900);
-}
-
-/*
- * Real contribution graph inside the GitHub hover card. Unlike the decorative
- * heatmap above, this one carries data — so it keeps the green scale, the one
- * meaning viewers already read fluently. Geometry stays in the component;
- * only colour lives here, as tokens that flip with the theme.
+ * Real contribution cells, shared by the GitHub hover card and the
+ * Contributions section. They keep the green scale — the one meaning viewers
+ * already read fluently. Geometry stays in the components; only colour lives
+ * here, as tokens that flip with the theme.
  */
 .contrib-cell {
   flex: none;
@@ -363,6 +337,96 @@
 
 .contrib-cell.level-4 {
   background-color: var(--contrib-4);
+}
+
+/*
+ * The year graph in the Contributions section.
+ *
+ * Columns are fractions, not pixels, so the grid always fills the measure —
+ * but 53 of them inside a 320px viewport would be 4px wide, which is texture
+ * rather than data. So the window narrows instead of the square: 26 weeks
+ * below 480px, 39 below 640px, the whole year above it. That holds the cell
+ * between 8px and 14px everywhere, and it is a real `display: none` — columns
+ * outside the window leave the grid entirely, so the survivors divide the full
+ * width rather than being squeezed into a share of it.
+ *
+ * No month axis: the squares are a texture of a year's work, not a chart to
+ * read a date off. The tooltip names the exact day for anyone who wants one,
+ * which is the only time the date is actually being asked for.
+ */
+.contrib-year {
+  --contrib-gap: 2px;
+  --contrib-weeks: 26;
+  display: grid;
+  grid-template-columns: repeat(var(--contrib-weeks), minmax(0, 1fr));
+  gap: var(--contrib-gap);
+}
+
+/*
+ * Larger radius than the cells in the hover card, because these are larger
+ * cells: 3.5px on an 11px square is the same softness 2px gives a 6px one.
+ */
+.contrib-year .contrib-cell {
+  border-radius: 3.5px;
+}
+
+.contrib-week {
+  display: flex;
+  flex-direction: column;
+  gap: var(--contrib-gap);
+}
+
+/* Square, and sized by the column rather than by a fixed edge. */
+.contrib-year .contrib-cell {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1;
+}
+
+.contrib-year > .contrib-week:nth-last-child(n + 27) {
+  display: none;
+}
+
+@media (min-width: 480px) {
+  .contrib-year {
+    --contrib-weeks: 39;
+  }
+
+  .contrib-year > .contrib-week:nth-last-child(n + 27) {
+    display: flex;
+  }
+
+  .contrib-year > .contrib-week:nth-last-child(n + 40) {
+    display: none;
+  }
+}
+
+/*
+ * 46 weeks, not the full 53, and the gutter stays at 2px.
+ *
+ * The prose measure leaves 588px for the grid, and that is the whole
+ * constraint: 53 columns divide it into 9.1px squares, which is texture
+ * rather than a graph you can read a day off. 46 gives 10.8px. Widening the
+ * card past the text column instead was measured and buys less — 40px of
+ * bleed on each side only reaches 10.6px, and costs the left edge every other
+ * block on the page is aligned to.
+ *
+ * So the window loses its oldest six weeks. The count below the grid still
+ * says "in the last year" because it is GitHub's own year total, and the
+ * narrower breakpoints have been cropping the same way all along.
+ */
+@media (min-width: 640px) {
+  .contrib-year {
+    --contrib-weeks: 46;
+  }
+
+  .contrib-year > .contrib-week:nth-last-child(n + 40) {
+    display: flex;
+  }
+
+  .contrib-year > .contrib-week:nth-last-child(n + 47) {
+    display: none;
+  }
 }
 
 /*
@@ -413,6 +477,25 @@
 
 .text-gray-1200, .text-gray-1200\/10 {
   color: var(--color-gray-1200);
+}
+
+/*
+ * The inverted pair, for the résumé button.
+ *
+ * These greys are hand-written utilities rather than `@theme` colours, so
+ * Tailwind generates nothing for them on demand — only the exact class names
+ * written out here exist, which is why `bg-` and `text-` have to be spelled
+ * even though `text-gray-1200` and `bg-preview-bg` already are.
+ *
+ * Both tokens flip with the theme, so one pair reads near-black on white in
+ * the light theme and near-white on black in the dark one.
+ */
+.bg-gray-1200 {
+  background-color: var(--color-gray-1200);
+}
+
+.text-preview-bg {
+  color: var(--color-preview-bg);
 }
 
 .dark .shiki,

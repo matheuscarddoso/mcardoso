@@ -87,14 +87,18 @@ export const SOCIAL = {
 export type SocialKey = keyof typeof SOCIAL
 
 /**
- * Split across the two rows on purpose. Six brand marks plus the email button
- * and both toggles measure 332px of ink, against 288px on a 320px phone — the
- * header row would overflow. So the header keeps the working identity, and the
- * footer carries the rest. No profile appears twice, and every one is still a
- * crawlable link on the page.
+ * Split across the two rows on purpose. All six brand marks plus the email
+ * button and both toggles measure 332px of ink, against 288px on a 320px phone
+ * — the header row would overflow. So the header keeps the working identity
+ * and the footer carries the rest. No profile appears twice, and every one is
+ * still a crawlable link on the page.
+ *
+ * LinkedIn sits in the header because it is part of that working identity; at
+ * four marks the header measures roughly 230px, which still clears the 320px
+ * viewport. A fifth would not, so the next one goes below.
  */
-export const HEADER_SOCIAL: SocialKey[] = ["github", "x", "stackoverflow"]
-export const FOOTER_SOCIAL: SocialKey[] = ["linkedin", "instagram", "youtube", "facebook"]
+export const HEADER_SOCIAL: SocialKey[] = ["github", "x", "stackoverflow", "linkedin"]
+export const FOOTER_SOCIAL: SocialKey[] = ["instagram", "youtube", "facebook"]
 
 /** Only the profiles that exist — an empty `sameAs` entry is worse than none. */
 export const SAME_AS: string[] = Object.values(SOCIAL).filter(

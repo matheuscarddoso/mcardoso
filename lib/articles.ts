@@ -211,6 +211,18 @@ export const articles: Article[] = [
 export const articleBySlug = new Map(articles.map((article) => [article.slug, article]))
 
 /**
+ * The slug the writing list marks "New".
+ *
+ * Read off `publishedAt` rather than taking the first row, even though the
+ * list is kept newest-first: the badge is a claim about dates, so it should
+ * fail when a date is wrong, not when a row lands in the wrong place. ISO
+ * dates compare correctly as strings.
+ */
+export const latestSlug: string = articles.reduce((latest, article) =>
+  article.publishedAt > latest.publishedAt ? article : latest
+).slug
+
+/**
  * What `dateModified` and `<lastmod>` should say. Falls back to the publish
  * date so an untouched article never claims a revision it didn't have.
  */

@@ -8,7 +8,11 @@
  * 60/h per IP), but nothing here requires it.
  */
 
-const GITHUB_LOGIN = "matheuscarddoso"
+/** The account the bio links to — its hover card carries the identity. */
+const PROFILE_LOGIN = "matheuscarddoso"
+
+/** The account the Contributions section draws. */
+const GRAPH_LOGIN = "4st-cardoso"
 
 /** One hour: the graph moves at most once a day, the profile even less. */
 const REVALIDATE_SECONDS = 3600
@@ -18,6 +22,14 @@ const REVALIDATE_SECONDS = 3600
  * width follows from this, and it has to clear the name + handle line below.
  */
 export const CONTRIBUTION_WEEKS = 20
+
+/**
+ * Columns in the section graph. GitHub's window is 53 Sunday-aligned columns
+ * and has been for years, but the responsive grid hard-codes that count, so a
+ * 54th column from a mid-week window would wrap into a second row — the slice
+ * drops the leading partial instead.
+ */
+export const YEAR_WEEKS = 53
 
 export type ContributionLevel = 0 | 1 | 2 | 3 | 4
 
@@ -147,7 +159,7 @@ function parseTotal(html: string, days: ContributionDay[]): number {
 type Profile = Pick<GithubCardData, "login" | "name" | "bio" | "avatarUrl" | "url">
 
 async function fetchProfile(): Promise<Profile> {
-  const response = await fetch(`https://api.github.com/users/${GITHUB_LOGIN}`, {
+  const response = await fetch(`https://api.github.com/users/${PROFILE_LOGIN}`, {
     headers: {
       accept: "application/vnd.github+json",
       "x-github-api-version": "2022-11-28",
@@ -181,8 +193,9 @@ async function fetchProfile(): Promise<Profile> {
   }
 }
 
-async function fetchContributions(): Promise<Pick<GithubCardData, "weeks" | "months" | "total">> {
-  const response = await fetch(`https://github.com/users/${GITHUB_LOGIN}/contributions`, {
+/** The calendar fragment, parsed. Shared by both graphs on the page. */
+async function fetchCalendar(login: string): Promise<{ days: ContributionDay[]; total: number }> {
+  const response = await fetch(`https://github.com/users/${login}/contributions`, {
     headers: { accept: "text/html", "user-agent": USER_AGENT },
     next: { revalidate: REVALIDATE_SECONDS },
   })
@@ -193,9 +206,14 @@ async function fetchContributions(): Promise<Pick<GithubCardData, "weeks" | "mon
   const days = parseDays(html)
   if (days.length === 0) throw new Error("GitHub contributions: no day cells")
 
+  return { days, total: parseTotal(html, days) }
+}
+
+async function fetchContributions(): Promise<Pick<GithubCardData, "weeks" | "months" | "total">> {
+  const { days, total } = await fetchCalendar(PROFILE_LOGIN)
   const weeks = groupIntoWeeks(days).slice(-CONTRIBUTION_WEEKS)
 
-  return { weeks, months: monthLabels(weeks), total: parseTotal(html, days) }
+  return { weeks, months: monthLabels(weeks), total }
 }
 
 /**
@@ -222,5 +240,39 @@ export async function getGithubCard(): Promise<GithubCardData | null> {
     weeks: contributions?.weeks ?? [],
     months: contributions?.months ?? [],
     total: contributions?.total ?? 0,
+  }
+}
+
+export type ContributionYear = {
+  login: string
+  url: string
+  weeks: ContributionWeek[]
+  /** Contributions in the last year, as GitHub counts them. */
+  total: number
+}
+
+/**
+ * The full year, for the Contributions section. No REST call: the section
+ * shows squares, not an identity, so the calendar fragment is the whole
+ * dependency — which also keeps it clear of the 60/h unauthenticated API
+ * limit the profile fetch has to live inside.
+ *
+ * Returns `null` when the calendar can't be read, and the section then doesn't
+ * render at all — an empty grid would claim a year of no work.
+ */
+export async function getContributionYear(): Promise<ContributionYear | null> {
+  try {
+    const { days, total } = await fetchCalendar(GRAPH_LOGIN)
+
+    return {
+      login: GRAPH_LOGIN,
+      url: `https://github.com/${GRAPH_LOGIN}`,
+      // No month axis in the section, so no labels to derive from these.
+      weeks: groupIntoWeeks(days).slice(-YEAR_WEEKS),
+      total,
+    }
+  } catch (error: unknown) {
+    console.warn("[github] contribution year unavailable:", error)
+    return null
   }
 }

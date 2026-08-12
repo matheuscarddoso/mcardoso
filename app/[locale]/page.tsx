@@ -1,6 +1,6 @@
 import type { Metadata } from "next"
 import { JsonLd } from "@/components/json-ld"
-import { getGithubCard } from "@/lib/github"
+import { getContributionYear, getGithubCard } from "@/lib/github"
 import { localeToLanguage } from "@/lib/locale"
 import { HOME_SEO, pageMetadata, toLocale } from "@/lib/site"
 import { homeGraph } from "@/lib/structured-data"
@@ -22,12 +22,14 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 export default async function Page({ params }: PageProps) {
   const locale = toLocale((await params).locale)
-  const github = await getGithubCard()
+  // Two different accounts, so two calendars — in parallel, since neither
+  // needs the other and both are cached on the same one-hour window.
+  const [github, contributions] = await Promise.all([getGithubCard(), getContributionYear()])
 
   return (
     <>
       <JsonLd data={homeGraph(locale)} />
-      <HomeContent github={github} />
+      <HomeContent github={github} contributions={contributions} />
     </>
   )
 }

@@ -2,8 +2,23 @@
 
 import * as React from "react"
 import Link from "next/link"
-import { articles } from "@/lib/articles"
+import { articles, latestSlug } from "@/lib/articles"
 import type { Language } from "@/components/footer"
+
+/**
+ * Sits beside the newest title on the home list. Its own blue rather than a
+ * theme token: nothing else on this page is blue, which is the entire job —
+ * one badge that reads as new against a column of grey.
+ */
+const newLabel: Record<Language, string> = { PT: "Novo", EN: "New", ES: "Nuevo" }
+
+function NewBadge({ label }: { label: string }) {
+  return (
+    <span className="shrink-0 rounded-full bg-[#e8f0fe] px-1.5 py-px text-[11px] leading-[18px] font-medium text-[#1d63d8] dark:bg-[#4d8dff]/15 dark:text-[#7fb0ff]">
+      {label}
+    </span>
+  )
+}
 
 function GlyphDots() {
   return (
@@ -130,9 +145,14 @@ export function WorkList({ language, locale }: { language: Language; locale: str
                 {GLYPHS[article.slug]}
               </span>
               <div className="flex min-w-0 flex-1 flex-col sm:flex-row sm:items-center sm:justify-between sm:gap-4">
-                <h3 className="truncate text-[15px] font-[450] text-gray-1200">
-                  {article.title[language]}
-                </h3>
+                {/* The title truncates, the badge never does — so they share a
+                    row of their own rather than competing for the same one. */}
+                <div className="flex min-w-0 items-center gap-2">
+                  <h3 className="truncate text-[15px] font-[450] text-gray-1200">
+                    {article.title[language]}
+                  </h3>
+                  {article.slug === latestSlug && <NewBadge label={newLabel[language]} />}
+                </div>
                 <span className="truncate text-[15px] text-gray-1000 sm:text-right">
                   {article.description[language]}
                 </span>

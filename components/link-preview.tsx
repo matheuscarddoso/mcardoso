@@ -6,7 +6,7 @@ import Link from "next/link"
 import * as HoverCardPrimitive from "@radix-ui/react-hover-card"
 import { ArrowUpRight } from "lucide-react"
 import { AnimatePresence, motion, useReducedMotion } from "motion/react"
-import type { Language } from "@/lib/locale"
+import { MONTH_NAMES, type Language } from "@/lib/locale"
 import type { GithubCardData } from "@/lib/github"
 
 type Preview = {
@@ -38,6 +38,12 @@ const PREVIEWS: Record<string, Preview> = {
     alt: "Abacate Pay",
     width: 640,
     height: 363,
+  },
+  "https://kubofood.app": {
+    src: "/projects/kubofood.webp",
+    alt: "KuboFood",
+    width: 640,
+    height: 318,
   },
   "https://www.goiasec.com.br/": {
     src: "/previews/goias-fc.webp",
@@ -232,13 +238,6 @@ const CARD_CHROME = 8 * 2 + 4 * 2
 
 const columnStep = CELL + CELL_GAP
 const gridWidth = (columns: number) => columns * CELL + Math.max(columns - 1, 0) * CELL_GAP
-
-/** Short month names, held locally so server and client never disagree. */
-const MONTH_NAMES: Record<Language, readonly string[]> = {
-  PT: ["jan", "fev", "mar", "abr", "mai", "jun", "jul", "ago", "set", "out", "nov", "dez"],
-  EN: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
-  ES: ["ene", "feb", "mar", "abr", "may", "jun", "jul", "ago", "sep", "oct", "nov", "dic"],
-}
 
 const contributionsLabel = {
   PT: (total: number) => `${total} contribuições no último ano`,

@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { Geist, Geist_Mono, Libre_Baskerville } from "next/font/google";
 import "../globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
+import { DocumentPanelProvider } from "@/components/document-panel";
 import { LOCALES, localeToLanguage } from "@/lib/locale";
 import {
   HOME_SEO,
@@ -135,7 +136,11 @@ export default async function LocaleLayout({
           enableSystem
           disableTransitionOnChange
         >
-          {children}
+          {/* Wraps every page rather than the home page alone: the panel is
+              fixed to the viewport and shifts whatever column is beside it. */}
+          <DocumentPanelProvider language={localeToLanguage(locale)}>
+            {children}
+          </DocumentPanelProvider>
         </ThemeProvider>
       </body>
     </html>

@@ -308,6 +308,44 @@
 }
 
 /*
+ * Width of the document panel, and of the margin the page gives up to it.
+ * One variable so the two can never disagree: the panel is laid out from it
+ * and the column beside it is pushed by the same value.
+ *
+ * The floor is what a page of A4 needs to stay readable, the ceiling stops it
+ * swallowing the window on a wide display.
+ */
+:root {
+  --doc-panel-width: clamp(400px, 40vw, 720px);
+  /*
+   * The air around the panel, in both modes. It floats off every edge rather
+   * than butting into them, so the same value is its offset from the viewport
+   * and the gap between it and the column beside it.
+   */
+  --doc-panel-inset: 0.5rem;
+  /*
+   * How wide the document itself is allowed to get, expanded or not. A4 is
+   * 210mm, which is 794 CSS pixels, so this is a shade over a sheet at its
+   * natural size: wide enough not to look shrunken, narrow enough that the
+   * lines stay the length they were typeset for.
+   */
+  --doc-page-width: 860px;
+
+  /*
+   * The photo deck, sized so the fan always fits the prose column.
+   *
+   * Seven cards overlapping by `overlap` measure `7w - 6o`, and the column is
+   * 608px at its widest and 288px on the narrowest phone. The clamps are what
+   * keep that sum under both: at the ceiling it comes to 570px, and at 320px
+   * it comes to 278px. Fixed pixels would have been fine on a desktop and
+   * clipped by the page's `overflow-x-hidden` on a phone.
+   */
+  --deck-card-w: clamp(66px, 21vw, 144px);
+  --deck-card-h: clamp(78px, 25vw, 171px);
+  --deck-overlap: clamp(31px, 10vw, 73px);
+}
+
+/*
  * Only the italic face of the display serif is loaded, so ask for it by name.
  * Without this the request is font-style: normal, and browsers that don't fall
  * back across styles (older Safari, several Android WebViews) skip the family

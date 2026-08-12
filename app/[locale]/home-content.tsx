@@ -19,7 +19,9 @@ import type { ContributionYear, GithubCardData } from "@/lib/github"
 import { VerifiedBadge } from "@/components/verified-badge"
 import { BrandMark } from "@/components/brand-marks"
 import { AvatarStack } from "@/components/avatar-stack"
+import { PhotoDeck } from "@/components/photo-deck"
 import { FileTextIcon } from "@/components/file-text-icon"
+import { DOCUMENT_PANEL_ID, useDocumentPanel } from "@/components/document-panel"
 import { Mail } from "lucide-react"
 import { AnimatePresence, motion, useReducedMotion } from "motion/react"
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
@@ -35,6 +37,7 @@ const translations = {
     projects: "Projetos",
     contributions: "Contribuições",
     writing: "Escrita",
+    elsewhere: "Por aí",
     copyEmail: "Copiar e-mail",
     copy: "Copiar",
     copied: "Copiado!",
@@ -53,6 +56,7 @@ const translations = {
     projects: "Projects",
     contributions: "Contributions",
     writing: "Writing",
+    elsewhere: "Elsewhere",
     copyEmail: "Copy email",
     copy: "Copy",
     copied: "Copied!",
@@ -71,6 +75,7 @@ const translations = {
     projects: "Proyectos",
     contributions: "Contribuciones",
     writing: "Escritura",
+    elsewhere: "Por ahí",
     copyEmail: "Copiar correo",
     copy: "Copiar",
     copied: "¡Copiado!",
@@ -220,11 +225,41 @@ const CV: Record<Language, string> = {
  * the dark one. A hard-coded black would sink into a #111 page.
  */
 function ResumeButton({ language, label }: { language: Language; label: string }) {
+  const { canOpen, openSrc, toggle } = useDocumentPanel()
+  const src = CV[language]
+  const isOpen = openSrc === src
+
+  /*
+   * Intercepts the plain left click and nothing else. A modified click is the
+   * reader asking for a tab or a window, and `canOpen` is false on any
+   * viewport too narrow to host the split, so both fall through to the anchor.
+   */
+  const handleClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
+    if (!canOpen) return
+    if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || event.button !== 0) return
+
+    event.preventDefault()
+    toggle({
+      title: label,
+      label: "PDF",
+      src,
+      filename: src.split("/").pop() ?? "curriculo.pdf",
+    })
+  }
+
   return (
     <a
-      href={CV[language]}
+      href={src}
       target="_blank"
       rel="noopener noreferrer"
+      onClick={handleClick}
+      /*
+       * Announced as a toggle only where it behaves like one. Below the split
+       * it is a plain link to a file, and claiming it expands a panel that
+       * cannot open would be a lie to a screen reader.
+       */
+      aria-expanded={canOpen ? isOpen : undefined}
+      aria-controls={canOpen ? DOCUMENT_PANEL_ID : undefined}
       className="inline-flex w-fit items-center gap-2 rounded-xl bg-gray-1200 py-2 pr-3.5 pl-3 text-sm font-medium text-preview-bg shadow-custom transition-[box-shadow,transform] duration-300 ease-[var(--ease-out-strong)] hover:scale-[1.02] hover:shadow-card-lift active:scale-[0.98] motion-reduce:hover:scale-100 motion-reduce:active:scale-100"
     >
       {/* No colour of its own — it takes the button's ink. */}
@@ -248,7 +283,7 @@ const bio: Record<Language, BioParagraphs> = {
         Sou engenheiro de software na <BioLink href="https://4selet.com.br" target="_blank" className={link} rel="noopener noreferrer"><BrandMark name="4selet" />4Selet</BioLink>, onde criadores vendem cursos e assinaturas, e na <BioLink href="https://zero7.com.br/home" target="_blank" className={link} rel="noopener noreferrer"><BrandMark name="zero7" />Zero7</BioLink>, uma mesa proprietária de day trade. Quase tudo que eu construo é fluxo de pagamento: checkout, cobrança e repasse. O <span className="font-display">caminho feliz</span> é a parte fácil. O trabalho está em decidir o que acontece quando ela falha, duplica ou chega fora de ordem.
       </p>
       <p className="paragraph mb-3">
-        Meu maior projeto open-source é a <BioLink href="https://www.abacatepay.com/" target="_blank" className={link} rel="noopener noreferrer"><BrandMark name="abacate" />Abacate Pay</BioLink>, um método de pagamento feito para o Brasil por <AvatarStack /> 23 desenvolvedores. Também construo o <BioLink href="https://kubofood.app" target="_blank" className={link} rel="noopener noreferrer"><BrandMark name="kubo" />KuboFood</BioLink>, que leva o pedido do celular do cliente até a tela da cozinha sem ninguém redigitar nada.
+        Meu maior projeto open-source é a <BioLink href="https://www.abacatepay.com/" target="_blank" className={link} rel="noopener noreferrer"><span aria-hidden className="inline-block" style={{ marginRight: "0.3em" }}>🥑</span>Abacate Pay</BioLink>, um método de pagamento feito para o Brasil por <AvatarStack /> 23 desenvolvedores. Também construo o <BioLink href="https://kubofood.app" target="_blank" className={link} rel="noopener noreferrer"><BrandMark name="kubo" />KuboFood</BioLink>, que<br className="hidden sm:inline" /> leva o pedido do celular do cliente até a tela da cozinha sem ninguém redigitar nada.
       </p>
       <p className="paragraph mb-3">
         Antes disso trabalhei com o <BioLink href="https://www.goiasec.com.br/" target="_blank" className={link} rel="noopener noreferrer"><BrandMark name="goias" />Goiás F.C.</BioLink> e outros. Monto uma <PlaylistLink language={lang} className={link} href={`/${locale}/monthly-playlists`}><BrandMark name="spotify" />playlist</PlaylistLink> por mês e corro todo dia.
@@ -264,7 +299,7 @@ const bio: Record<Language, BioParagraphs> = {
         I&apos;m a software engineer at <BioLink href="https://4selet.com.br" target="_blank" className={link} rel="noopener noreferrer"><BrandMark name="4selet" />4Selet</BioLink>, where creators sell courses and subscriptions, and at <BioLink href="https://zero7.com.br/home" target="_blank" className={link} rel="noopener noreferrer"><BrandMark name="zero7" />Zero7</BioLink>, a proprietary trading desk. Almost everything I build is a payment flow: checkout, billing, payouts. The <span className="font-display">happy path</span> is the easy part. The work is deciding what happens when a charge fails, fires twice, or arrives out of order.
       </p>
       <p className="paragraph mb-3">
-        My biggest open-source project is <BioLink href="https://www.abacatepay.com/" target="_blank" className={link} rel="noopener noreferrer"><BrandMark name="abacate" />Abacate Pay</BioLink>, a payment method built for Brazil by <AvatarStack /> 23 developers. I also build <BioLink href="https://kubofood.app" target="_blank" className={link} rel="noopener noreferrer"><BrandMark name="kubo" />KuboFood</BioLink>, which carries an order from the customer&apos;s phone to the kitchen screen without anyone retyping it.
+        My biggest open-source project is <BioLink href="https://www.abacatepay.com/" target="_blank" className={link} rel="noopener noreferrer"><span aria-hidden className="inline-block" style={{ marginRight: "0.3em" }}>🥑</span>Abacate Pay</BioLink>, a payment method built for Brazil by <AvatarStack /> 23 developers. I also build <BioLink href="https://kubofood.app" target="_blank" className={link} rel="noopener noreferrer"><BrandMark name="kubo" />KuboFood</BioLink>, which<br className="hidden sm:inline" /> carries an order from the customer&apos;s phone to the kitchen screen without anyone retyping it.
       </p>
       <p className="paragraph mb-3">
         Before that I worked with <BioLink href="https://www.goiasec.com.br/" target="_blank" className={link} rel="noopener noreferrer"><BrandMark name="goias" />Goiás F.C.</BioLink> and a few others. I put together a <PlaylistLink language={lang} className={link} href={`/${locale}/monthly-playlists`}><BrandMark name="spotify" />playlist</PlaylistLink> every month and run every day.
@@ -280,7 +315,7 @@ const bio: Record<Language, BioParagraphs> = {
         Soy ingeniero de software en <BioLink href="https://4selet.com.br" target="_blank" className={link} rel="noopener noreferrer"><BrandMark name="4selet" />4Selet</BioLink>, donde creadores venden cursos y suscripciones, y en <BioLink href="https://zero7.com.br/home" target="_blank" className={link} rel="noopener noreferrer"><BrandMark name="zero7" />Zero7</BioLink>, una mesa propietaria de day trade. Casi todo lo que construyo es flujo de pago: checkout, cobros y pagos. El <span className="font-display">camino feliz</span> es la parte fácil. El trabajo está en decidir qué pasa cuando un cobro falla, se duplica o llega fuera de orden.
       </p>
       <p className="paragraph mb-3">
-        Mi mayor proyecto open-source es <BioLink href="https://www.abacatepay.com/" target="_blank" className={link} rel="noopener noreferrer"><BrandMark name="abacate" />Abacate Pay</BioLink>, un método de pago hecho para Brasil por <AvatarStack /> 23 desarrolladores. También construyo <BioLink href="https://kubofood.app" target="_blank" className={link} rel="noopener noreferrer"><BrandMark name="kubo" />KuboFood</BioLink>, que lleva el pedido del móvil del cliente hasta la pantalla de la cocina sin que nadie lo reescriba.
+        Mi mayor proyecto open-source es <BioLink href="https://www.abacatepay.com/" target="_blank" className={link} rel="noopener noreferrer"><span aria-hidden className="inline-block" style={{ marginRight: "0.3em" }}>🥑</span>Abacate Pay</BioLink>, un método de pago hecho para Brasil por <AvatarStack /> 23 desarrolladores. También construyo <BioLink href="https://kubofood.app" target="_blank" className={link} rel="noopener noreferrer"><BrandMark name="kubo" />KuboFood</BioLink>, que<br className="hidden sm:inline" /> lleva el pedido del móvil del cliente hasta la pantalla de la cocina sin que nadie lo reescriba.
       </p>
       <p className="paragraph mb-3">
         Antes trabajé con <BioLink href="https://www.goiasec.com.br/" target="_blank" className={link} rel="noopener noreferrer"><BrandMark name="goias" />Goiás F.C.</BioLink> y algunos otros. Armo una <PlaylistLink language={lang} className={link} href={`/${locale}/monthly-playlists`}><BrandMark name="spotify" />playlist</PlaylistLink> cada mes y corro todos los días.
@@ -422,6 +457,18 @@ export function HomeContent({
             {t.writing}
           </h2>
           <WorkList language={language} locale={locale} />
+        </section>
+
+        <SectionDivider className="my-10" />
+
+        <section aria-labelledby="elsewhere-heading" className="mb-4 w-full">
+          <h2
+            id="elsewhere-heading"
+            className="mb-2 flex w-full items-center font-medium text-gray-1200"
+          >
+            {t.elsewhere}
+          </h2>
+          <PhotoDeck language={language} />
         </section>
       </main>
       {/* Both toggles live in the header on this page. */}

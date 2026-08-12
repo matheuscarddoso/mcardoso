@@ -17,32 +17,14 @@ const FACES = ["/people/abacate-1.png", "/people/abacate-2.png", "/people/abacat
 
 /* Geometry in `em`, so the stack tracks the paragraph rather than a fixed size. */
 const FACE = 1.15
-/** Each face sits this far right of the one before it. */
-const STACKED = 0.62
 
 /**
- * How far the outermost faces travel on hover, in em, and the reason this
- * component takes up no more room when they do.
- *
- * The spread runs *outward from the middle face*, not rightward off the end:
- * the left face goes left, the right face goes right, the middle one holds.
- * So the extra width is split between the two sides, and each side only has to
- * borrow half of it from the word space already sitting there.
+ * The gap between one face and the next, at rest and hovered. Negative is an
+ * overlap, so the pile at rest is each face sitting on top of half the one
+ * before it, and hovering opens it to a hair of daylight.
  */
-const SPREAD = 0.4
-
-/** Middle index, which is the face that stays put. */
-const PIVOT = (FACES.length - 1) / 2
-
-/**
- * A hair of room on each side, so the borrowed space on hover is space this
- * component already owns. At rest it just reads as slightly loose word
- * spacing, which is what an inline avatar pile wants anyway.
- */
-const BREATHING = 0.15
-
-/** Rounded, or the inline style prints `2.3899999999999997em`. */
-const STACK_WIDTH = `${Math.round((FACE + STACKED * (FACES.length - 1)) * 1000) / 1000}em`
+const STACKED_GAP = -0.53
+const OPEN_GAP = 0.1
 
 /**
  * A touch of bounce: the spread is a flourish, not a state change, and this is
@@ -58,12 +40,12 @@ export function AvatarStack() {
 
   return (
     /*
-     * Fixed width, always. The first version animated it so the number after
-     * the stack would be carried along, and that reflowed the paragraph: on
-     * hover the last words of the line were pushed onto the next one and the
-     * whole block jumped. Nothing about a hover flourish is worth moving the
-     * text a reader is in the middle of. So the footprint never changes and
-     * the faces move by transform alone, spreading into the margins below.
+     * No width of its own. The faces sit in normal flow and the gap between
+     * them is what animates, so the box is only ever as wide as they are and
+     * the sentence re-spaces around it the way it would around any word that
+     * grew. An earlier version pinned the width and spread the faces with
+     * transforms to stop the line reflowing; this is the opposite trade, and
+     * it is the one that reads as the pile actually opening.
      */
     <span
       aria-hidden
@@ -71,18 +53,16 @@ export function AvatarStack() {
       onMouseLeave={() => setOpen(false)}
       // Same centre as the brand marks, from the same constant, so the faces
       // and the logos in the paragraph above sit on one line.
-      style={{
-        height: `${FACE}em`,
-        width: STACK_WIDTH,
-        marginInline: `${BREATHING}em`,
-        verticalAlign: `${(MARK_CENTER - FACE / 2).toFixed(3)}em`,
-      }}
-      className="relative inline-block shrink-0"
+      style={{ verticalAlign: `${(MARK_CENTER - FACE / 2).toFixed(3)}em` }}
+      className="inline-flex"
     >
       {FACES.map((src, index) => (
         <motion.span
           key={src}
-          animate={{ x: `${STACKED * index + (open ? (index - PIVOT) * SPREAD : 0)}em` }}
+          // The first face has nothing to overlap, so only the rest move.
+          animate={{
+            marginLeft: index === 0 ? 0 : `${open ? OPEN_GAP : STACKED_GAP}em`,
+          }}
           initial={false}
           transition={transition}
           // Later faces paint over earlier ones, so the stack reads as a pile
@@ -93,7 +73,7 @@ export function AvatarStack() {
            * sit in a paragraph, and it is what cuts each face away from the one
            * beneath so the pile reads as separate discs.
            */
-          className="absolute top-0 left-0 block overflow-hidden rounded-full bg-background ring-2 ring-background"
+          className="relative block shrink-0 overflow-hidden rounded-full bg-background ring-2 ring-background"
         >
           {/* Fixed size and no `sizes`, so Next emits the 1x/2x pair rather
               than a full-width srcSet: with `sizes` it wrote sixteen candidate

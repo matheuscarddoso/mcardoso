@@ -53,7 +53,13 @@
   --ease-out-strong: cubic-bezier(0.23, 1, 0.32, 1);
   --ease-icon: cubic-bezier(0.2, 0, 0, 1);
   --radius: 0.325rem;
-  --background: oklch(1 0 0);
+  /*
+   * Off-white, not paper white. `--color-preview-bg` stays at #fff on purpose:
+   * every card, hover panel and tooltip is painted with it, so holding the
+   * page a shade below them is what gives those surfaces their lift. When both
+   * were #fff the only thing separating a card from the page was its shadow.
+   */
+  --background: #fcfcfc;
   --foreground: oklch(0.141 0.005 285.823);
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.141 0.005 285.823);

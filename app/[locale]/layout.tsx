@@ -55,7 +55,9 @@ export const viewport: Viewport = {
   // The lightbox and the fixed header blur both run edge to edge on phones.
   viewportFit: "cover",
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+    // Tracks `--background`. A browser chrome painted a shade off the page
+    // shows as a seam under the status bar on a phone.
+    { media: "(prefers-color-scheme: light)", color: "#fcfcfc" },
     { media: "(prefers-color-scheme: dark)", color: "#111111" },
   ],
 };

@@ -21,10 +21,14 @@ import { OG_IMAGE, PERSON } from "./site"
 const { width: WIDTH, height: HEIGHT } = OG_IMAGE
 
 /**
- * The site's own light-mode tokens, not values sampled off the old PNG: its
- * ink reads as #23221e only because that average includes the antialiased
- * edges. The darkest pixels are #000 on #fff, which is exactly
- * `--color-heading` on `--background`.
+ * The site's own light-mode ink, not a value sampled off the old PNG: that
+ * reads as #23221e only because the average includes the antialiased edges.
+ * The darkest pixels are #000, which is exactly `--color-heading`.
+ *
+ * The ground stays paper white and deliberately does not track `--background`,
+ * which is now #fcfcfc. A share card is composited onto Twitter's or
+ * LinkedIn's own surface, never onto this page, and it has to match the static
+ * `/og.png` that every other share of this site already points at.
  */
 const INK = "#000"
 const GROUND = "#fff"

@@ -365,7 +365,7 @@ export function HomeContent({
             {/* No `whitespace-nowrap`: the Portuguese and Spanish roles are
                 the longest strings on the page, and a 320px viewport has to
                 wrap them rather than push the column sideways. */}
-            <p className="font-medium text-gray-1100 leading-snug text-sm">{t.title}</p>
+            <p className="font-medium text-gray-1100 leading-snug text-base">{t.title}</p>
           </div>
         </div>
 

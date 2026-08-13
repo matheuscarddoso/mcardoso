@@ -353,7 +353,7 @@ export function HomeContent({
               closeLabel={t.closePhoto}
             />
           </div>
-          <div className="ml-2">
+          <div className="ml-3">
             {/* `inline-flex` on the link, not the heading: the badge belongs to
                 the name, so it has to sit on the last line if the name wraps. */}
             <h1 className="font-medium text-gray-1200 leading-snug text-base">

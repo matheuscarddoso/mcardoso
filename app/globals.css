@@ -310,31 +310,51 @@
 /*
  * The pixel cat beside the footer clock.
  *
- * The sheet is a 8x4 grid of 32px cells. The three washing frames sit in
- * columns 5, 6 and 7 of the top row, which is the only reason this is a single
- * sweep of `background-position` rather than a keyframe per cell: they are
- * contiguous. The sweep runs from -160px to -256px, three cells, and `steps(3)`
- * lands on the first three and never paints the fourth.
+ * The sheet is a 8x4 grid of 32px cells and the scale is the whole point: at
+ * 1:1 there is no resampling, so `image-rendering: pixelated` has nothing to
+ * do and the sprite just looks small. Drawing it at 2x turns every source
+ * pixel into a 2x2 block, which is what reads as pixel art.
  *
- * `image-rendering: pixelated` is not optional. Without it the browser smooths
- * the upscale and 32px of pixel art turns to mush.
+ * Integer scales only. At 1.5x some source pixels land on one screen pixel and
+ * some on two, and the sprite comes out visibly uneven.
+ *
+ * The three washing frames sit in columns 5, 6 and 7 of the top row. Being
+ * contiguous is why this is one sweep of `background-position` rather than a
+ * keyframe per cell: -160 to -256 in sheet units, three cells, with `steps(3)`
+ * landing on the first three and never painting the fourth.
  */
 .pixel-cat {
+  --cat-scale: 2;
+  --cat-cell: calc(32px * var(--cat-scale));
+  --cat-from: calc(-160px * var(--cat-scale));
+  --cat-to: calc(-256px * var(--cat-scale));
+
   display: inline-block;
-  width: 32px;
-  height: 32px;
+  width: var(--cat-cell);
+  height: var(--cat-cell);
   background-image: url("/oneko/oneko.gif");
-  background-position: -160px 0;
+  background-size: calc(256px * var(--cat-scale)) calc(128px * var(--cat-scale));
+  background-position: var(--cat-from) 0;
   image-rendering: pixelated;
   animation: pixel-cat-wash 1.2s steps(3) infinite;
 }
 
+/*
+ * The artwork is a white cat with a black outline, which reads on a #111 page
+ * and disappears on a #fcfcfc one. Inverting for the light theme gives a black
+ * cat instead of an invisible one; the outline turns white and vanishes into
+ * the page, leaving a silhouette, which is the right way round.
+ */
+:root:not(.dark) .pixel-cat {
+  filter: invert(100%);
+}
+
 @keyframes pixel-cat-wash {
   from {
-    background-position: -160px 0;
+    background-position: var(--cat-from) 0;
   }
   to {
-    background-position: -256px 0;
+    background-position: var(--cat-to) 0;
   }
 }
 

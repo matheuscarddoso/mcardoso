@@ -80,20 +80,21 @@ export function AsciiStrip() {
     }
 
     /**
-     * Only ever acts on a change in width. The scene's height follows from its
-     * width, and this writes that height back onto the element the observer is
-     * watching — reacting to height too would be a loop.
+     * Reads the grid out of the box CSS already gave the element, and never
+     * writes a size back. The strip's height comes from an aspect ratio in the
+     * stylesheet, so it is correct on the first paint and nothing here can
+     * move the page under a reader who is already on it.
      */
     const measure = () => {
       const charWidth = measureCell(getComputedStyle(pre).fontFamily)
-      const next = Math.max(1, Math.floor(pre.clientWidth / charWidth))
-      if (next === cols) return false
+      const nextCols = Math.max(1, Math.floor(pre.clientWidth / charWidth))
+      const nextRows = Math.max(1, Math.floor(pre.clientHeight / LINE_HEIGHT))
+      if (nextCols === cols && nextRows === rows) return false
 
-      cols = next
+      cols = nextCols
+      rows = nextRows
       cellAspect = LINE_HEIGHT / charWidth
-      rows = Math.max(1, SCENE.rows(cols, cellAspect))
       cells = new Uint8Array(cols * rows)
-      pre.style.height = `${rows * LINE_HEIGHT}px`
       return true
     }
 
@@ -162,6 +163,9 @@ export function AsciiStrip() {
       style={{
         fontSize: FONT_SIZE,
         lineHeight: `${LINE_HEIGHT}px`,
+        /* The scene's own proportion, held from the first paint so the page is
+           its final height before the browser restores a scroll position. */
+        aspectRatio: 1 / SCENE.ratio,
         color: "var(--color-gray-900)",
         maskImage:
           "linear-gradient(to right, transparent, black 14%, black 86%, transparent)",

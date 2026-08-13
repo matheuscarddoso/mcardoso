@@ -1,29 +1,38 @@
-"use client"
+"use client";
 
-import * as React from "react"
-import Link from "next/link"
-import { useParams } from "next/navigation"
-import { Undo2, Check, LinkIcon } from "lucide-react"
-import { Footer, type Language } from "@/components/footer"
-import { LanguageToggle, ThemeToggle } from "@/components/toggles"
-import { ArticleByline } from "@/components/article-byline"
-import { ArticleNav } from "@/components/article-nav"
-import { ArticleTimeline } from "@/components/article-timeline"
-import { SectionDivider } from "@/components/section-divider"
-import { localeToLanguage } from "@/lib/locale"
-import { switchLocale } from "@/lib/switch-locale"
+import * as React from "react";
+import { HomeLink } from "@/components/home-link";
+import { useParams } from "next/navigation";
+import { Undo2, Check, LinkIcon } from "lucide-react";
+import { Footer, type Language } from "@/components/footer";
+import { LanguageToggle, ThemeToggle } from "@/components/toggles";
+import { ArticleByline } from "@/components/article-byline";
+import { ArticleNav } from "@/components/article-nav";
+import { ArticleTimeline } from "@/components/article-timeline";
+import { SectionDivider } from "@/components/section-divider";
+import { localeToLanguage } from "@/lib/locale";
+import { switchLocale } from "@/lib/switch-locale";
 
 /** Same dotted rule the home page uses, at the spacing these essays had. */
 function Divider() {
-  return <SectionDivider className="my-16" />
+  return <SectionDivider className="my-16" />;
 }
 
-function SectionHeading({ id, children }: { id: string; children: React.ReactNode }) {
+function SectionHeading({
+  id,
+  children,
+}: {
+  id: string;
+  children: React.ReactNode;
+}) {
   return (
-    <h2 className="mt-16 mb-2 scroll-mt-20 text-balance font-[550] article-heading" id={id}>
+    <h2
+      className="mt-16 mb-2 scroll-mt-20 text-balance font-[550] article-heading"
+      id={id}
+    >
       {children}
     </h2>
-  )
+  );
 }
 
 /**
@@ -32,17 +41,21 @@ function SectionHeading({ id, children }: { id: string; children: React.ReactNod
  * a table of contents that is meant to be glanceable.
  */
 function SubHeading({ children }: { children: React.ReactNode }) {
-  return <h3 className="mt-8 mb-2 text-balance font-medium text-foreground">{children}</h3>
+  return (
+    <h3 className="mt-8 mb-2 text-balance font-medium text-foreground">
+      {children}
+    </h3>
+  );
 }
 
 function CopyLinkButton() {
-  const [copied, setCopied] = React.useState(false)
+  const [copied, setCopied] = React.useState(false);
 
   const handleCopy = React.useCallback(() => {
-    navigator.clipboard.writeText(window.location.href)
-    setCopied(true)
-    setTimeout(() => setCopied(false), 2000)
-  }, [])
+    navigator.clipboard.writeText(window.location.href);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  }, []);
 
   return (
     <button
@@ -73,10 +86,10 @@ function CopyLinkButton() {
         />
       </span>
     </button>
-  )
+  );
 }
 
-const c = (text: string) => <code className="code-inline">{text}</code>
+const c = (text: string) => <code className="code-inline">{text}</code>;
 
 /**
  * The dispatch rounds for the plan in the `codePlan` listing. Node ids are code
@@ -90,9 +103,9 @@ const ROUNDS: readonly (readonly string[])[] = [
   ["fix_a", "fix_b", "update_docs"],
   ["run_tests"],
   ["report"],
-]
+];
 
-type Row = { label: string; desc: string }
+type Row = { label: string; desc: string };
 
 /**
  * A short label and what it means — a description list, because that is what
@@ -108,11 +121,13 @@ function Rows({ items }: { items: readonly Row[] }) {
           className={`flex flex-col gap-1 px-4 py-3 ${i < items.length - 1 ? "border-b" : ""}`}
         >
           <dt className="text-sm font-medium text-foreground">{item.label}</dt>
-          <dd className="text-sm text-pretty text-muted-foreground">{item.desc}</dd>
+          <dd className="text-sm text-pretty text-muted-foreground">
+            {item.desc}
+          </dd>
         </div>
       ))}
     </dl>
-  )
+  );
 }
 
 /**
@@ -136,13 +151,17 @@ function NumberedRows({ items }: { items: readonly Row[] }) {
             {i + 1}
           </span>
           <span className="flex min-w-0 flex-col gap-1">
-            <span className="text-sm font-medium text-foreground">{item.label}</span>
-            <span className="text-sm text-pretty text-muted-foreground">{item.desc}</span>
+            <span className="text-sm font-medium text-foreground">
+              {item.label}
+            </span>
+            <span className="text-sm text-pretty text-muted-foreground">
+              {item.desc}
+            </span>
           </span>
         </li>
       ))}
     </ol>
-  )
+  );
 }
 
 /** One row per dispatch round, so what runs together is visible at a glance. */
@@ -173,7 +192,7 @@ function RoundsFigure({ caption }: { caption: string }) {
         {caption}
       </figcaption>
     </figure>
-  )
+  );
 }
 
 const translations = {
@@ -181,19 +200,21 @@ const translations = {
     title: "Loops, harness e grafos",
     intro: (
       <>
-        Você já usou um agente: Claude Code, Cursor, Copilot em modo agent. Ele lê o seu pedido,
-        faz uma coisa, olha o resultado e decide a próxima. Às vezes parece mágica. Às vezes ele
-        tenta a mesma correção errada quatro vezes seguidas. Os dois comportamentos saem da mesma
-        estrutura, e essa estrutura dá pra entender inteira sem uma linha de matemática.
+        Você já usou um agente: Claude Code, Cursor, Copilot em modo agent. Ele
+        lê o seu pedido, faz uma coisa, olha o resultado e decide a próxima. Às
+        vezes parece mágica. Às vezes ele tenta a mesma correção errada quatro
+        vezes seguidas. Os dois comportamentos saem da mesma estrutura, e essa
+        estrutura dá pra entender inteira sem uma linha de matemática.
       </>
     ),
 
     loop: "O loop: uma coisa por vez",
     loopP1: (
       <>
-        Todo agente é um {c("while")}. Ele monta um contexto (o seu pedido, o que já aconteceu, a
-        lista de ferramentas disponíveis), manda pro modelo, recebe de volta uma ação, executa
-        essa ação, guarda o resultado no histórico e volta pro topo. Quando o modelo responde
+        Todo agente é um {c("while")}. Ele monta um contexto (o seu pedido, o
+        que já aconteceu, a lista de ferramentas disponíveis), manda pro modelo,
+        recebe de volta uma ação, executa essa ação, guarda o resultado no
+        histórico e volta pro topo. Quando o modelo responde
         &ldquo;terminei&rdquo; em vez de pedir outra ação, o loop para.
       </>
     ),
@@ -201,12 +222,13 @@ const translations = {
       "É isso. Todo agente de código que você já usou é uma variação de vinte linhas disso, e é justamente por ser tão pouco que ele funciona tão bem em tanta coisa.",
     loopP3: (
       <>
-        Agora repare em duas propriedades desse código, porque tudo neste texto sai delas. A
-        primeira: em cada volta existe exatamente <em>uma</em> coisa pra fazer. Não duas. O modelo
-        devolve uma ação, você executa, volta pro topo. A segunda: quem escolhe essa ação é o
-        modelo. Não existe nenhuma função no seu código dizendo &ldquo;agora é a vez do passo
-        3&rdquo;. A decisão vem de dentro de uma inferência que você não consegue inspecionar nem
-        repetir igual.
+        Agora repare em duas propriedades desse código, porque tudo neste texto
+        sai delas. A primeira: em cada volta existe exatamente <em>uma</em>{" "}
+        coisa pra fazer. Não duas. O modelo devolve uma ação, você executa,
+        volta pro topo. A segunda: quem escolhe essa ação é o modelo. Não existe
+        nenhuma função no seu código dizendo &ldquo;agora é a vez do passo
+        3&rdquo;. A decisão vem de dentro de uma inferência que você não
+        consegue inspecionar nem repetir igual.
       </>
     ),
     loopP4:
@@ -233,13 +255,14 @@ const translations = {
       "A distinção importa por um motivo prático. Você não controla o modelo: ele é um serviço de terceiro que você chama por HTTP. O harness é 100% seu código. Quando um agente seu se comporta mal, a chance de o problema estar no harness é muito maior que a de estar no modelo. E quatro linhas de harness resolvem a maior parte da seção anterior:",
     harnessP3: (
       <>
-        Nada aí é sofisticado, e é esse o ponto. {c("MAX_STEPS")} transforma &ldquo;loop
-        infinito&rdquo; em &ldquo;loop que termina&rdquo;. Um teto de tentativas por passo
-        transforma &ldquo;insiste pra sempre&rdquo; em &ldquo;insiste três vezes&rdquo;. O{" "}
-        {c("slice(-HISTORY_TURNS)")} transforma &ldquo;a conversa cresce até estourar a janela de
-        contexto&rdquo; em &ldquo;a conversa tem tamanho máximo&rdquo;. E {c("maxTokens")}{" "}
-        transforma &ldquo;a fatura é uma surpresa no fim do mês&rdquo; em &ldquo;a fatura tem
-        teto&rdquo;.
+        Nada aí é sofisticado, e é esse o ponto. {c("MAX_STEPS")} transforma
+        &ldquo;loop infinito&rdquo; em &ldquo;loop que termina&rdquo;. Um teto
+        de tentativas por passo transforma &ldquo;insiste pra sempre&rdquo; em
+        &ldquo;insiste três vezes&rdquo;. O {c("slice(-HISTORY_TURNS)")}{" "}
+        transforma &ldquo;a conversa cresce até estourar a janela de
+        contexto&rdquo; em &ldquo;a conversa tem tamanho máximo&rdquo;. E{" "}
+        {c("maxTokens")} transforma &ldquo;a fatura é uma surpresa no fim do
+        mês&rdquo; em &ldquo;a fatura tem teto&rdquo;.
       </>
     ),
     harnessP4:
@@ -250,37 +273,41 @@ const translations = {
       "O loop decide o próximo passo no meio do caminho. A alternativa é decidir todos os passos antes de começar, escrever essa decisão num formato que o código consegue ler, e depois só executar o que está escrito.",
     graphP2: (
       <>
-        Esse formato é um grafo. Se a palavra assusta, troca por uma que você já usa toda semana: é
-        um pipeline de CI. No GitHub Actions você escreve jobs e coloca {c("needs: build")} em um
-        deles. Pronto, é um grafo: caixas, e setas dizendo &ldquo;esta só começa depois
-        daquela&rdquo;. Um {c("Makefile")} é a mesma ideia. As dependências do seu{" "}
+        Esse formato é um grafo. Se a palavra assusta, troca por uma que você já
+        usa toda semana: é um pipeline de CI. No GitHub Actions você escreve
+        jobs e coloca {c("needs: build")} em um deles. Pronto, é um grafo:
+        caixas, e setas dizendo &ldquo;esta só começa depois daquela&rdquo;. Um{" "}
+        {c("Makefile")} é a mesma ideia. As dependências do seu{" "}
         {c("package.json")} também.
       </>
     ),
     graphP3: (
       <>
-        O nome técnico é DAG, e vale traduzir os três pedaços porque cada um carrega uma garantia.{" "}
-        <em>Grafo</em>: caixas ligadas por setas. <em>Dirigido</em>: as setas têm ponta, então{" "}
-        {c("A → B")} é diferente de {c("B → A")}. <em>Acíclico</em>: nenhuma seta volta pra trás.
-        Esse último não é detalhe de vocabulário: é a garantia estrutural de que a execução
-        termina. Sem ciclo, não existe caminho que se repita pra sempre.
+        O nome técnico é DAG, e vale traduzir os três pedaços porque cada um
+        carrega uma garantia. <em>Grafo</em>: caixas ligadas por setas.{" "}
+        <em>Dirigido</em>: as setas têm ponta, então {c("A → B")} é diferente de{" "}
+        {c("B → A")}. <em>Acíclico</em>: nenhuma seta volta pra trás. Esse
+        último não é detalhe de vocabulário: é a garantia estrutural de que a
+        execução termina. Sem ciclo, não existe caminho que se repita pra
+        sempre.
       </>
     ),
     graphP4: "Na prática, o plano é um array:",
     graphP5: (
       <>
-        Repare no que mudou. {c("needs")} não é uma frase pedindo bom comportamento: é dado. O
-        executor lê {c("needs")} e simplesmente não despacha {c("analyze")} antes de{" "}
-        {c("read_auth")} e {c("read_utils")} terminarem. Não tem como &ldquo;esquecer&rdquo;: a
-        dependência deixou de ser memória do modelo e virou uma condição num {c("if")}.
+        Repare no que mudou. {c("needs")} não é uma frase pedindo bom
+        comportamento: é dado. O executor lê {c("needs")} e simplesmente não
+        despacha {c("analyze")} antes de {c("read_auth")} e {c("read_utils")}{" "}
+        terminarem. Não tem como &ldquo;esquecer&rdquo;: a dependência deixou de
+        ser memória do modelo e virou uma condição num {c("if")}.
       </>
     ),
     graphP6:
       "E aparece um ganho que o loop não consegue ter de jeito nenhum. A cada rodada, o executor pega todos os passos cujas dependências já terminaram, não apenas um. Se dois passos não têm seta entre eles, eles rodam juntos:",
     graphP7: (
       <>
-        São quatro linhas de {c("filter")} e um {c("Promise.all")}. A mesma tarefa que o loop faz em
-        onze voltas em série sai em seis rodadas:
+        São quatro linhas de {c("filter")} e um {c("Promise.all")}. A mesma
+        tarefa que o loop faz em onze voltas em série sai em seis rodadas:
       </>
     ),
     roundsCaption:
@@ -291,25 +318,27 @@ const translations = {
       "Quando um passo depende de dois outros, “depende” pode significar duas coisas bem diferentes. Confundir as duas é um bug caro, e o loop não tem como expressar a segunda.",
     joinsAll: (
       <>
-        <em>Esperar todos.</em> {c("report")} precisa dos testes <em>e</em> da documentação. Só
-        começa quando os dois terminarem. É o caso comum, e é o padrão.
+        <em>Esperar todos.</em> {c("report")} precisa dos testes <em>e</em> da
+        documentação. Só começa quando os dois terminarem. É o caso comum, e é o
+        padrão.
       </>
     ),
     joinsAny: (
       <>
-        <em>Esperar um.</em> {c("fix_a")} e {c("fix_b")} são duas correções alternativas pro mesmo
-        bug. {c("run_tests")} precisa de <em>uma</em> delas. Se {c("fix_b")} funcionar,{" "}
-        {c("fix_a")} deixou de importar, e a coisa certa é marcá-lo como dispensado, não ficar
-        tentando de novo até gastar o orçamento de retentativas em um caminho que ninguém mais vai
+        <em>Esperar um.</em> {c("fix_a")} e {c("fix_b")} são duas correções
+        alternativas pro mesmo bug. {c("run_tests")} precisa de <em>uma</em>{" "}
+        delas. Se {c("fix_b")} funcionar, {c("fix_a")} deixou de importar, e a
+        coisa certa é marcá-lo como dispensado, não ficar tentando de novo até
+        gastar o orçamento de retentativas em um caminho que ninguém mais vai
         usar.
       </>
     ),
     joinsP2: (
       <>
-        No loop, a segunda situação não tem como ser escrita. O modelo tenta A, falha, decide tentar
-        B, e a desistência de A é uma frase no histórico. No grafo é um campo:{" "}
-        {c('waitFor: "any"')}. É a diferença entre combinar uma coisa e esperar que alguém lembre
-        dela.
+        No loop, a segunda situação não tem como ser escrita. O modelo tenta A,
+        falha, decide tentar B, e a desistência de A é uma frase no histórico.
+        No grafo é um campo: {c('waitFor: "any"')}. É a diferença entre combinar
+        uma coisa e esperar que alguém lembre dela.
       </>
     ),
 
@@ -334,8 +363,9 @@ const translations = {
     ],
     recoveryP3: (
       <>
-        E a regra que faz a escada funcionar: não pode pular degrau. O degrau 3 só depois de esgotar
-        1 e 2. Isso é meia dúzia de linhas: um contador por passo, que só sobe de um em um:
+        E a regra que faz a escada funcionar: não pode pular degrau. O degrau 3
+        só depois de esgotar 1 e 2. Isso é meia dúzia de linhas: um contador por
+        passo, que só sobe de um em um:
       </>
     ),
     recoveryP4:
@@ -355,10 +385,12 @@ const translations = {
     costA: "O plano depende de quem escreve o plano",
     costAP: (
       <>
-        O paralelismo só existe se alguém desenhou as setas certas. Se o planejador escrever uma
-        linha reta ({c("1 → 2 → 3 → 4")}), o grafo executa uma coisa por vez, igualzinho ao loop,
-        só com muito mais código no caminho. E quem normalmente escreve o plano é um LLM, que erra.
-        Todo o ganho de velocidade estava na estrutura, e a estrutura não é garantida.
+        O paralelismo só existe se alguém desenhou as setas certas. Se o
+        planejador escrever uma linha reta ({c("1 → 2 → 3 → 4")}), o grafo
+        executa uma coisa por vez, igualzinho ao loop, só com muito mais código
+        no caminho. E quem normalmente escreve o plano é um LLM, que erra. Todo
+        o ganho de velocidade estava na estrutura, e a estrutura não é
+        garantida.
       </>
     ),
     costB: "Erro em paralelo custa mais",
@@ -402,20 +434,22 @@ const translations = {
     title: "Loops, harnesses and graphs",
     intro: (
       <>
-        You&apos;ve used an agent: Claude Code, Cursor, Copilot in agent mode. It reads your
-        request, does one thing, looks at the result and decides the next one. Sometimes it feels
-        like magic. Sometimes it tries the same wrong fix four times in a row. Both behaviours come
-        out of the same structure, and you can understand that structure completely without a line
-        of maths.
+        You&apos;ve used an agent: Claude Code, Cursor, Copilot in agent mode.
+        It reads your request, does one thing, looks at the result and decides
+        the next one. Sometimes it feels like magic. Sometimes it tries the same
+        wrong fix four times in a row. Both behaviours come out of the same
+        structure, and you can understand that structure completely without a
+        line of maths.
       </>
     ),
 
     loop: "The loop: one thing at a time",
     loopP1: (
       <>
-        Every agent is a {c("while")}. It assembles a context (your request, what has happened so
-        far, the list of available tools), sends it to the model, gets back one action, runs that
-        action, appends the result to the history and goes back to the top. When the model answers
+        Every agent is a {c("while")}. It assembles a context (your request,
+        what has happened so far, the list of available tools), sends it to the
+        model, gets back one action, runs that action, appends the result to the
+        history and goes back to the top. When the model answers
         &ldquo;done&rdquo; instead of asking for another action, the loop stops.
       </>
     ),
@@ -423,12 +457,13 @@ const translations = {
       "That's it. Every coding agent you have ever used is a twenty-line variation on this, and it is precisely because it is so little that it works so well on so much.",
     loopP3: (
       <>
-        Now notice two properties of that code, because everything else in this piece falls out of
-        them. First: on each turn there is exactly <em>one</em> thing to do. Not two. The model
-        returns one action, you run it, you go back to the top. Second: the thing choosing that
-        action is the model. There is no function in your code saying &ldquo;step 3 is next&rdquo;.
-        the decision comes from inside an inference you cannot inspect and cannot reproduce
-        exactly.
+        Now notice two properties of that code, because everything else in this
+        piece falls out of them. First: on each turn there is exactly{" "}
+        <em>one</em> thing to do. Not two. The model returns one action, you run
+        it, you go back to the top. Second: the thing choosing that action is
+        the model. There is no function in your code saying &ldquo;step 3 is
+        next&rdquo;. the decision comes from inside an inference you cannot
+        inspect and cannot reproduce exactly.
       </>
     ),
     loopP4:
@@ -455,13 +490,14 @@ const translations = {
       "The distinction matters for a practical reason. You don't control the model: it is a third-party service you call over HTTP. The harness is entirely your code. When an agent of yours misbehaves, the odds of the problem living in the harness are far higher than the odds of it living in the model. And four lines of harness handle most of the previous section:",
     harnessP3: (
       <>
-        None of that is clever, and that is the point. {c("MAX_STEPS")} turns &ldquo;infinite
-        loop&rdquo; into &ldquo;loop that ends&rdquo;. A per-step attempt ceiling turns
-        &ldquo;insists forever&rdquo; into &ldquo;insists three times&rdquo;. The{" "}
-        {c("slice(-HISTORY_TURNS)")} turns &ldquo;the conversation grows until it blows the context
-        window&rdquo; into &ldquo;the conversation has a maximum size&rdquo;. And {c("maxTokens")}{" "}
-        turns &ldquo;the bill is a surprise at the end of the month&rdquo; into &ldquo;the bill has
-        a ceiling&rdquo;.
+        None of that is clever, and that is the point. {c("MAX_STEPS")} turns
+        &ldquo;infinite loop&rdquo; into &ldquo;loop that ends&rdquo;. A
+        per-step attempt ceiling turns &ldquo;insists forever&rdquo; into
+        &ldquo;insists three times&rdquo;. The {c("slice(-HISTORY_TURNS)")}{" "}
+        turns &ldquo;the conversation grows until it blows the context
+        window&rdquo; into &ldquo;the conversation has a maximum size&rdquo;.
+        And {c("maxTokens")} turns &ldquo;the bill is a surprise at the end of
+        the month&rdquo; into &ldquo;the bill has a ceiling&rdquo;.
       </>
     ),
     harnessP4:
@@ -472,38 +508,42 @@ const translations = {
       "The loop decides the next step along the way. The alternative is to decide every step before starting, write that decision in a format your code can read, and then just run what is written.",
     graphP2: (
       <>
-        That format is a graph. If the word puts you off, swap it for one you already use every
-        week: it is a CI pipeline. In GitHub Actions you write jobs and put {c("needs: build")} on
-        one of them. That is a graph: boxes, and arrows saying &ldquo;this one only starts after
-        that one&rdquo;. A {c("Makefile")} is the same idea. So are your {c("package.json")}{" "}
+        That format is a graph. If the word puts you off, swap it for one you
+        already use every week: it is a CI pipeline. In GitHub Actions you write
+        jobs and put {c("needs: build")} on one of them. That is a graph: boxes,
+        and arrows saying &ldquo;this one only starts after that one&rdquo;. A{" "}
+        {c("Makefile")} is the same idea. So are your {c("package.json")}{" "}
         dependencies.
       </>
     ),
     graphP3: (
       <>
-        The technical name is a DAG, and the three parts are worth unpacking because each one
-        carries a guarantee. <em>Graph</em>: boxes joined by arrows. <em>Directed</em>: the arrows
-        have a point, so {c("A → B")} is not {c("B → A")}. <em>Acyclic</em>: no arrow ever loops
-        back. That last one isn&apos;t vocabulary trivia: it is the structural guarantee that
-        execution terminates. With no cycle, there is no path that can repeat forever.
+        The technical name is a DAG, and the three parts are worth unpacking
+        because each one carries a guarantee. <em>Graph</em>: boxes joined by
+        arrows. <em>Directed</em>: the arrows have a point, so {c("A → B")} is
+        not {c("B → A")}. <em>Acyclic</em>: no arrow ever loops back. That last
+        one isn&apos;t vocabulary trivia: it is the structural guarantee that
+        execution terminates. With no cycle, there is no path that can repeat
+        forever.
       </>
     ),
     graphP4: "In practice, the plan is an array:",
     graphP5: (
       <>
-        Notice what changed. {c("needs")} is not a sentence asking for good behaviour: it is data.
-        The runner reads {c("needs")} and simply does not dispatch {c("analyze")} before{" "}
-        {c("read_auth")} and {c("read_utils")} have finished. There is nothing to
-        &ldquo;forget&rdquo;: the dependency stopped being the model&apos;s memory and became a
-        condition in an {c("if")}.
+        Notice what changed. {c("needs")} is not a sentence asking for good
+        behaviour: it is data. The runner reads {c("needs")} and simply does not
+        dispatch {c("analyze")} before {c("read_auth")} and {c("read_utils")}{" "}
+        have finished. There is nothing to &ldquo;forget&rdquo;: the dependency
+        stopped being the model&apos;s memory and became a condition in an{" "}
+        {c("if")}.
       </>
     ),
     graphP6:
       "And a win appears that the loop cannot have at all. On each round the runner takes every step whose dependencies are done, not just one. If two steps have no arrow between them, they run together:",
     graphP7: (
       <>
-        That is four lines of {c("filter")} and one {c("Promise.all")}. The same task the loop does
-        in eleven serial turns comes out in six rounds:
+        That is four lines of {c("filter")} and one {c("Promise.all")}. The same
+        task the loop does in eleven serial turns comes out in six rounds:
       </>
     ),
     roundsCaption:
@@ -514,31 +554,35 @@ const translations = {
       "When a step depends on two others, “depends” can mean two rather different things. Mixing them up is an expensive bug, and the loop has no way to express the second one.",
     joinsAll: (
       <>
-        <em>Wait for all.</em> {c("report")} needs the tests <em>and</em> the docs. It only starts
-        once both are done. This is the common case, and the default.
+        <em>Wait for all.</em> {c("report")} needs the tests <em>and</em> the
+        docs. It only starts once both are done. This is the common case, and
+        the default.
       </>
     ),
     joinsAny: (
       <>
-        <em>Wait for one.</em> {c("fix_a")} and {c("fix_b")} are two alternative fixes for the same
-        bug. {c("run_tests")} needs <em>one</em> of them. If {c("fix_b")} works, {c("fix_a")} has
-        stopped mattering, and the right move is to mark it as skipped, not to keep retrying it
-        until the retry budget is gone on a path nobody will use.
+        <em>Wait for one.</em> {c("fix_a")} and {c("fix_b")} are two alternative
+        fixes for the same bug. {c("run_tests")} needs <em>one</em> of them. If{" "}
+        {c("fix_b")} works, {c("fix_a")} has stopped mattering, and the right
+        move is to mark it as skipped, not to keep retrying it until the retry
+        budget is gone on a path nobody will use.
       </>
     ),
     joinsP2: (
       <>
-        In the loop, that second situation cannot be written down. The model tries A, fails, decides
-        to try B, and giving up on A is a sentence in the history. In the graph it is a field:{" "}
-        {c('waitFor: "any"')}. That is the difference between agreeing something and hoping someone
-        remembers it.
+        In the loop, that second situation cannot be written down. The model
+        tries A, fails, decides to try B, and giving up on A is a sentence in
+        the history. In the graph it is a field: {c('waitFor: "any"')}. That is
+        the difference between agreeing something and hoping someone remembers
+        it.
       </>
     ),
 
     recovery: "When it fails: a three-rung ladder",
     recoveryP1:
       "The most annoying agent symptom is the one that spins: failed, replanned, failed, replanned, and forty thousand tokens later it is exactly where it started. This happens because “what to do when it fails” was delegated to the model, which has a strong bias towards trying something else rather than trying again.",
-    recoveryP2: "The fix is to take that decision away from it and turn it into three fixed rungs:",
+    recoveryP2:
+      "The fix is to take that decision away from it and turn it into three fixed rungs:",
     recoverySteps: [
       {
         label: "Try again",
@@ -555,9 +599,9 @@ const translations = {
     ],
     recoveryP3: (
       <>
-        And the rule that makes the ladder work: you cannot skip a rung. Rung 3 only after 1 and 2
-        are exhausted. That is half a dozen lines: one counter per step, which only ever goes up by
-        one:
+        And the rule that makes the ladder work: you cannot skip a rung. Rung 3
+        only after 1 and 2 are exhausted. That is half a dozen lines: one
+        counter per step, which only ever goes up by one:
       </>
     ),
     recoveryP4:
@@ -577,11 +621,12 @@ const translations = {
     costA: "The plan is only as good as whoever writes it",
     costAP: (
       <>
-        The parallelism only exists if someone drew the right arrows. If the planner writes a
-        straight line ({c("1 → 2 → 3 → 4")}), the graph runs one thing at a time, exactly like the
-        loop, with far more code in the way. And the thing usually writing the plan is an LLM, which
-        gets it wrong. The whole speed win lived in the structure, and the structure is not
-        guaranteed.
+        The parallelism only exists if someone drew the right arrows. If the
+        planner writes a straight line ({c("1 → 2 → 3 → 4")}), the graph runs
+        one thing at a time, exactly like the loop, with far more code in the
+        way. And the thing usually writing the plan is an LLM, which gets it
+        wrong. The whole speed win lived in the structure, and the structure is
+        not guaranteed.
       </>
     ),
     costB: "Errors in parallel cost more",
@@ -618,26 +663,29 @@ const translations = {
       "A loop is one thing at a time, chosen by the model. A graph is several things at a time, chosen by the structure. The harness is your code around both, and it is where most of an agent's quality lives, whichever of the two you pick.",
     takeawayP2:
       "If your agent is burning money or spinning in place, that's a harness problem and you can fix it today. If it's slow because it does unrelated things one after another, then it's worth looking at a graph.",
-    takeawayP3: "As always, feel free to reach out if you have any questions on",
+    takeawayP3:
+      "As always, feel free to reach out if you have any questions on",
   },
 
   ES: {
     title: "Loops, harness y grafos",
     intro: (
       <>
-        Ya usaste un agente: Claude Code, Cursor, Copilot en modo agent. Lee tu pedido, hace una
-        cosa, mira el resultado y decide la siguiente. A veces parece magia. A veces intenta la
-        misma corrección equivocada cuatro veces seguidas. Los dos comportamientos salen de la misma
-        estructura, y esa estructura se entiende completa sin una línea de matemáticas.
+        Ya usaste un agente: Claude Code, Cursor, Copilot en modo agent. Lee tu
+        pedido, hace una cosa, mira el resultado y decide la siguiente. A veces
+        parece magia. A veces intenta la misma corrección equivocada cuatro
+        veces seguidas. Los dos comportamientos salen de la misma estructura, y
+        esa estructura se entiende completa sin una línea de matemáticas.
       </>
     ),
 
     loop: "El loop: una cosa por vez",
     loopP1: (
       <>
-        Todo agente es un {c("while")}. Arma un contexto (tu pedido, lo que ya pasó, la lista de
-        herramientas disponibles), lo manda al modelo, recibe de vuelta una acción, ejecuta esa
-        acción, guarda el resultado en el historial y vuelve al principio. Cuando el modelo responde
+        Todo agente es un {c("while")}. Arma un contexto (tu pedido, lo que ya
+        pasó, la lista de herramientas disponibles), lo manda al modelo, recibe
+        de vuelta una acción, ejecuta esa acción, guarda el resultado en el
+        historial y vuelve al principio. Cuando el modelo responde
         &ldquo;terminé&rdquo; en lugar de pedir otra acción, el loop se detiene.
       </>
     ),
@@ -645,12 +693,13 @@ const translations = {
       "Eso es todo. Todo agente de código que hayas usado es una variación de veinte líneas de esto, y es justamente por ser tan poco que funciona tan bien en tantas cosas.",
     loopP3: (
       <>
-        Ahora fijate en dos propiedades de ese código, porque todo lo demás en este texto sale de
-        ellas. La primera: en cada vuelta existe exactamente <em>una</em> cosa por hacer. No dos. El
-        modelo devuelve una acción, la ejecutás, volvés al principio. La segunda: quien elige esa
-        acción es el modelo. No hay ninguna función en tu código que diga &ldquo;ahora va el paso
-        3&rdquo;. La decisión viene de dentro de una inferencia que no podés inspeccionar ni
-        reproducir igual.
+        Ahora fijate en dos propiedades de ese código, porque todo lo demás en
+        este texto sale de ellas. La primera: en cada vuelta existe exactamente{" "}
+        <em>una</em> cosa por hacer. No dos. El modelo devuelve una acción, la
+        ejecutás, volvés al principio. La segunda: quien elige esa acción es el
+        modelo. No hay ninguna función en tu código que diga &ldquo;ahora va el
+        paso 3&rdquo;. La decisión viene de dentro de una inferencia que no
+        podés inspeccionar ni reproducir igual.
       </>
     ),
     loopP4:
@@ -677,13 +726,15 @@ const translations = {
       "La distinción importa por un motivo práctico. No controlás el modelo: es un servicio de terceros que llamás por HTTP. El harness es 100% tu código. Cuando un agente tuyo se porta mal, la probabilidad de que el problema esté en el harness es mucho mayor que la de que esté en el modelo. Y cuatro líneas de harness resuelven la mayor parte de la sección anterior:",
     harnessP3: (
       <>
-        Nada de eso es sofisticado, y ese es el punto. {c("MAX_STEPS")} convierte &ldquo;loop
-        infinito&rdquo; en &ldquo;loop que termina&rdquo;. Un techo de intentos por paso convierte
-        &ldquo;insiste para siempre&rdquo; en &ldquo;insiste tres veces&rdquo;. El{" "}
-        {c("slice(-HISTORY_TURNS)")} convierte &ldquo;la conversación crece hasta reventar la
-        ventana de contexto&rdquo; en &ldquo;la conversación tiene tamaño máximo&rdquo;. Y{" "}
-        {c("maxTokens")} convierte &ldquo;la factura es una sorpresa a fin de mes&rdquo; en
-        &ldquo;la factura tiene techo&rdquo;.
+        Nada de eso es sofisticado, y ese es el punto. {c("MAX_STEPS")}{" "}
+        convierte &ldquo;loop infinito&rdquo; en &ldquo;loop que termina&rdquo;.
+        Un techo de intentos por paso convierte &ldquo;insiste para
+        siempre&rdquo; en &ldquo;insiste tres veces&rdquo;. El{" "}
+        {c("slice(-HISTORY_TURNS)")} convierte &ldquo;la conversación crece
+        hasta reventar la ventana de contexto&rdquo; en &ldquo;la conversación
+        tiene tamaño máximo&rdquo;. Y {c("maxTokens")} convierte &ldquo;la
+        factura es una sorpresa a fin de mes&rdquo; en &ldquo;la factura tiene
+        techo&rdquo;.
       </>
     ),
     harnessP4:
@@ -694,38 +745,42 @@ const translations = {
       "El loop decide el próximo paso en el camino. La alternativa es decidir todos los pasos antes de empezar, escribir esa decisión en un formato que el código pueda leer, y después solo ejecutar lo que está escrito.",
     graphP2: (
       <>
-        Ese formato es un grafo. Si la palabra intimida, cambiala por una que ya usás toda la
-        semana: es un pipeline de CI. En GitHub Actions escribís jobs y le ponés {c("needs: build")}{" "}
-        a uno. Listo, es un grafo: cajas, y flechas que dicen &ldquo;esta solo empieza después de
-        aquella&rdquo;. Un {c("Makefile")} es la misma idea. Las dependencias de tu{" "}
+        Ese formato es un grafo. Si la palabra intimida, cambiala por una que ya
+        usás toda la semana: es un pipeline de CI. En GitHub Actions escribís
+        jobs y le ponés {c("needs: build")} a uno. Listo, es un grafo: cajas, y
+        flechas que dicen &ldquo;esta solo empieza después de aquella&rdquo;. Un{" "}
+        {c("Makefile")} es la misma idea. Las dependencias de tu{" "}
         {c("package.json")} también.
       </>
     ),
     graphP3: (
       <>
-        El nombre técnico es DAG, y vale traducir las tres partes porque cada una trae una garantía.{" "}
-        <em>Grafo</em>: cajas unidas por flechas. <em>Dirigido</em>: las flechas tienen punta, así
-        que {c("A → B")} no es {c("B → A")}. <em>Acíclico</em>: ninguna flecha vuelve hacia atrás.
-        Esa última no es trivia de vocabulario: es la garantía estructural de que la ejecución
-        termina. Sin ciclo, no hay camino que pueda repetirse para siempre.
+        El nombre técnico es DAG, y vale traducir las tres partes porque cada
+        una trae una garantía. <em>Grafo</em>: cajas unidas por flechas.{" "}
+        <em>Dirigido</em>: las flechas tienen punta, así que {c("A → B")} no es{" "}
+        {c("B → A")}. <em>Acíclico</em>: ninguna flecha vuelve hacia atrás. Esa
+        última no es trivia de vocabulario: es la garantía estructural de que la
+        ejecución termina. Sin ciclo, no hay camino que pueda repetirse para
+        siempre.
       </>
     ),
     graphP4: "En la práctica, el plan es un array:",
     graphP5: (
       <>
-        Fijate en lo que cambió. {c("needs")} no es una frase pidiendo buen comportamiento: es
-        dato. El ejecutor lee {c("needs")} y simplemente no despacha {c("analyze")} antes de que{" "}
-        {c("read_auth")} y {c("read_utils")} hayan terminado. No hay nada que
-        &ldquo;olvidar&rdquo;: la dependencia dejó de ser memoria del modelo y pasó a ser una
-        condición en un {c("if")}.
+        Fijate en lo que cambió. {c("needs")} no es una frase pidiendo buen
+        comportamiento: es dato. El ejecutor lee {c("needs")} y simplemente no
+        despacha {c("analyze")} antes de que {c("read_auth")} y{" "}
+        {c("read_utils")} hayan terminado. No hay nada que
+        &ldquo;olvidar&rdquo;: la dependencia dejó de ser memoria del modelo y
+        pasó a ser una condición en un {c("if")}.
       </>
     ),
     graphP6:
       "Y aparece una ventaja que el loop no puede tener de ninguna manera. En cada ronda el ejecutor toma todos los pasos cuyas dependencias ya terminaron, no solo uno. Si dos pasos no tienen flecha entre ellos, corren juntos:",
     graphP7: (
       <>
-        Son cuatro líneas de {c("filter")} y un {c("Promise.all")}. La misma tarea que el loop hace
-        en once vueltas en serie sale en seis rondas:
+        Son cuatro líneas de {c("filter")} y un {c("Promise.all")}. La misma
+        tarea que el loop hace en once vueltas en serie sale en seis rondas:
       </>
     ),
     roundsCaption:
@@ -736,23 +791,26 @@ const translations = {
       "Cuando un paso depende de otros dos, “depende” puede significar dos cosas bastante distintas. Confundirlas es un bug caro, y el loop no tiene forma de expresar la segunda.",
     joinsAll: (
       <>
-        <em>Esperar a todos.</em> {c("report")} necesita los tests <em>y</em> la documentación. Solo
-        empieza cuando los dos terminaron. Es el caso común, y es el default.
+        <em>Esperar a todos.</em> {c("report")} necesita los tests <em>y</em> la
+        documentación. Solo empieza cuando los dos terminaron. Es el caso común,
+        y es el default.
       </>
     ),
     joinsAny: (
       <>
-        <em>Esperar a uno.</em> {c("fix_a")} y {c("fix_b")} son dos correcciones alternativas para
-        el mismo bug. {c("run_tests")} necesita <em>una</em> de ellas. Si {c("fix_b")} funciona,{" "}
-        {c("fix_a")} dejó de importar, y lo correcto es marcarlo como descartado, no seguir
-        reintentándolo hasta gastar el presupuesto de reintentos en un camino que nadie va a usar.
+        <em>Esperar a uno.</em> {c("fix_a")} y {c("fix_b")} son dos correcciones
+        alternativas para el mismo bug. {c("run_tests")} necesita <em>una</em>{" "}
+        de ellas. Si {c("fix_b")} funciona, {c("fix_a")} dejó de importar, y lo
+        correcto es marcarlo como descartado, no seguir reintentándolo hasta
+        gastar el presupuesto de reintentos en un camino que nadie va a usar.
       </>
     ),
     joinsP2: (
       <>
-        En el loop, esa segunda situación no se puede escribir. El modelo intenta A, falla, decide
-        intentar B, y desistir de A es una frase en el historial. En el grafo es un campo:{" "}
-        {c('waitFor: "any"')}. Es la diferencia entre acordar algo y esperar que alguien se acuerde.
+        En el loop, esa segunda situación no se puede escribir. El modelo
+        intenta A, falla, decide intentar B, y desistir de A es una frase en el
+        historial. En el grafo es un campo: {c('waitFor: "any"')}. Es la
+        diferencia entre acordar algo y esperar que alguien se acuerde.
       </>
     ),
 
@@ -777,9 +835,9 @@ const translations = {
     ],
     recoveryP3: (
       <>
-        Y la regla que hace funcionar la escalera: no se puede saltar un peldaño. El peldaño 3 solo
-        después de agotar 1 y 2. Son media docena de líneas: un contador por paso, que solo sube de
-        uno en uno:
+        Y la regla que hace funcionar la escalera: no se puede saltar un
+        peldaño. El peldaño 3 solo después de agotar 1 y 2. Son media docena de
+        líneas: un contador por paso, que solo sube de uno en uno:
       </>
     ),
     recoveryP4:
@@ -799,10 +857,11 @@ const translations = {
     costA: "El plan vale lo que vale quien lo escribe",
     costAP: (
       <>
-        El paralelismo solo existe si alguien dibujó las flechas correctas. Si el planificador
-        escribe una línea recta ({c("1 → 2 → 3 → 4")}), el grafo ejecuta una cosa por vez, igual
-        que el loop, con mucho más código en el camino. Y quien normalmente escribe el plan es un
-        LLM, que se equivoca. Toda la ganancia de velocidad estaba en la estructura, y la estructura
+        El paralelismo solo existe si alguien dibujó las flechas correctas. Si
+        el planificador escribe una línea recta ({c("1 → 2 → 3 → 4")}), el grafo
+        ejecuta una cosa por vez, igual que el loop, con mucho más código en el
+        camino. Y quien normalmente escribe el plan es un LLM, que se equivoca.
+        Toda la ganancia de velocidad estaba en la estructura, y la estructura
         no está garantizada.
       </>
     ),
@@ -842,15 +901,15 @@ const translations = {
       "Si tu agente está gastando de más o girando en falso, es un problema de harness y lo arreglás hoy. Si está lento porque hace en serie cosas que no dependen una de la otra, ahí sí vale mirar grafos.",
     takeawayP3: "Como siempre, escribime si tenés cualquier duda en",
   },
-}
+};
 
 type ArticleContentProps = {
-  codeLoop: React.ReactNode
-  codeHarness: React.ReactNode
-  codePlan: React.ReactNode
-  codeReady: React.ReactNode
-  codeLadder: React.ReactNode
-}
+  codeLoop: React.ReactNode;
+  codeHarness: React.ReactNode;
+  codePlan: React.ReactNode;
+  codeReady: React.ReactNode;
+  codeLadder: React.ReactNode;
+};
 
 export function ArticleContent({
   codeLoop,
@@ -859,10 +918,10 @@ export function ArticleContent({
   codeReady,
   codeLadder,
 }: ArticleContentProps) {
-  const params = useParams()
-  const locale = (params.locale as string) ?? "en"
-  const language: Language = localeToLanguage(locale)
-  const t = translations[language]
+  const params = useParams();
+  const locale = (params.locale as string) ?? "en";
+  const language: Language = localeToLanguage(locale);
+  const t = translations[language];
 
   return (
     <div className="relative flex min-h-[100dvh] w-full flex-col overflow-x-hidden">
@@ -870,8 +929,8 @@ export function ArticleContent({
       <main className="mx-auto w-full max-w-(--breakpoint-sm) flex-1 px-4 py-12 leading-relaxed sm:py-20">
         <header>
           <div className="mb-24 flex min-h-9 w-full select-none items-center justify-between gap-2">
-            <Link
-              href={`/${locale}`}
+            <HomeLink
+              locale={locale}
               className="group flex size-9 shrink-0 cursor-pointer items-center justify-center rounded-full bg-secondary transition-[scale,background-color] duration-200 ease-out hover:bg-gray-300 active:scale-[0.96]"
               aria-label="Home"
             >
@@ -879,9 +938,12 @@ export function ArticleContent({
                 className="mr-0.5 size-4 text-muted-foreground transition-colors duration-200 ease-out group-hover:text-foreground"
                 strokeWidth={1.5}
               />
-            </Link>
+            </HomeLink>
             <div className="flex items-center gap-2">
-              <LanguageToggle language={language} onLanguageChange={switchLocale} />
+              <LanguageToggle
+                language={language}
+                onLanguageChange={switchLocale}
+              />
               <ThemeToggle language={language} />
               <CopyLinkButton />
             </div>
@@ -896,7 +958,10 @@ export function ArticleContent({
             {t.title}
           </h1>
 
-          <ArticleByline slug="agent-loops-harness-graphs" language={language} />
+          <ArticleByline
+            slug="agent-loops-harness-graphs"
+            language={language}
+          />
 
           <p className="w-full text-pretty text-muted-foreground">{t.intro}</p>
 
@@ -904,13 +969,21 @@ export function ArticleContent({
 
           <SectionHeading id="loop">{t.loop}</SectionHeading>
 
-          <p className="mb-4 w-full text-pretty text-muted-foreground">{t.loopP1}</p>
+          <p className="mb-4 w-full text-pretty text-muted-foreground">
+            {t.loopP1}
+          </p>
 
           {codeLoop}
 
-          <p className="mb-4 w-full text-pretty text-muted-foreground">{t.loopP2}</p>
-          <p className="mb-4 w-full text-pretty text-muted-foreground">{t.loopP3}</p>
-          <p className="mb-4 w-full text-pretty text-muted-foreground">{t.loopP4}</p>
+          <p className="mb-4 w-full text-pretty text-muted-foreground">
+            {t.loopP2}
+          </p>
+          <p className="mb-4 w-full text-pretty text-muted-foreground">
+            {t.loopP3}
+          </p>
+          <p className="mb-4 w-full text-pretty text-muted-foreground">
+            {t.loopP4}
+          </p>
 
           <Rows items={t.loopProblems} />
 
@@ -918,31 +991,53 @@ export function ArticleContent({
 
           <SectionHeading id="harness">{t.harness}</SectionHeading>
 
-          <p className="mb-4 w-full text-pretty text-muted-foreground">{t.harnessP1}</p>
-          <p className="mb-4 w-full text-pretty text-muted-foreground">{t.harnessP2}</p>
+          <p className="mb-4 w-full text-pretty text-muted-foreground">
+            {t.harnessP1}
+          </p>
+          <p className="mb-4 w-full text-pretty text-muted-foreground">
+            {t.harnessP2}
+          </p>
 
           {codeHarness}
 
-          <p className="mb-4 w-full text-pretty text-muted-foreground">{t.harnessP3}</p>
-          <p className="mb-4 w-full text-pretty text-muted-foreground">{t.harnessP4}</p>
+          <p className="mb-4 w-full text-pretty text-muted-foreground">
+            {t.harnessP3}
+          </p>
+          <p className="mb-4 w-full text-pretty text-muted-foreground">
+            {t.harnessP4}
+          </p>
 
           <Divider />
 
           <SectionHeading id="graph">{t.graph}</SectionHeading>
 
-          <p className="mb-4 w-full text-pretty text-muted-foreground">{t.graphP1}</p>
-          <p className="mb-4 w-full text-pretty text-muted-foreground">{t.graphP2}</p>
-          <p className="mb-4 w-full text-pretty text-muted-foreground">{t.graphP3}</p>
-          <p className="mb-4 w-full text-pretty text-muted-foreground">{t.graphP4}</p>
+          <p className="mb-4 w-full text-pretty text-muted-foreground">
+            {t.graphP1}
+          </p>
+          <p className="mb-4 w-full text-pretty text-muted-foreground">
+            {t.graphP2}
+          </p>
+          <p className="mb-4 w-full text-pretty text-muted-foreground">
+            {t.graphP3}
+          </p>
+          <p className="mb-4 w-full text-pretty text-muted-foreground">
+            {t.graphP4}
+          </p>
 
           {codePlan}
 
-          <p className="mb-4 w-full text-pretty text-muted-foreground">{t.graphP5}</p>
-          <p className="mb-4 w-full text-pretty text-muted-foreground">{t.graphP6}</p>
+          <p className="mb-4 w-full text-pretty text-muted-foreground">
+            {t.graphP5}
+          </p>
+          <p className="mb-4 w-full text-pretty text-muted-foreground">
+            {t.graphP6}
+          </p>
 
           {codeReady}
 
-          <p className="mb-4 w-full text-pretty text-muted-foreground">{t.graphP7}</p>
+          <p className="mb-4 w-full text-pretty text-muted-foreground">
+            {t.graphP7}
+          </p>
 
           <RoundsFigure caption={t.roundsCaption} />
 
@@ -950,68 +1045,108 @@ export function ArticleContent({
 
           <SectionHeading id="joins">{t.joins}</SectionHeading>
 
-          <p className="mb-4 w-full text-pretty text-muted-foreground">{t.joinsP1}</p>
-          <p className="mb-4 w-full text-pretty text-muted-foreground">{t.joinsAll}</p>
-          <p className="mb-4 w-full text-pretty text-muted-foreground">{t.joinsAny}</p>
-          <p className="mb-4 w-full text-pretty text-muted-foreground">{t.joinsP2}</p>
+          <p className="mb-4 w-full text-pretty text-muted-foreground">
+            {t.joinsP1}
+          </p>
+          <p className="mb-4 w-full text-pretty text-muted-foreground">
+            {t.joinsAll}
+          </p>
+          <p className="mb-4 w-full text-pretty text-muted-foreground">
+            {t.joinsAny}
+          </p>
+          <p className="mb-4 w-full text-pretty text-muted-foreground">
+            {t.joinsP2}
+          </p>
 
           <Divider />
 
           <SectionHeading id="recovery">{t.recovery}</SectionHeading>
 
-          <p className="mb-4 w-full text-pretty text-muted-foreground">{t.recoveryP1}</p>
-          <p className="mb-4 w-full text-pretty text-muted-foreground">{t.recoveryP2}</p>
+          <p className="mb-4 w-full text-pretty text-muted-foreground">
+            {t.recoveryP1}
+          </p>
+          <p className="mb-4 w-full text-pretty text-muted-foreground">
+            {t.recoveryP2}
+          </p>
 
           <NumberedRows items={t.recoverySteps} />
 
-          <p className="mb-4 w-full text-pretty text-muted-foreground">{t.recoveryP3}</p>
+          <p className="mb-4 w-full text-pretty text-muted-foreground">
+            {t.recoveryP3}
+          </p>
 
           {codeLadder}
 
-          <p className="mb-4 w-full text-pretty text-muted-foreground">{t.recoveryP4}</p>
+          <p className="mb-4 w-full text-pretty text-muted-foreground">
+            {t.recoveryP4}
+          </p>
 
           <Divider />
 
           <SectionHeading id="plan-version">{t.version}</SectionHeading>
 
-          <p className="mb-4 w-full text-pretty text-muted-foreground">{t.versionP1}</p>
-          <p className="mb-4 w-full text-pretty text-muted-foreground">{t.versionP2}</p>
-          <p className="mb-4 w-full text-pretty text-muted-foreground">{t.versionP3}</p>
+          <p className="mb-4 w-full text-pretty text-muted-foreground">
+            {t.versionP1}
+          </p>
+          <p className="mb-4 w-full text-pretty text-muted-foreground">
+            {t.versionP2}
+          </p>
+          <p className="mb-4 w-full text-pretty text-muted-foreground">
+            {t.versionP3}
+          </p>
 
           <Divider />
 
           <SectionHeading id="cost">{t.cost}</SectionHeading>
 
-          <p className="mb-4 w-full text-pretty text-muted-foreground">{t.costP1}</p>
+          <p className="mb-4 w-full text-pretty text-muted-foreground">
+            {t.costP1}
+          </p>
 
           <SubHeading>{t.costA}</SubHeading>
-          <p className="mb-4 w-full text-pretty text-muted-foreground">{t.costAP}</p>
+          <p className="mb-4 w-full text-pretty text-muted-foreground">
+            {t.costAP}
+          </p>
 
           <SubHeading>{t.costB}</SubHeading>
-          <p className="mb-4 w-full text-pretty text-muted-foreground">{t.costBP}</p>
+          <p className="mb-4 w-full text-pretty text-muted-foreground">
+            {t.costBP}
+          </p>
 
           <SubHeading>{t.costC}</SubHeading>
-          <p className="mb-4 w-full text-pretty text-muted-foreground">{t.costCP}</p>
+          <p className="mb-4 w-full text-pretty text-muted-foreground">
+            {t.costCP}
+          </p>
 
           <SubHeading>{t.costD}</SubHeading>
-          <p className="mb-4 w-full text-pretty text-muted-foreground">{t.costDP}</p>
+          <p className="mb-4 w-full text-pretty text-muted-foreground">
+            {t.costDP}
+          </p>
 
           <Divider />
 
           <SectionHeading id="choosing">{t.choose}</SectionHeading>
 
-          <p className="mb-4 w-full text-pretty text-muted-foreground">{t.chooseP1}</p>
+          <p className="mb-4 w-full text-pretty text-muted-foreground">
+            {t.chooseP1}
+          </p>
 
           <NumberedRows items={t.chooseRows} />
 
-          <p className="mb-4 w-full text-pretty text-muted-foreground">{t.chooseP2}</p>
+          <p className="mb-4 w-full text-pretty text-muted-foreground">
+            {t.chooseP2}
+          </p>
 
           <Divider />
 
           <SectionHeading id="takeaway">{t.takeaway}</SectionHeading>
 
-          <p className="mb-4 w-full text-pretty text-muted-foreground">{t.takeawayP1}</p>
-          <p className="mb-4 w-full text-pretty text-muted-foreground">{t.takeawayP2}</p>
+          <p className="mb-4 w-full text-pretty text-muted-foreground">
+            {t.takeawayP1}
+          </p>
+          <p className="mb-4 w-full text-pretty text-muted-foreground">
+            {t.takeawayP2}
+          </p>
 
           <p className="mb-6 w-full text-pretty text-muted-foreground">
             {t.takeawayP3}{" "}
@@ -1026,11 +1161,19 @@ export function ArticleContent({
             .
           </p>
 
-          <ArticleNav slug="agent-loops-harness-graphs" language={language} locale={locale} />
+          <ArticleNav
+            slug="agent-loops-harness-graphs"
+            language={language}
+            locale={locale}
+          />
         </article>
       </main>
       {/* Both toggles live in the article header, beside copy-link. */}
-      <Footer language={language} showLanguageToggle={false} showThemeToggle={false} />
+      <Footer
+        language={language}
+        showLanguageToggle={false}
+        showThemeToggle={false}
+      />
     </div>
-  )
+  );
 }

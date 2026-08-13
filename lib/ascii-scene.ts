@@ -19,11 +19,15 @@ export type Scene = {
    */
   ramp: string
   /**
-   * How tall the scene wants to be, in rows, for a grid this many columns
-   * wide. The strip asks before it allocates, so a scene sets its own
-   * proportions instead of being handed a box and stretched into it.
+   * How tall the scene wants to be, as a share of its width.
+   *
+   * A ratio rather than a row count so the strip can reserve the space in CSS,
+   * before any of this runs. A scene that reports its height only once
+   * measured is a scene that is zero pixels tall on the first paint, and the
+   * browser restores a remembered scroll position against the page as it is at
+   * that moment: it lands short, and going back loses the reader's place.
    */
-  rows(cols: number, cellAspect: number): number
+  ratio: number
   /**
    * Fills `cells` with one ramp index per cell, row-major.
    *
@@ -169,9 +173,14 @@ let depth = new Float32Array(0)
 export const TORUS: Scene = {
   ramp: " .,-~:;=!*#$@",
 
-  rows(cols, cellAspect) {
-    return Math.max(1, Math.round(diameter(cols, cellAspect) * REVEAL))
-  },
+  /*
+   * The character box cancels out. The strip is `width / charWidth` columns
+   * wide, the ring spans SPAN of those, and one scene unit is `charWidth /
+   * lineHeight` rows — multiply them and the font metric disappears, leaving
+   * the height as a plain fraction of the width. Which is why this can be a
+   * constant, and why CSS can hold the space before anything is measured.
+   */
+  ratio: REVEAL * SPAN,
 
   draw(cells, cols, rows, cellAspect, time) {
     cells.fill(0)

@@ -113,21 +113,35 @@ const open = {
 const close = { PT: "Fechar a foto", EN: "Close photo", ES: "Cerrar la foto" } as const
 
 /**
- * Card size and overlap live in CSS, as clamps against the viewport, because
- * the fan has to fit the prose column at every width and seven fixed cards do
- * not. See `--deck-card-w` in `globals.css` for the arithmetic.
+ * The deck is sized as a fraction of its container, not in pixels, so the fan
+ * spans the column exactly the way every other block on the page does.
+ *
+ * Each card laps half of the one before it, so `n` cards measure
+ * `nW - (n-1)(W/2)`, and setting that to the full width gives `W = 200/(n+1)`.
+ * Seven cards means a quarter of the column each, which lands at 152px in the
+ * 608px measure. Percentage margins resolve against the container's width too,
+ * so the overlap tracks it without a second calculation.
  */
-const CARD_W = "var(--deck-card-w)"
-const CARD_H = "var(--deck-card-h)"
-const OVERLAP = "calc(var(--deck-overlap) * -1)"
+const CARD_W = `${200 / (PHOTOS.length + 1)}%`
+const OVERLAP = `-${100 / (PHOTOS.length + 1)}%`
+
+/** Card proportion, measured off the reference: 152.71 by 180.3. */
+const CARD_RATIO = 0.847
 
 /**
- * Intrinsic size handed to Next, not the rendered one. Twice the widest the
- * card ever gets, so the 2x variant is sharp and nothing larger is fetched
- * for something that paints at 144px.
+ * How far the outermost cards hang below the middle one, as a share of their
+ * own height. A flat row of rotated cards reads as a row; the sag is what
+ * makes it a hand.
  */
-const SOURCE_W = 288
-const SOURCE_H = 342
+const ARC = 7
+
+/**
+ * Intrinsic size handed to Next, not the rendered one. A quarter of the 608px
+ * measure is 152px, so this is the 2x variant and nothing larger gets fetched
+ * for a card that never paints bigger than that.
+ */
+const SOURCE_W = 304
+const SOURCE_H = 359
 
 /** Degrees between one card and the next, so the pile reads as a fan. */
 const TILT = 5.5
@@ -149,16 +163,19 @@ export function PhotoDeck({ language }: { language: Language }) {
   return (
     <>
       {/*
-        The fan leans on negative margins rather than absolute positioning, so
-        the row is as wide as its cards and stays centred without arithmetic.
-        `pt-6` is headroom for the lift: a card rising out of the pile would
-        otherwise be clipped by the section above it.
+        Negative margins rather than absolute positioning, so the fan is laid
+        out by the flow and spans the column edge to edge like every other
+        block. `pt-6` is headroom for the lift: a card rising out of the pile
+        would otherwise be clipped by the section above it.
       */}
-      <div className="flex justify-center overflow-visible pt-6 pb-2">
+      <div className="flex w-full overflow-visible pt-6 pb-4">
         {PHOTOS.map((photo, index) => {
           // The fan is centred, so the middle card is upright and the ones
           // either side rotate away from it.
-          const tilt = (index - (PHOTOS.length - 1) / 2) * TILT
+          const offset = index - (PHOTOS.length - 1) / 2
+          const tilt = offset * TILT
+          // Quadratic, so the sag deepens toward the ends rather than ramping.
+          const arc = ARC * (offset / ((PHOTOS.length - 1) / 2)) ** 2
           const isLifted = lifted === index
 
           return (
@@ -173,13 +190,14 @@ export function PhotoDeck({ language }: { language: Language }) {
               onBlur={() => setLifted((current) => (current === index ? null : current))}
               animate={{
                 rotate: isLifted ? 0 : tilt,
-                y: isLifted ? -18 : 0,
+                // Percentages, so the lift and the sag scale with the card.
+                y: isLifted ? "-13%" : `${arc}%`,
                 scale: isLifted ? 1.08 : 1,
               }}
               transition={reduceMotion ? { duration: 0.12 } : LIFT}
               style={{
                 width: CARD_W,
-                height: CARD_H,
+                aspectRatio: CARD_RATIO,
                 marginLeft: index === 0 ? 0 : OVERLAP,
                 // Raised above its neighbours only while lifted, so the card
                 // comes forward out of the pile rather than under the next one.

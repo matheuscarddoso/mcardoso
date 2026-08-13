@@ -331,18 +331,6 @@
    */
   --doc-page-width: 860px;
 
-  /*
-   * The photo deck, sized so the fan always fits the prose column.
-   *
-   * Seven cards overlapping by `overlap` measure `7w - 6o`, and the column is
-   * 608px at its widest and 288px on the narrowest phone. The clamps are what
-   * keep that sum under both: at the ceiling it comes to 570px, and at 320px
-   * it comes to 278px. Fixed pixels would have been fine on a desktop and
-   * clipped by the page's `overflow-x-hidden` on a phone.
-   */
-  --deck-card-w: clamp(66px, 21vw, 144px);
-  --deck-card-h: clamp(78px, 25vw, 171px);
-  --deck-overlap: clamp(31px, 10vw, 73px);
 }
 
 /*

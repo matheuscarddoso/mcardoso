@@ -1,3 +1,6 @@
+"use client"
+
+import { HoverPreview } from "@/components/link-preview"
 import { SOCIAL, type SocialKey } from "@/lib/site"
 
 /**
@@ -63,6 +66,99 @@ const MARKS: Record<SocialKey, Mark> = {
 }
 
 /**
+ * What the hover card says about each profile.
+ *
+ * Written down rather than scraped. The obvious build is to read `og:` tags
+ * off each URL, and it does not survive contact: Stack Overflow answers 403 to
+ * an unauthenticated request and LinkedIn answers 999, so half the cards would
+ * be empty, and a datacentre IP fares worse than a laptop did. Four links that
+ * are all the author's own do not need a scraper, an SSRF surface and a
+ * runtime dependency on four third parties staying up.
+ *
+ * GitHub's and X's lines are their own `og:description`, trimmed of the counts
+ * that would go stale. The other two are written here, since neither site
+ * will hand them over.
+ */
+type Preview = {
+  title: string
+  description: string
+  /** The bare host, as the card prints it. */
+  domain: string
+}
+
+const PREVIEWS: Partial<Record<SocialKey, Preview>> = {
+  github: {
+    title: "matheuscarddoso",
+    description: "Software Engineer. Follow their code on GitHub.",
+    domain: "github.com",
+  },
+  x: {
+    title: "Matheus Cardoso (@mattcrdoso)",
+    description: "Founder at Abacate Pay. Software & Design Engineer at 4Selet.",
+    domain: "x.com",
+  },
+  stackoverflow: {
+    title: "Matheus Cardoso",
+    description: "Questions and answers on Stack Overflow, where developers learn and share.",
+    domain: "stackoverflow.com",
+  },
+  linkedin: {
+    title: "Matheus Cardoso",
+    description: "Software Engineer at 4Selet, in Goiânia. Professional profile on LinkedIn.",
+    domain: "linkedin.com",
+  },
+}
+
+/** The mark, drawn at whatever size the caller asks for. */
+function Glyph({ mark, className }: { mark: Mark; className: string }) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox={mark.viewBox}
+      className={className}
+      fill="none"
+      aria-hidden
+    >
+      <path
+        fill="currentColor"
+        fillRule={mark.fillRule}
+        clipRule={mark.fillRule}
+        d={mark.path}
+      />
+    </svg>
+  )
+}
+
+/**
+ * The card itself. Its picture is the brand mark on a neutral field rather
+ * than a screenshot or an `og:image`: a profile's own share image is a 200px
+ * avatar, which stretched across a card looks like a mistake, and two of the
+ * four sites publish no image at all. One treatment for all of them also means
+ * no remote host to allowlist and nothing to fetch.
+ */
+function ProfileCard({ mark, preview }: { mark: Mark; preview: Preview }) {
+  return (
+    <div className="overflow-hidden rounded-xl bg-preview-bg shadow-card-lift">
+      <div className="flex h-[104px] items-center justify-center bg-black/[0.04] dark:bg-white/[0.04]">
+        <Glyph mark={mark} className="size-10 text-gray-1100" />
+      </div>
+      <div className="flex flex-col gap-1 p-2.5">
+        <p className="truncate text-[13px] font-medium text-gray-1200">{preview.title}</p>
+        {/* Three lines then an ellipsis, so a long description cannot stretch
+            the card past the height its neighbours settle at. */}
+        <p className="line-clamp-3 text-xs leading-[1.45] text-gray-1100">
+          {preview.description}
+        </p>
+        <p className="mt-0.5 flex items-center gap-1.5">
+          <Glyph mark={mark} className="size-3 shrink-0 text-gray-1000" />
+          <span className="truncate text-xs text-gray-1000">{preview.domain}</span>
+        </p>
+      </div>
+    </div>
+  )
+}
+
+/**
  * Only the profiles that exist in `SOCIAL` render — adding one there lights up
  * the icon here and adds it to the JSON-LD `sameAs` at the same time.
  *
@@ -77,8 +173,9 @@ export function SocialLinks({ include }: { include: SocialKey[] }) {
         const href = SOCIAL[key]
         if (!href) return null
         const mark = MARKS[key]
+        const preview = PREVIEWS[key]
 
-        return (
+        const anchor = (
           <a
             key={key}
             id={key}
@@ -88,21 +185,17 @@ export function SocialLinks({ include }: { include: SocialKey[] }) {
             aria-label={mark.label}
             className="-m-2 inline-flex p-2 transition-transform duration-150 ease-[var(--ease-out-strong)] active:scale-[0.97] motion-reduce:active:scale-100"
           >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox={mark.viewBox}
-              className={mark.className}
-              fill="none"
-              aria-hidden
-            >
-              <path
-                fill="currentColor"
-                fillRule={mark.fillRule}
-                clipRule={mark.fillRule}
-                d={mark.path}
-              />
-            </svg>
+            <Glyph mark={mark} className={mark.className} />
           </a>
+        )
+
+        // A profile with nothing written about it is still a working link.
+        if (!preview) return anchor
+
+        return (
+          <HoverPreview key={key} width={232} trigger={anchor}>
+            <ProfileCard mark={mark} preview={preview} />
+          </HoverPreview>
         )
       })}
     </>

@@ -58,7 +58,7 @@ const PREVIEWS: Record<string, Preview> = {
  * Radix hover card wired to Motion instead of the CSS keyframes shadcn ships —
  * keyframes can animate neither a spring nor blur on the way out.
  */
-function HoverPreview({
+export function HoverPreview({
   width,
   trigger,
   children,

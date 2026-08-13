@@ -87,6 +87,20 @@ const nextConfig: NextConfig = {
     return [
       { source: "/((?!cv/).*)", headers: [...baseHeaders, ...denyFraming] },
       { source: "/cv/:path*", headers: [...baseHeaders, ...allowSelfFraming] },
+      /*
+       * The photographs are served as they are, not through /_next/image, so
+       * they do not inherit the optimizer's cache headers and would otherwise
+       * revalidate on every open. Only Cache-Control is set here, so this
+       * stacks with the rule above rather than conflicting with it.
+       *
+       * `immutable` is a promise the filenames have to keep: these paths are
+       * not content-hashed, so replacing a photograph means giving it a new
+       * name, or a year of visitors keep the old one.
+       */
+      {
+        source: "/elsewhere/:path*",
+        headers: [{ key: "Cache-Control", value: "public, max-age=31536000, immutable" }],
+      },
     ];
   },
 };

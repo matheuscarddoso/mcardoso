@@ -146,6 +146,23 @@ const SOURCE_H = 359
 /** Degrees between one card and the next, so the pile reads as a fan. */
 const TILT = 5.5
 
+/**
+ * Downloads the full photograph before it is asked for.
+ *
+ * The open photograph is served straight from /public rather than through the
+ * image optimizer, so the URL it will request is just the source path and
+ * warming it is one assignment. On a pointer this runs while the cursor is
+ * still travelling to the card; on touch, `pointerdown` still lands before the
+ * click that opens the dialog.
+ */
+function warm(src: string, done: Set<string>) {
+  if (done.has(src)) return
+  done.add(src)
+  const image = document.createElement("img")
+  image.decoding = "async"
+  image.src = src
+}
+
 /* Apple-style spring, same register as the avatar lightbox. */
 const SPRING_IN = { type: "spring" as const, duration: 0.55, bounce: 0.18 }
 const SPRING_OUT = { type: "spring" as const, duration: 0.4, bounce: 0 }
@@ -155,6 +172,16 @@ export function PhotoDeck({ language }: { language: Language }) {
   const [active, setActive] = React.useState<Photo | null>(null)
   const [lifted, setLifted] = React.useState<number | null>(null)
   const reduceMotion = useReducedMotion()
+
+  /* Which full photographs have already been asked for, so hovering the same
+     card twice does not queue a second download. */
+  const warmed = React.useRef<Set<string>>(new Set())
+
+  /* False until the open photograph has decoded. Reset per photo: without
+     this, the second one to open inherits the first one's `true` and shows an
+     empty frame instead of the blurred stand-in. */
+  const [loaded, setLoaded] = React.useState(false)
+  React.useEffect(() => setLoaded(false), [active])
 
   /* Reduced motion keeps the crossfade and drops the morph, same trade the
      avatar lightbox makes: the change is still explained, nothing travels. */
@@ -184,9 +211,17 @@ export function PhotoDeck({ language }: { language: Language }) {
               type="button"
               aria-label={open[language](photo.caption[language])}
               onClick={() => setActive(photo)}
-              onHoverStart={() => setLifted(index)}
+              /* Pointer intent, not the click, is what starts the download. */
+              onPointerDown={() => warm(photo.src, warmed.current)}
+              onHoverStart={() => {
+                setLifted(index)
+                warm(photo.src, warmed.current)
+              }}
               onHoverEnd={() => setLifted((current) => (current === index ? null : current))}
-              onFocus={() => setLifted(index)}
+              onFocus={() => {
+                setLifted(index)
+                warm(photo.src, warmed.current)
+              }}
               onBlur={() => setLifted((current) => (current === index ? null : current))}
               animate={{
                 rotate: isLifted ? 0 : tilt,
@@ -289,15 +324,43 @@ export function PhotoDeck({ language }: { language: Language }) {
                         width: `min(86vw, calc(76vh * ${(active.w / active.h).toFixed(4)}))`,
                         aspectRatio: `${active.w} / ${active.h}`,
                       }}
-                      className="overflow-hidden rounded-xl shadow-card-lift"
+                      className="relative overflow-hidden rounded-xl bg-gray-300 shadow-card-lift dark:bg-[#2a2a2a]"
                     >
+                      {/*
+                        The deck's own thumbnail, blown up and blurred, under
+                        the real photograph.
+
+                        Same props as the card above, so this is the variant
+                        the browser already has: it paints on the first frame
+                        of the morph, which used to open onto an empty box
+                        while the full file was still in flight. Scaled past
+                        the edges because a blur samples transparency at the
+                        border and would otherwise draw a pale frame.
+                      */}
+                      <Image
+                        src={active.src}
+                        alt=""
+                        aria-hidden
+                        width={SOURCE_W}
+                        height={SOURCE_H}
+                        className="absolute inset-0 h-full w-full scale-110 object-cover blur-lg grayscale"
+                      />
+                      {/*
+                        Straight from /public, no optimizer. These are already
+                        WebP at their delivery size, so a transform buys no
+                        bytes and costs a cold render on the first open of each
+                        one — which is exactly the wait this section had.
+                      */}
                       <Image
                         src={active.src}
                         alt={active.caption[language]}
                         width={active.w}
                         height={active.h}
+                        unoptimized
                         priority
-                        className="h-full w-full object-cover grayscale"
+                        onLoad={() => setLoaded(true)}
+                        style={{ opacity: loaded ? 1 : 0 }}
+                        className="relative h-full w-full object-cover grayscale transition-opacity duration-300 ease-[var(--ease-out-strong)] motion-reduce:transition-none"
                       />
                     </motion.div>
                     <motion.figcaption

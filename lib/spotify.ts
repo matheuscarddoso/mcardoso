@@ -27,13 +27,34 @@ export type NowPlaying = {
 
 type Credentials = { id: string; secret: string; refresh: string }
 
+/**
+ * Announced once per instance, then never again. Missing config is not an
+ * error worth throwing over: the card falls back to a plain link, which is
+ * what it does on a failed fetch too. But it stayed quiet about it, and a card
+ * that never opens looks exactly like an account that is not playing anything
+ * — which is how production ran unconfigured without anyone noticing.
+ */
+let warnedMissing = false
+
 function credentials(): Credentials | null {
   const id = process.env.SPOTIFY_CLIENT_ID
   const secret = process.env.SPOTIFY_CLIENT_SECRET
   const refresh = process.env.SPOTIFY_REFRESH_TOKEN
-  // Missing config is not an error worth throwing over: the card simply falls
-  // back to being a plain link, which is what it does on a failed fetch too.
-  if (!id || !secret || !refresh) return null
+
+  if (!id || !secret || !refresh) {
+    if (!warnedMissing) {
+      warnedMissing = true
+      // Names only. The values are the secret; which of them is absent is not.
+      const missing = [
+        !id && "SPOTIFY_CLIENT_ID",
+        !secret && "SPOTIFY_CLIENT_SECRET",
+        !refresh && "SPOTIFY_REFRESH_TOKEN",
+      ].filter(Boolean)
+      console.warn(`[spotify] card disabled, unset: ${missing.join(", ")}`)
+    }
+    return null
+  }
+
   return { id, secret, refresh }
 }
 

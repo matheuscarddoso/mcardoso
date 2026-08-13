@@ -4,6 +4,7 @@ import { Geist, Geist_Mono, Libre_Baskerville } from "next/font/google";
 import "../globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { DocumentPanelProvider } from "@/components/document-panel";
+import { Oneko } from "@/components/oneko";
 import { LOCALES, localeToLanguage } from "@/lib/locale";
 import {
   HOME_SEO,
@@ -141,6 +142,9 @@ export default async function LocaleLayout({
           <DocumentPanelProvider language={localeToLanguage(locale)}>
             {children}
           </DocumentPanelProvider>
+          {/* Outside the panel provider: it is fixed to the viewport and has
+              no business being shifted when the résumé opens. */}
+          <Oneko />
         </ThemeProvider>
       </body>
     </html>

@@ -8,6 +8,7 @@ import { ArrowUpRight } from "lucide-react"
 import { AnimatePresence, motion, useReducedMotion } from "motion/react"
 import { MONTH_NAMES, type Language } from "@/lib/locale"
 import type { GithubCardData } from "@/lib/github"
+import type { NowPlaying } from "@/lib/spotify"
 
 type Preview = {
   src: string
@@ -142,19 +143,99 @@ export function BioLink({ href, className, children, ...props }: React.Component
   )
 }
 
-/** Mocked for now — swap for the real "last played" feed when it exists. */
-const NOW_PLAYING = {
-  url: "https://www.youtube.com/watch?v=eEQMtIX61LA",
-  title: "Love's Train",
-  artist: "Silk Sonic",
-  thumbnail: "/previews/now-playing.webp",
+/**
+ * One request per page, shared by every card that asks and kept for the life
+ * of the visit. The promise itself is the cache, so two hovers in quick
+ * succession wait on the same fetch rather than starting a second one.
+ */
+let nowPlayingRequest: Promise<NowPlaying | null> | null = null
+
+function fetchNowPlaying(): Promise<NowPlaying | null> {
+  nowPlayingRequest ??= fetch("/api/now-playing")
+    .then((response) => (response.status === 204 ? null : response.json()))
+    .catch(() => null)
+  return nowPlayingRequest
 }
 
-const lastPlayedLabel = {
-  PT: "Ouvida há 3 horas",
-  EN: "Last played 3 hours ago",
-  ES: "Escuchada hace 3 horas",
-} as const
+/**
+ * Loads on the first hover rather than on page load. The card is the only
+ * thing that needs this, and most visits never open it.
+ */
+function useNowPlaying(enabled: boolean) {
+  const [track, setTrack] = React.useState<NowPlaying | null>(null)
+  const [settled, setSettled] = React.useState(false)
+
+  React.useEffect(() => {
+    if (!enabled || settled) return
+    let alive = true
+    fetchNowPlaying().then((result) => {
+      if (!alive) return
+      setTrack(result)
+      setSettled(true)
+    })
+    return () => {
+      alive = false
+    }
+  }, [enabled, settled])
+
+  return { track, settled }
+}
+
+const MINUTE = 60_000
+const HOUR = 60 * MINUTE
+const DAY = 24 * HOUR
+
+type PlaybackCopy = {
+  playing: string
+  /** Already-formatted count and unit, so plurals stay with the language. */
+  ago: (value: number, unit: "minute" | "hour" | "day") => string
+  justNow: string
+  /** Shown while the request is still in flight. */
+  loading: string
+}
+
+const playback: Record<Language, PlaybackCopy> = {
+  PT: {
+    playing: "Tocando agora",
+    justNow: "Ouvida agora há pouco",
+    loading: "Procurando...",
+    ago: (value, unit) => {
+      const word = { minute: "minuto", hour: "hora", day: "dia" }[unit]
+      return `Ouvida há ${value} ${word}${value === 1 ? "" : "s"}`
+    },
+  },
+  EN: {
+    playing: "Now playing",
+    justNow: "Played just now",
+    loading: "Checking...",
+    ago: (value, unit) => `Last played ${value} ${unit}${value === 1 ? "" : "s"} ago`,
+  },
+  ES: {
+    playing: "Sonando ahora",
+    justNow: "Escuchada hace un momento",
+    loading: "Buscando...",
+    ago: (value, unit) => {
+      const word = { minute: "minuto", hour: "hora", day: "día" }[unit]
+      return `Escuchada hace ${value} ${word}${value === 1 ? "" : "s"}`
+    },
+  },
+}
+
+/**
+ * Relative time, rounded down to the largest whole unit. Computed on the
+ * client and only after the fetch resolves, so there is no server render of it
+ * to disagree with.
+ */
+function playedLabel(track: NowPlaying, language: Language): string {
+  const t = playback[language]
+  if (track.playing || !track.playedAt) return t.playing
+
+  const elapsed = Date.now() - new Date(track.playedAt).getTime()
+  if (elapsed < MINUTE) return t.justNow
+  if (elapsed < HOUR) return t.ago(Math.floor(elapsed / MINUTE), "minute")
+  if (elapsed < DAY) return t.ago(Math.floor(elapsed / HOUR), "hour")
+  return t.ago(Math.floor(elapsed / DAY), "day")
+}
 
 export function PlaylistLink({
   language,
@@ -163,6 +244,9 @@ export function PlaylistLink({
   children,
   ...props
 }: Omit<React.ComponentProps<"a">, "href"> & { language: Language; href: string }) {
+  const [open, setOpen] = React.useState(false)
+  const { track, settled } = useNowPlaying(open)
+
   // Internal route, so `Link` — a plain anchor here threw away the client
   // navigation and reloaded the whole document to move one page across.
   const anchor = (
@@ -171,60 +255,80 @@ export function PlaylistLink({
     </Link>
   )
 
+  /*
+   * Warms the request on pointer intent, before the card is asked to open.
+   * The hover card waits 120ms and then springs in over 400ms, so by the time
+   * there is anything to look at the track has usually arrived and the reader
+   * never sees the placeholder.
+   */
+  const warm = () => setOpen(true)
+
+  /*
+   * No track and the request already finished means Spotify is unreachable,
+   * the account has never played anything, or the keys are missing. All three
+   * come to the same thing here: nothing worth opening a card for, so the link
+   * stands on its own the way an unconfigured GitHub card does.
+   */
+  if (settled && !track) return <span onPointerEnter={warm}>{anchor}</span>
+
   return (
-    <HoverPreview width={244} trigger={anchor}>
-      {/* Both surfaces are fully opaque — the card sits over body copy. */}
-      <div className="rounded-xl bg-[#f4f4f5] p-1 shadow-card-lift dark:bg-[#171717]">
-        <a
-          href={NOW_PLAYING.url}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="flex items-center gap-2 rounded-lg bg-white p-1.5 shadow-custom transition-transform duration-150 ease-[var(--ease-out-strong)] active:scale-[0.98] motion-reduce:active:scale-100 dark:bg-[#222]"
-        >
-          {/* Record turning behind the sleeve, its label cut from the cover art. */}
-          <span className="relative h-10 w-[58px] shrink-0">
-            <span className="absolute top-1/2 left-[22px] size-9 -translate-y-1/2">
-              {/* Rotation lives on its own node — the spin would clobber the centring transform. */}
-              <span className="vinyl-spin block size-full rounded-full bg-[radial-gradient(circle,#3a3a3a_0%,#0e0e0e_58%,#1c1c1c_100%)] shadow-sm ring-1 ring-black/40">
-                <span className="absolute inset-[3px] rounded-full ring-1 ring-white/10" />
-                <span className="absolute inset-[6px] rounded-full ring-1 ring-white/[0.07]" />
-                <span className="absolute inset-[10px] overflow-hidden rounded-full">
+    <span onPointerEnter={warm} onFocusCapture={warm}>
+      <HoverPreview width={244} trigger={anchor}>
+        {/* Both surfaces are fully opaque — the card sits over body copy. */}
+        <div className="rounded-xl bg-[#f4f4f5] p-1 shadow-card-lift dark:bg-[#171717]">
+          <a
+            href={track?.url ?? "https://open.spotify.com"}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-2 rounded-lg bg-white p-1.5 shadow-custom transition-transform duration-150 ease-[var(--ease-out-strong)] active:scale-[0.98] motion-reduce:active:scale-100 dark:bg-[#222]"
+          >
+            {/* Record turning behind the sleeve, its label cut from the cover art. */}
+            <span className="relative h-10 w-[58px] shrink-0">
+              <span className="absolute top-1/2 left-[22px] size-9 -translate-y-1/2">
+                {/* Rotation lives on its own node — the spin would clobber the centring transform. */}
+                <span className="vinyl-spin block size-full rounded-full bg-[radial-gradient(circle,#3a3a3a_0%,#0e0e0e_58%,#1c1c1c_100%)] shadow-sm ring-1 ring-black/40">
+                  <span className="absolute inset-[3px] rounded-full ring-1 ring-white/10" />
+                  <span className="absolute inset-[6px] rounded-full ring-1 ring-white/[0.07]" />
+                  <span className="absolute inset-[10px] overflow-hidden rounded-full">
+                    {track?.cover && (
+                      <Image src={track.cover} alt="" fill sizes="16px" className="object-cover" />
+                    )}
+                  </span>
+                  <span className="absolute top-1/2 left-1/2 size-[3px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#f4f4f5] ring-1 ring-black/40" />
+                </span>
+              </span>
+              <span className="absolute top-0 left-0 size-10 overflow-hidden rounded-md bg-gray-300 shadow-custom">
+                {/* The sleeve is the one that carries the meaning; the record
+                    behind it is the same art, spinning, and stays decorative. */}
+                {track?.cover && (
                   <Image
-                    src={NOW_PLAYING.thumbnail}
-                    alt=""
+                    src={track.cover}
+                    alt={`${track.title} · ${track.artist}`}
                     fill
-                    sizes="16px"
+                    sizes="40px"
                     className="object-cover"
                   />
+                )}
+              </span>
+            </span>
+            <span className="flex min-w-0 flex-1 flex-col">
+              <span className="flex items-start gap-1">
+                <span className="truncate text-xs font-medium text-gray-1200">
+                  {track?.title ?? "\u00a0"}
                 </span>
-                <span className="absolute top-1/2 left-1/2 size-[3px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#f4f4f5] ring-1 ring-black/40" />
+                <ArrowUpRight aria-hidden className="mt-px size-3 shrink-0 text-gray-1000" />
               </span>
+              {/* Non-breaking space rather than nothing, so the two rows hold
+                  their height and the card doesn't resize when the track lands. */}
+              <span className="truncate text-xs text-gray-1100">{track?.artist ?? "\u00a0"}</span>
             </span>
-            <span className="absolute top-0 left-0 size-10 overflow-hidden rounded-md shadow-custom">
-              {/* The sleeve is the one that carries the meaning; the record
-                  behind it is the same art, spinning, and stays decorative. */}
-              <Image
-                src={NOW_PLAYING.thumbnail}
-                alt={`${NOW_PLAYING.title} · ${NOW_PLAYING.artist}`}
-                fill
-                sizes="40px"
-                className="object-cover"
-              />
-            </span>
-          </span>
-          <span className="flex min-w-0 flex-1 flex-col">
-            <span className="flex items-start gap-1">
-              <span className="truncate text-xs font-medium text-gray-1200">
-                {NOW_PLAYING.title}
-              </span>
-              <ArrowUpRight aria-hidden className="mt-px size-3 shrink-0 text-gray-1000" />
-            </span>
-            <span className="truncate text-xs text-gray-1100">{NOW_PLAYING.artist}</span>
-          </span>
-        </a>
-        <p className="px-1.5 py-1 text-[10px] text-gray-1000">{lastPlayedLabel[language]}</p>
-      </div>
-    </HoverPreview>
+          </a>
+          <p className="px-1.5 py-1 text-[10px] text-gray-1000">
+            {track ? playedLabel(track, language) : playback[language].loading}
+          </p>
+        </div>
+      </HoverPreview>
+    </span>
   )
 }
 

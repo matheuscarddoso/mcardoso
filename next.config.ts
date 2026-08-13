@@ -66,6 +66,13 @@ const nextConfig: NextConfig = {
         hostname: "opengraph.githubassets.com",
         pathname: "/*/**",
       },
+      // Spotify album art for the now-playing card. `i.scdn.co` is the image
+      // CDN specifically; the API host itself never serves pictures.
+      {
+        protocol: "https",
+        hostname: "i.scdn.co",
+        pathname: "/image/**",
+      },
     ],
   },
 

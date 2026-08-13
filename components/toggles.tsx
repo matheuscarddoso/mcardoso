@@ -3,7 +3,7 @@
 import * as React from "react"
 import { useTheme } from "next-themes"
 import { Monitor, Moon, Sun } from "lucide-react"
-import { AnimatePresence, motion, useReducedMotion } from "motion/react"
+import { motion, useReducedMotion } from "motion/react"
 import type { Language } from "@/lib/locale"
 
 const themeAction = {
@@ -18,7 +18,20 @@ const languageAction = {
   ES: "Cambiar idioma",
 } as const
 
-const themeIcons = { system: Monitor, dark: Moon, light: Sun } as const
+/** In the order they sit in the tray, dimmest to brightest. */
+const THEMES = [
+  { value: "system", Icon: Monitor },
+  { value: "light", Icon: Sun },
+  { value: "dark", Icon: Moon },
+] as const
+
+type ThemeValue = (typeof THEMES)[number]["value"]
+
+const themeName: Record<Language, Record<ThemeValue, string>> = {
+  PT: { system: "Sistema", light: "Claro", dark: "Escuro" },
+  EN: { system: "System", light: "Light", dark: "Dark" },
+  ES: { system: "Sistema", light: "Claro", dark: "Oscuro" },
+}
 
 const toggleClass =
   "relative flex h-[28px] cursor-pointer items-center rounded-xl px-2 py-1.5 text-xs font-medium select-none transition-[color,background-color,transform] duration-150 ease-[var(--ease-out-strong)] hover:bg-zinc-50 active:scale-[0.97] motion-reduce:active:scale-100 dark:hover:bg-zinc-800"
@@ -48,52 +61,70 @@ export function LanguageToggle({
   )
 }
 
+/**
+ * A tray of three rather than one button that cycles.
+ *
+ * Cycling hid two things: which theme was set, and how many presses it would
+ * take to reach the one you wanted. Three targets say both at a glance, and
+ * "system" stops being a state you can only reach by going around.
+ */
 export function ThemeToggle({ language }: { language: Language }) {
   const { theme, setTheme } = useTheme()
   const shouldReduceMotion = useReducedMotion()
 
-  // `theme` is only known on the client, so nothing is drawn until mount —
-  // that keeps the first client render identical to the server's and avoids
-  // flashing the wrong icon.
+  // `theme` is only known on the client, so the highlight is not drawn until
+  // mount. That keeps the first client render identical to the server's and
+  // avoids marking the wrong one for a frame.
   const [mounted, setMounted] = React.useState(false)
   React.useEffect(() => setMounted(true), [])
 
-  const current = theme === "dark" ? "dark" : theme === "light" ? "light" : "system"
-  const Icon = themeIcons[current]
-
-  const toggleTheme = () => {
-    if (theme === "system") setTheme("dark")
-    else if (theme === "dark") setTheme("light")
-    else setTheme("system")
-  }
+  const current: ThemeValue = theme === "dark" ? "dark" : theme === "light" ? "light" : "system"
 
   const transition = shouldReduceMotion
     ? { duration: 0.12 }
     : { type: "spring" as const, duration: 0.35, bounce: 0.15 }
 
   return (
-    <button
-      type="button"
-      onClick={toggleTheme}
-      className={toggleClass}
+    <div
+      role="radiogroup"
       aria-label={themeAction[language]}
+      className="flex items-center gap-0.5 rounded-xl p-0.5 shadow-custom"
     >
-      <span className="relative grid size-4 place-items-center">
-        <AnimatePresence initial={false}>
-          {mounted && (
-            <motion.span
-              key={current}
-              initial={{ opacity: 0, scale: 0.6, filter: "blur(4px)" }}
-              animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
-              exit={{ opacity: 0, scale: 0.6, filter: "blur(4px)" }}
-              transition={transition}
-              className="absolute inset-0 grid place-items-center"
-            >
-              <Icon className="size-4" strokeWidth={1.75} />
-            </motion.span>
-          )}
-        </AnimatePresence>
-      </span>
-    </button>
+      {THEMES.map(({ value, Icon }) => {
+        const active = mounted && current === value
+
+        return (
+          <button
+            key={value}
+            type="button"
+            role="radio"
+            aria-checked={active}
+            aria-label={themeName[language][value]}
+            title={themeName[language][value]}
+            onClick={() => setTheme(value)}
+            className="relative grid size-6 cursor-pointer place-items-center rounded-[10px] transition-[color,transform] duration-150 ease-[var(--ease-out-strong)] active:scale-[0.92] motion-reduce:active:scale-100"
+          >
+            {/*
+              One shared `layoutId`, so the pill travels between the three
+              instead of fading out here and in there. Sitting behind the glyph
+              rather than around it keeps the icon on top of its own highlight.
+            */}
+            {active && (
+              <motion.span
+                layoutId="theme-tray-active"
+                transition={transition}
+                className="absolute inset-0 rounded-[10px] bg-zinc-100 dark:bg-zinc-800"
+              />
+            )}
+            <Icon
+              className={`relative size-3.5 transition-colors duration-150 ${
+                active ? "text-gray-1200" : "text-gray-1000"
+              }`}
+              strokeWidth={1.75}
+            />
+          </button>
+        )
+      })}
+    </div>
   )
 }

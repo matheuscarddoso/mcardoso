@@ -334,17 +334,10 @@ export function HomeContent({
   return (
     <div className="relative flex min-h-dvh w-full flex-col overflow-x-hidden">
       <main className="mx-auto flex w-full max-w-(--breakpoint-sm) flex-1 flex-col px-4 pt-20 pb-4 dark:text-[#b4b4b4] text-gray-600">
-        {/* Just the two controls now. No `ToggleSeparator`: with the profile
-            links moved down there is nothing left for it to separate. */}
-        <div className="mb-8 mt-4 flex items-center gap-4 text-black dark:text-white">
-          <LanguageToggle
-            language={language}
-            onLanguageChange={switchLocale}
-          />
-          <ThemeToggle language={language} />
-        </div>
-        
-        <div className="relative z-10 mb-8 flex items-center">
+        {/* The controls ride on the name's row now, pushed to the far edge.
+            `items-center` on the row, so they centre against the avatar
+            rather than against the two lines of type beside it. */}
+        <div className="relative z-10 mt-4 mb-8 flex items-center">
           <div className="relative z-10">
             <AvatarLightbox
               src="/profile.png"
@@ -366,6 +359,11 @@ export function HomeContent({
                 the longest strings on the page, and a 320px viewport has to
                 wrap them rather than push the column sideways. */}
             <p className="font-medium text-gray-1100 leading-snug text-base">{t.title}</p>
+          </div>
+
+          <div className="ml-auto flex shrink-0 items-center gap-2 text-black dark:text-white">
+            <LanguageToggle language={language} onLanguageChange={switchLocale} />
+            <ThemeToggle language={language} />
           </div>
         </div>
 

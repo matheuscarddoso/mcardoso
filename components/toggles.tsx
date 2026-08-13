@@ -88,7 +88,7 @@ export function ThemeToggle({ language }: { language: Language }) {
     <div
       role="radiogroup"
       aria-label={themeAction[language]}
-      className="flex items-center gap-0.5 rounded-xl p-0.5 shadow-custom"
+      className="flex items-center gap-0.5 rounded-full p-0.5 shadow-custom"
     >
       {THEMES.map(({ value, Icon }) => {
         const active = mounted && current === value
@@ -102,7 +102,7 @@ export function ThemeToggle({ language }: { language: Language }) {
             aria-label={themeName[language][value]}
             title={themeName[language][value]}
             onClick={() => setTheme(value)}
-            className="relative grid size-6 cursor-pointer place-items-center rounded-[10px] transition-[color,transform] duration-150 ease-[var(--ease-out-strong)] active:scale-[0.92] motion-reduce:active:scale-100"
+            className="relative grid size-6 cursor-pointer place-items-center rounded-full transition-[color,transform] duration-150 ease-[var(--ease-out-strong)] active:scale-[0.92] motion-reduce:active:scale-100"
           >
             {/*
               One shared `layoutId`, so the pill travels between the three
@@ -113,7 +113,7 @@ export function ThemeToggle({ language }: { language: Language }) {
               <motion.span
                 layoutId="theme-tray-active"
                 transition={transition}
-                className="absolute inset-0 rounded-[10px] bg-zinc-100 dark:bg-zinc-800"
+                className="absolute inset-0 rounded-full bg-zinc-100 dark:bg-zinc-800"
               />
             )}
             <Icon

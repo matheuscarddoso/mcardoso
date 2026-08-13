@@ -4,6 +4,7 @@ import Link from "next/link"
 import { useParams, usePathname } from "next/navigation"
 import { LanguageToggle, ThemeToggle } from "@/components/toggles"
 import { LocalTime } from "@/components/local-time"
+import { PixelCat } from "@/components/pixel-cat"
 import { SocialLinks } from "@/components/social-links"
 import { FOOTER_SOCIAL } from "@/lib/site"
 import type { Language } from "@/lib/locale"
@@ -54,6 +55,7 @@ export function Footer({
             <LanguageToggle language={language} onLanguageChange={onLanguageChange} />
           )}
           <LocalTime language={language} />
+          <PixelCat />
         </div>
         {/* The profiles the header has no room for. Same -m-2/p-2 targets. */}
         <div className="flex items-center gap-4">

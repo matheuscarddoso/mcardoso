@@ -308,6 +308,44 @@
 }
 
 /*
+ * The pixel cat beside the footer clock.
+ *
+ * The sheet is a 8x4 grid of 32px cells. The three washing frames sit in
+ * columns 5, 6 and 7 of the top row, which is the only reason this is a single
+ * sweep of `background-position` rather than a keyframe per cell: they are
+ * contiguous. The sweep runs from -160px to -256px, three cells, and `steps(3)`
+ * lands on the first three and never paints the fourth.
+ *
+ * `image-rendering: pixelated` is not optional. Without it the browser smooths
+ * the upscale and 32px of pixel art turns to mush.
+ */
+.pixel-cat {
+  display: inline-block;
+  width: 32px;
+  height: 32px;
+  background-image: url("/oneko/oneko.gif");
+  background-position: -160px 0;
+  image-rendering: pixelated;
+  animation: pixel-cat-wash 1.2s steps(3) infinite;
+}
+
+@keyframes pixel-cat-wash {
+  from {
+    background-position: -160px 0;
+  }
+  to {
+    background-position: -256px 0;
+  }
+}
+
+/* A loop that never stops is exactly what this setting is asking about. */
+@media (prefers-reduced-motion: reduce) {
+  .pixel-cat {
+    animation: none;
+  }
+}
+
+/*
  * The marks in the bio sit grey and take their brand colour when the link they
  * belong to is hovered.
  *

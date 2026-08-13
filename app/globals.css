@@ -307,29 +307,6 @@
   corner-shape: squircle;
 }
 
-/*
- * The rubber duck beside the footer clock. One frame, no animation: it is a
- * bath toy, and bath toys do not move.
- *
- * 12x12, drawn by hand, and the source that writes the PNG is committed next
- * to it. Two earlier attempts at an animal were generated from ellipses and
- * both came out as blobs; at this size the shape has to be placed pixel by
- * pixel, and a duck is legible in twelve where a koala was not.
- *
- * Drawn at 2x, so every source pixel is a 2x2 block and the sprite reads as
- * pixel art rather than as a small picture. Integer scales only: at 1.5x some
- * source pixels land on one screen pixel and some on two.
- */
-.pixel-duck {
-  --duck-scale: 2;
-
-  display: inline-block;
-  width: calc(12px * var(--duck-scale));
-  height: calc(12px * var(--duck-scale));
-  background-image: url("/duck/duck.png");
-  background-size: 100% 100%;
-  image-rendering: pixelated;
-}
 
 /*
  * The marks in the bio sit grey and take their brand colour when the link they

@@ -9,15 +9,15 @@
  * No JavaScript. The whole animation is `background-position` stepped by CSS,
  * so it costs one 3KB image and nothing on the main thread.
  */
-export function PixelCat() {
+export function PixelKoala() {
   return (
     <span
       aria-hidden
       /*
-       * `pixel-cat` carries the sprite and the loop; see `globals.css` for the
+       * `pixel-koala` carries the sprite and the loop; see `globals.css` for the
        * frame arithmetic and for why `image-rendering` matters here.
        */
-      className="pixel-cat shrink-0"
+      className="pixel-koala shrink-0"
     />
   )
 }

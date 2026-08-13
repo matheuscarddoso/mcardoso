@@ -2,7 +2,7 @@
 
 import { LanguageToggle, ThemeToggle } from "@/components/toggles"
 import { LocalTime } from "@/components/local-time"
-import { PixelCat } from "@/components/pixel-cat"
+import { PixelKoala } from "@/components/pixel-koala"
 import type { Language } from "@/lib/locale"
 
 export type { Language }
@@ -36,7 +36,7 @@ export function Footer({
             <LanguageToggle language={language} onLanguageChange={onLanguageChange} />
           )}
           <LocalTime language={language} />
-          <PixelCat />
+          <PixelKoala />
         </div>
         <div className="flex items-center gap-4">
           {showThemeToggle && <ThemeToggle language={language} />}

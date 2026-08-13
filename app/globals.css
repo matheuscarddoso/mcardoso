@@ -308,59 +308,47 @@
 }
 
 /*
- * The pixel cat beside the footer clock.
+ * The koala beside the footer clock.
  *
- * The sheet is a 8x4 grid of 32px cells and the scale is the whole point: at
- * 1:1 there is no resampling, so `image-rendering: pixelated` has nothing to
- * do and the sprite just looks small. Drawing it at 2x turns every source
- * pixel into a 2x2 block, which is what reads as pixel art.
+ * Two 24px frames side by side in a 48x24 sheet, the second one a pixel lower
+ * than the first, which is the whole animation: it breathes. The source that
+ * draws it is committed next to the image, because pixel art typed out by hand
+ * is unmaintainable and this one was generated from ellipses.
  *
- * Integer scales only. At 1.5x some source pixels land on one screen pixel and
- * some on two, and the sprite comes out visibly uneven.
+ * The scale is the point. At 1:1 there is no resampling and
+ * `image-rendering: pixelated` has nothing to do, so the sprite just looks
+ * small. At 2x every source pixel becomes a 2x2 block, which is what reads as
+ * pixel art. Integer scales only: at 1.5x some source pixels land on one
+ * screen pixel and some on two, and the sprite comes out visibly uneven.
  *
- * The three washing frames sit in columns 5, 6 and 7 of the top row. Being
- * contiguous is why this is one sweep of `background-position` rather than a
- * keyframe per cell: -160 to -256 in sheet units, three cells, with `steps(3)`
- * landing on the first three and never painting the fourth.
+ * It carries its own colours, grey fur and a pink inner ear, so unlike the
+ * black-and-white cat it needs no per-theme inversion to stay visible.
  */
-.pixel-cat {
-  --cat-scale: 2;
-  --cat-cell: calc(32px * var(--cat-scale));
-  --cat-from: calc(-160px * var(--cat-scale));
-  --cat-to: calc(-256px * var(--cat-scale));
+.pixel-koala {
+  --koala-scale: 2;
 
   display: inline-block;
-  width: var(--cat-cell);
-  height: var(--cat-cell);
-  background-image: url("/oneko/oneko.gif");
-  background-size: calc(256px * var(--cat-scale)) calc(128px * var(--cat-scale));
-  background-position: var(--cat-from) 0;
+  width: calc(24px * var(--koala-scale));
+  height: calc(24px * var(--koala-scale));
+  background-image: url("/koala/koala.png");
+  background-size: calc(48px * var(--koala-scale)) calc(24px * var(--koala-scale));
+  background-position: 0 0;
   image-rendering: pixelated;
-  animation: pixel-cat-wash 1.2s steps(3) infinite;
+  animation: pixel-koala-breathe 1.8s steps(2) infinite;
 }
 
-/*
- * The artwork is a white cat with a black outline, which reads on a #111 page
- * and disappears on a #fcfcfc one. Inverting for the light theme gives a black
- * cat instead of an invisible one; the outline turns white and vanishes into
- * the page, leaving a silhouette, which is the right way round.
- */
-:root:not(.dark) .pixel-cat {
-  filter: invert(100%);
-}
-
-@keyframes pixel-cat-wash {
+@keyframes pixel-koala-breathe {
   from {
-    background-position: var(--cat-from) 0;
+    background-position: 0 0;
   }
   to {
-    background-position: var(--cat-to) 0;
+    background-position: calc(-48px * var(--koala-scale)) 0;
   }
 }
 
 /* A loop that never stops is exactly what this setting is asking about. */
 @media (prefers-reduced-motion: reduce) {
-  .pixel-cat {
+  .pixel-koala {
     animation: none;
   }
 }

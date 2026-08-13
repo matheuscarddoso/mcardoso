@@ -1,31 +1,43 @@
-"use client"
+"use client";
 
-import * as React from "react"
-import Link from "next/link"
-import { useParams } from "next/navigation"
-import { AvatarLightbox } from "@/components/avatar-lightbox"
-import { Footer, type Language } from "@/components/footer"
-import { AbacatePreview, KuboPreview, ProjectCard } from "@/components/project-card"
-import { WorkList } from "@/components/work-list"
-import { ContributionGraph } from "@/components/contribution-graph"
-import { LanguageToggle, ThemeToggle } from "@/components/toggles"
-import { BioLink, GithubLink, HoverPreview, PlaylistLink } from "@/components/link-preview"
-import { SocialLinks } from "@/components/social-links"
-import { SectionDivider } from "@/components/section-divider"
-import { localeToLanguage } from "@/lib/locale"
-import { switchLocale } from "@/lib/switch-locale"
-import { HEADER_SOCIAL } from "@/lib/site"
-import type { ContributionYear, GithubCardData } from "@/lib/github"
-import { VerifiedBadge } from "@/components/verified-badge"
-import { BrandMark } from "@/components/brand-marks"
-import { AvatarStack } from "@/components/avatar-stack"
-import { PhotoDeck } from "@/components/photo-deck"
-import { FileTextIcon } from "@/components/file-text-icon"
-import { DOCUMENT_PANEL_ID, useDocumentPanel } from "@/components/document-panel"
-import { Check, Copy, Mail } from "lucide-react"
-import { AnimatePresence, motion, useReducedMotion } from "motion/react"
+import * as React from "react";
+import Link from "next/link";
+import { useParams } from "next/navigation";
+import { AvatarLightbox } from "@/components/avatar-lightbox";
+import { Footer, type Language } from "@/components/footer";
+import {
+  AbacatePreview,
+  KuboPreview,
+  ProjectCard,
+} from "@/components/project-card";
+import { WorkList } from "@/components/work-list";
+import { ContributionGraph } from "@/components/contribution-graph";
+import { LanguageToggle, ThemeToggle } from "@/components/toggles";
+import {
+  BioLink,
+  GithubLink,
+  HoverPreview,
+  PlaylistLink,
+} from "@/components/link-preview";
+import { SocialLinks } from "@/components/social-links";
+import { SectionDivider } from "@/components/section-divider";
+import { localeToLanguage } from "@/lib/locale";
+import { switchLocale } from "@/lib/switch-locale";
+import { HEADER_SOCIAL } from "@/lib/site";
+import type { ContributionYear, GithubCardData } from "@/lib/github";
+import { VerifiedBadge } from "@/components/verified-badge";
+import { BrandMark } from "@/components/brand-marks";
+import { AvatarStack } from "@/components/avatar-stack";
+import { PhotoDeck } from "@/components/photo-deck";
+import { FileTextIcon } from "@/components/file-text-icon";
+import {
+  DOCUMENT_PANEL_ID,
+  useDocumentPanel,
+} from "@/components/document-panel";
+import { Check, Copy, Mail } from "lucide-react";
+import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 
-const EMAIL = "mathuscardoso@gmail.com"
+const EMAIL = "mathuscardoso@gmail.com";
 
 const translations = {
   PT: {
@@ -34,6 +46,9 @@ const translations = {
     closePhoto: "Fechar a foto",
     title: "Engenheiro de Software",
     projects: "Projetos",
+    crafts: "Crafts",
+    craftsSoon: "em breve",
+    craftsIntro: "Componentes que eu construo e solto aqui, um de cada vez.",
     contributions: "Contribuições",
     writing: "Escrita",
     elsewhere: "Por aí",
@@ -52,6 +67,9 @@ const translations = {
     closePhoto: "Close photo",
     title: "Software Engineer",
     projects: "Projects",
+    crafts: "Crafts",
+    craftsSoon: "soon",
+    craftsIntro: "Components I build and drop here, one at a time.",
     contributions: "Contributions",
     writing: "Writing",
     elsewhere: "Elsewhere",
@@ -70,6 +88,9 @@ const translations = {
     closePhoto: "Cerrar la foto",
     title: "Ingeniero de Software",
     projects: "Proyectos",
+    crafts: "Crafts",
+    craftsSoon: "pronto",
+    craftsIntro: "Componentes que construyo y suelto aquí, uno a uno.",
     contributions: "Contribuciones",
     writing: "Escritura",
     elsewhere: "Por ahí",
@@ -82,60 +103,61 @@ const translations = {
     abacateMeta: "Open-source",
     abacateDescription: "Método de pago open-source hecho para Brasil.",
   },
-}
+};
 
 /**
  * The same spring the theme toggle swaps its icon on, so the two controls
  * sitting a few pixels apart in the header behave identically.
  */
-const ICON_SWAP = { type: "spring" as const, duration: 0.35, bounce: 0.15 }
+const ICON_SWAP = { type: "spring" as const, duration: 0.35, bounce: 0.15 };
 
 function CopyEmailButton({
   ariaLabel,
   copiedLabel,
 }: {
-  ariaLabel: string
-  copiedLabel: string
+  ariaLabel: string;
+  copiedLabel: string;
 }) {
-  const [open, setOpen] = React.useState(false)
-  const [copied, setCopied] = React.useState(false)
-  const resetTimeoutRef = React.useRef<ReturnType<typeof setTimeout>>(undefined)
-  const shouldReduceMotion = useReducedMotion()
+  const [open, setOpen] = React.useState(false);
+  const [copied, setCopied] = React.useState(false);
+  const resetTimeoutRef =
+    React.useRef<ReturnType<typeof setTimeout>>(undefined);
+  const shouldReduceMotion = useReducedMotion();
 
   React.useEffect(() => {
     return () => {
-      if (resetTimeoutRef.current) clearTimeout(resetTimeoutRef.current)
-    }
-  }, [])
+      if (resetTimeoutRef.current) clearTimeout(resetTimeoutRef.current);
+    };
+  }, []);
 
   const handleOpenChange = (next: boolean) => {
-    setOpen(next)
+    setOpen(next);
     // Reset only once the card is on its way out, so the tick never flips back
     // to the copy glyph while it is still under the pointer.
     if (!next) {
-      if (resetTimeoutRef.current) clearTimeout(resetTimeoutRef.current)
-      resetTimeoutRef.current = setTimeout(() => setCopied(false), 150)
+      if (resetTimeoutRef.current) clearTimeout(resetTimeoutRef.current);
+      resetTimeoutRef.current = setTimeout(() => setCopied(false), 150);
     }
-  }
+  };
 
   const handleCopy = React.useCallback(async () => {
-    await navigator.clipboard.writeText(EMAIL)
-    setCopied(true)
+    await navigator.clipboard.writeText(EMAIL);
+    setCopied(true);
     // Clicking a control that was already hovered keeps its card up; this
     // covers the tap, where there was never a hover to begin with.
-    setOpen(true)
+    setOpen(true);
 
-    if (resetTimeoutRef.current) clearTimeout(resetTimeoutRef.current)
-    resetTimeoutRef.current = setTimeout(() => setCopied(false), 2000)
-  }, [])
+    if (resetTimeoutRef.current) clearTimeout(resetTimeoutRef.current);
+    resetTimeoutRef.current = setTimeout(() => setCopied(false), 2000);
+  }, []);
 
-  const swap = shouldReduceMotion ? { duration: 0.12 } : ICON_SWAP
+  const swap = shouldReduceMotion ? { duration: 0.12 } : ICON_SWAP;
 
   // Blur bridges the two glyphs: without it the eye catches two separate marks
   // crossing over each other rather than one becoming the other.
   const hidden = shouldReduceMotion
     ? { opacity: 0 }
-    : { opacity: 0, scale: 0.6, filter: "blur(4px)" }
+    : { opacity: 0, scale: 0.6, filter: "blur(4px)" };
 
   const trigger = (
     <button
@@ -149,7 +171,7 @@ function CopyEmailButton({
     >
       <Mail className="h-4 w-4" />
     </button>
-  )
+  );
 
   return (
     /*
@@ -164,9 +186,7 @@ function CopyEmailButton({
       openDelay={150}
       trigger={trigger}
     >
-      <motion.div
-        className="flex w-fit items-center rounded-lg bg-preview-bg p-2 shadow-card-lift"
-      >
+      <motion.div className="flex w-fit items-center rounded-lg bg-preview-bg p-2 shadow-card-lift">
         <span className="relative grid size-4 shrink-0 place-items-center">
           <AnimatePresence initial={false}>
             <motion.span
@@ -197,10 +217,10 @@ function CopyEmailButton({
         </span>
       </motion.div>
     </HoverPreview>
-  )
+  );
 }
 
-const GITHUB_URL = "https://github.com/matheuscarddoso"
+const GITHUB_URL = "https://github.com/matheuscarddoso";
 
 /**
  * Two documents, not one translated label: the Portuguese file is a currículo
@@ -212,7 +232,7 @@ const CV: Record<Language, string> = {
   PT: "/cv/matheus-cardoso-curriculo.pdf",
   EN: "/cv/matheus-cardoso-resume.pdf",
   ES: "/cv/matheus-cardoso-resume.pdf",
-}
+};
 
 /**
  * Opens the PDF rather than forcing a download: a résumé is read before it is
@@ -223,10 +243,16 @@ const CV: Record<Language, string> = {
  * near-black on white in the light theme and flips to near-white on black in
  * the dark one. A hard-coded black would sink into a #111 page.
  */
-function ResumeButton({ language, label }: { language: Language; label: string }) {
-  const { canOpen, openSrc, toggle } = useDocumentPanel()
-  const src = CV[language]
-  const isOpen = openSrc === src
+function ResumeButton({
+  language,
+  label,
+}: {
+  language: Language;
+  label: string;
+}) {
+  const { canOpen, openSrc, toggle } = useDocumentPanel();
+  const src = CV[language];
+  const isOpen = openSrc === src;
 
   /*
    * Intercepts the plain left click and nothing else. A modified click is the
@@ -234,17 +260,24 @@ function ResumeButton({ language, label }: { language: Language; label: string }
    * viewport too narrow to host the split, so both fall through to the anchor.
    */
   const handleClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
-    if (!canOpen) return
-    if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || event.button !== 0) return
+    if (!canOpen) return;
+    if (
+      event.metaKey ||
+      event.ctrlKey ||
+      event.shiftKey ||
+      event.altKey ||
+      event.button !== 0
+    )
+      return;
 
-    event.preventDefault()
+    event.preventDefault();
     toggle({
       title: label,
       label: "PDF",
       src,
       filename: src.split("/").pop() ?? "curriculo.pdf",
-    })
-  }
+    });
+  };
 
   return (
     <a
@@ -265,71 +298,350 @@ function ResumeButton({ language, label }: { language: Language; label: string }
       <FileTextIcon aria-hidden loop size={18} className="shrink-0" />
       {label}
     </a>
-  )
+  );
 }
 
 type BioParagraphs = (
   link: string,
   locale: string,
   lang: Language,
-  github: GithubCardData | null
-) => React.ReactNode
+  github: GithubCardData | null,
+) => React.ReactNode;
 
 const bio: Record<Language, BioParagraphs> = {
   PT: (link, locale, lang, github) => (
     <>
       <p className="paragraph mb-3">
-        Sou engenheiro de software na <BioLink href="https://4selet.com.br" target="_blank" rel="noopener noreferrer" className={link}><BrandMark name="4selet" />4Selet</BioLink> e na <BioLink href="https://zero7.com.br/home" target="_blank" rel="noopener noreferrer" className={link}><BrandMark name="zero7" />Zero7</BioLink>. Construo fluxo de pagamento: checkout, cobrança, repasse. O <span className="font-display">caminho feliz</span> é a parte fácil. O trabalho é quando falha, duplica ou chega fora de ordem.
+        Sou engenheiro de software na{" "}
+        <BioLink
+          href="https://4selet.com.br"
+          target="_blank"
+          rel="noopener noreferrer"
+          className={link}
+        >
+          <BrandMark name="4selet" />
+          4Selet
+        </BioLink>{" "}
+        e na{" "}
+        <BioLink
+          href="https://zero7.com.br/home"
+          target="_blank"
+          rel="noopener noreferrer"
+          className={link}
+        >
+          <BrandMark name="zero7" />
+          Zero7
+        </BioLink>
+        . Construo fluxo de pagamento: checkout, cobrança, repasse. O{" "}
+        <span className="font-display">caminho feliz</span> é a parte fácil. O
+        trabalho é quando falha, duplica ou chega fora de ordem.
       </p>
       <p className="paragraph mb-3">
-        Meu maior open-source é a <BioLink href="https://www.abacatepay.com/" target="_blank" rel="noopener noreferrer" className={link}><span aria-hidden className="brand-mark inline-block" style={{ fontSize: "0.82em", marginRight: "0.3em" }}>🥑</span>Abacate Pay</BioLink>, feita no Brasil por <AvatarStack /> 23 devs. Também construo o <BioLink href="https://kubofood.app" target="_blank" rel="noopener noreferrer" className={link}><BrandMark name="kubo" />KuboFood</BioLink>, do pedido à cozinha.
+        Meu maior open-source é a{" "}
+        <BioLink
+          href="https://www.abacatepay.com/"
+          target="_blank"
+          rel="noopener noreferrer"
+          className={link}
+        >
+          <span
+            aria-hidden
+            className="brand-mark inline-block"
+            style={{ fontSize: "0.82em", marginRight: "0.3em" }}
+          >
+            🥑
+          </span>
+          Abacate Pay
+        </BioLink>
+        , feita no Brasil por <AvatarStack /> 23 devs. Também construo o{" "}
+        <BioLink
+          href="https://kubofood.app"
+          target="_blank"
+          rel="noopener noreferrer"
+          className={link}
+        >
+          <BrandMark name="kubo" />
+          KuboFood
+        </BioLink>
+        , do pedido à cozinha.
       </p>
       <p className="paragraph mb-3">
-        Antes, <BioLink href="https://www.goiasec.com.br/" target="_blank" rel="noopener noreferrer" className={link}><BrandMark name="goias" />Goiás F.C.</BioLink> Monto uma <PlaylistLink language={lang} className={link} href={`/${locale}/monthly-playlists`}><BrandMark name="spotify" />playlist</PlaylistLink> por mês e corro todo dia. Me acha no <a href="https://x.com/mattcrdoso" target="_blank" rel="noopener noreferrer" className={link}><BrandMark name="twitter" />Twitter</a>, no <a href="mailto:mathuscardoso@gmail.com" className={link}>email</a> ou no <GithubLink data={github} language={lang} href={GITHUB_URL} target="_blank" rel="noopener noreferrer" className={link}><BrandMark name="github" />GitHub</GithubLink>.
+        Antes,{" "}
+        <BioLink
+          href="https://www.goiasec.com.br/"
+          target="_blank"
+          rel="noopener noreferrer"
+          className={link}
+        >
+          <BrandMark name="goias" />
+          Goiás F.C.
+        </BioLink>{" "}
+        Monto uma{" "}
+        <PlaylistLink
+          language={lang}
+          className={link}
+          href={`/${locale}/monthly-playlists`}
+        >
+          <BrandMark name="spotify" />
+          playlist
+        </PlaylistLink>{" "}
+        por mês e corro todo dia. Me acha no{" "}
+        <a
+          href="https://x.com/mattcrdoso"
+          target="_blank"
+          rel="noopener noreferrer"
+          className={link}
+        >
+          <BrandMark name="twitter" />
+          Twitter
+        </a>
+        , no{" "}
+        <a href="mailto:mathuscardoso@gmail.com" className={link}>
+          email
+        </a>{" "}
+        ou no{" "}
+        <GithubLink
+          data={github}
+          language={lang}
+          href={GITHUB_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          className={link}
+        >
+          <BrandMark name="github" />
+          GitHub
+        </GithubLink>
+        .
       </p>
     </>
   ),
   EN: (link, locale, lang, github) => (
     <>
       <p className="paragraph mb-3">
-        I&apos;m a software engineer at <BioLink href="https://4selet.com.br" target="_blank" rel="noopener noreferrer" className={link}><BrandMark name="4selet" />4Selet</BioLink> and <BioLink href="https://zero7.com.br/home" target="_blank" rel="noopener noreferrer" className={link}><BrandMark name="zero7" />Zero7</BioLink>. I build payment flows: checkout, billing, payouts. The <span className="font-display">happy path</span> is the easy part. The work is when a charge fails, fires twice or arrives out of order.
+        I&apos;m a software engineer at{" "}
+        <BioLink
+          href="https://4selet.com.br"
+          target="_blank"
+          rel="noopener noreferrer"
+          className={link}
+        >
+          <BrandMark name="4selet" />
+          4Selet
+        </BioLink>{" "}
+        and{" "}
+        <BioLink
+          href="https://zero7.com.br/home"
+          target="_blank"
+          rel="noopener noreferrer"
+          className={link}
+        >
+          <BrandMark name="zero7" />
+          Zero7
+        </BioLink>
+        . I build payment flows: checkout, billing, payouts. The{" "}
+        <span className="font-display">happy path</span> is the easy part. The
+        work is when a charge fails, fires twice or arrives out of order.
       </p>
       <p className="paragraph mb-3">
-        My biggest open source is <BioLink href="https://www.abacatepay.com/" target="_blank" rel="noopener noreferrer" className={link}><span aria-hidden className="brand-mark inline-block" style={{ fontSize: "0.82em", marginRight: "0.3em" }}>🥑</span>Abacate Pay</BioLink>, built for Brazil by <AvatarStack /> 23 devs. I also build <BioLink href="https://kubofood.app" target="_blank" rel="noopener noreferrer" className={link}><BrandMark name="kubo" />KuboFood</BioLink>, from the order to the kitchen.
+        My biggest open source is{" "}
+        <BioLink
+          href="https://www.abacatepay.com/"
+          target="_blank"
+          rel="noopener noreferrer"
+          className={link}
+        >
+          <span
+            aria-hidden
+            className="brand-mark inline-block"
+            style={{ fontSize: "0.82em", marginRight: "0.3em" }}
+          >
+            🥑
+          </span>
+          Abacate Pay
+        </BioLink>
+        , built for Brazil by <AvatarStack /> 23 devs. I also build{" "}
+        <BioLink
+          href="https://kubofood.app"
+          target="_blank"
+          rel="noopener noreferrer"
+          className={link}
+        >
+          <BrandMark name="kubo" />
+          KuboFood
+        </BioLink>
+        , from the order to the kitchen.
       </p>
       <p className="paragraph mb-3">
-        Before that, <BioLink href="https://www.goiasec.com.br/" target="_blank" rel="noopener noreferrer" className={link}><BrandMark name="goias" />Goiás F.C.</BioLink> I make a <PlaylistLink language={lang} className={link} href={`/${locale}/monthly-playlists`}><BrandMark name="spotify" />playlist</PlaylistLink> a month and run every day. Find me on <a href="https://x.com/mattcrdoso" target="_blank" rel="noopener noreferrer" className={link}><BrandMark name="twitter" />Twitter</a>, by <a href="mailto:mathuscardoso@gmail.com" className={link}>email</a> or on <GithubLink data={github} language={lang} href={GITHUB_URL} target="_blank" rel="noopener noreferrer" className={link}><BrandMark name="github" />GitHub</GithubLink>.
+        Before that,{" "}
+        <BioLink
+          href="https://www.goiasec.com.br/"
+          target="_blank"
+          rel="noopener noreferrer"
+          className={link}
+        >
+          <BrandMark name="goias" />
+          Goiás F.C.
+        </BioLink>{" "}
+        I make a{" "}
+        <PlaylistLink
+          language={lang}
+          className={link}
+          href={`/${locale}/monthly-playlists`}
+        >
+          <BrandMark name="spotify" />
+          playlist
+        </PlaylistLink>{" "}
+        a month and run every day. Find me on{" "}
+        <a
+          href="https://x.com/mattcrdoso"
+          target="_blank"
+          rel="noopener noreferrer"
+          className={link}
+        >
+          <BrandMark name="twitter" />
+          Twitter
+        </a>
+        , by{" "}
+        <a href="mailto:mathuscardoso@gmail.com" className={link}>
+          email
+        </a>{" "}
+        or on{" "}
+        <GithubLink
+          data={github}
+          language={lang}
+          href={GITHUB_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          className={link}
+        >
+          <BrandMark name="github" />
+          GitHub
+        </GithubLink>
+        .
       </p>
     </>
   ),
   ES: (link, locale, lang, github) => (
     <>
       <p className="paragraph mb-3">
-        Soy ingeniero de software en <BioLink href="https://4selet.com.br" target="_blank" rel="noopener noreferrer" className={link}><BrandMark name="4selet" />4Selet</BioLink> y <BioLink href="https://zero7.com.br/home" target="_blank" rel="noopener noreferrer" className={link}><BrandMark name="zero7" />Zero7</BioLink>. Construyo flujos de pago: checkout, cobros, pagos. El <span className="font-display">camino feliz</span> es la parte fácil. El trabajo es cuando un cobro falla, se duplica o llega fuera de orden.
+        Soy ingeniero de software en{" "}
+        <BioLink
+          href="https://4selet.com.br"
+          target="_blank"
+          rel="noopener noreferrer"
+          className={link}
+        >
+          <BrandMark name="4selet" />
+          4Selet
+        </BioLink>{" "}
+        y{" "}
+        <BioLink
+          href="https://zero7.com.br/home"
+          target="_blank"
+          rel="noopener noreferrer"
+          className={link}
+        >
+          <BrandMark name="zero7" />
+          Zero7
+        </BioLink>
+        . Construyo flujos de pago: checkout, cobros, pagos. El{" "}
+        <span className="font-display">camino feliz</span> es la parte fácil. El
+        trabajo es cuando un cobro falla, se duplica o llega fuera de orden.
       </p>
       <p className="paragraph mb-3">
-        Mi mayor open source es <BioLink href="https://www.abacatepay.com/" target="_blank" rel="noopener noreferrer" className={link}><span aria-hidden className="brand-mark inline-block" style={{ fontSize: "0.82em", marginRight: "0.3em" }}>🥑</span>Abacate Pay</BioLink>, hecha para Brasil por <AvatarStack /> 23 devs. También construyo <BioLink href="https://kubofood.app" target="_blank" rel="noopener noreferrer" className={link}><BrandMark name="kubo" />KuboFood</BioLink>, del pedido a la cocina.
+        Mi mayor open source es{" "}
+        <BioLink
+          href="https://www.abacatepay.com/"
+          target="_blank"
+          rel="noopener noreferrer"
+          className={link}
+        >
+          <span
+            aria-hidden
+            className="brand-mark inline-block"
+            style={{ fontSize: "0.82em", marginRight: "0.3em" }}
+          >
+            🥑
+          </span>
+          Abacate Pay
+        </BioLink>
+        , hecha para Brasil por <AvatarStack /> 23 devs. También construyo{" "}
+        <BioLink
+          href="https://kubofood.app"
+          target="_blank"
+          rel="noopener noreferrer"
+          className={link}
+        >
+          <BrandMark name="kubo" />
+          KuboFood
+        </BioLink>
+        , del pedido a la cocina.
       </p>
       <p className="paragraph mb-3">
-        Antes, <BioLink href="https://www.goiasec.com.br/" target="_blank" rel="noopener noreferrer" className={link}><BrandMark name="goias" />Goiás F.C.</BioLink> Armo una <PlaylistLink language={lang} className={link} href={`/${locale}/monthly-playlists`}><BrandMark name="spotify" />playlist</PlaylistLink> al mes y corro todos los días. Encuéntrame en <a href="https://x.com/mattcrdoso" target="_blank" rel="noopener noreferrer" className={link}><BrandMark name="twitter" />Twitter</a>, por <a href="mailto:mathuscardoso@gmail.com" className={link}>email</a> o en <GithubLink data={github} language={lang} href={GITHUB_URL} target="_blank" rel="noopener noreferrer" className={link}><BrandMark name="github" />GitHub</GithubLink>.
+        Antes,{" "}
+        <BioLink
+          href="https://www.goiasec.com.br/"
+          target="_blank"
+          rel="noopener noreferrer"
+          className={link}
+        >
+          <BrandMark name="goias" />
+          Goiás F.C.
+        </BioLink>{" "}
+        Armo una{" "}
+        <PlaylistLink
+          language={lang}
+          className={link}
+          href={`/${locale}/monthly-playlists`}
+        >
+          <BrandMark name="spotify" />
+          playlist
+        </PlaylistLink>{" "}
+        al mes y corro todos los días. Encuéntrame en{" "}
+        <a
+          href="https://x.com/mattcrdoso"
+          target="_blank"
+          rel="noopener noreferrer"
+          className={link}
+        >
+          <BrandMark name="twitter" />
+          Twitter
+        </a>
+        , por{" "}
+        <a href="mailto:mathuscardoso@gmail.com" className={link}>
+          email
+        </a>{" "}
+        o en{" "}
+        <GithubLink
+          data={github}
+          language={lang}
+          href={GITHUB_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          className={link}
+        >
+          <BrandMark name="github" />
+          GitHub
+        </GithubLink>
+        .
       </p>
     </>
   ),
-}
+};
 
 export function HomeContent({
   github,
   contributions,
 }: {
-  github: GithubCardData | null
-  contributions: ContributionYear | null
+  github: GithubCardData | null;
+  contributions: ContributionYear | null;
 }) {
-  const params = useParams()
-  const locale = (params.locale as string) ?? 'en'
-  const language: Language = localeToLanguage(locale)
-  const t = translations[language]
+  const params = useParams();
+  const locale = (params.locale as string) ?? "en";
+  const language: Language = localeToLanguage(locale);
+  const t = translations[language];
 
-  const linkClass = "article-underline"
+  const linkClass = "article-underline";
 
   return (
     <div className="relative flex min-h-dvh w-full flex-col overflow-x-hidden">
@@ -350,7 +662,10 @@ export function HomeContent({
             {/* `inline-flex` on the link, not the heading: the badge belongs to
                 the name, so it has to sit on the last line if the name wraps. */}
             <h1 className="font-medium text-gray-1200 leading-snug text-base">
-              <Link href={`/${locale}`} className="inline-flex items-center gap-1">
+              <Link
+                href={`/${locale}`}
+                className="inline-flex items-center gap-1"
+              >
                 Matheus Cardoso
                 <VerifiedBadge label={t.verified} />
               </Link>
@@ -358,11 +673,16 @@ export function HomeContent({
             {/* No `whitespace-nowrap`: the Portuguese and Spanish roles are
                 the longest strings on the page, and a 320px viewport has to
                 wrap them rather than push the column sideways. */}
-            <p className="font-medium text-gray-1100 leading-snug text-base">{t.title}</p>
+            <p className="font-medium text-gray-1100 leading-snug text-base">
+              {t.title}
+            </p>
           </div>
 
           <div className="ml-auto flex shrink-0 items-center gap-2 text-black dark:text-white">
-            <LanguageToggle language={language} onLanguageChange={switchLocale} />
+            <LanguageToggle
+              language={language}
+              onLanguageChange={switchLocale}
+            />
             <ThemeToggle language={language} />
           </div>
         </div>
@@ -418,6 +738,26 @@ export function HomeContent({
           </ul>
         </section>
 
+        <SectionDivider className="my-10" />
+
+        {/* Empty on purpose, and saying so. A heading over nothing reads as a
+            section that failed to load; the badge is what makes it read as one
+            that has not opened yet. */}
+        <section aria-labelledby="crafts-heading" className="w-full">
+          <div className="mb-2 flex w-full items-center gap-2">
+            <h2 id="crafts-heading" className="font-medium text-gray-1200">
+              {t.crafts}
+            </h2>
+            {/* Outside the heading rather than inside it: "Crafts" is what this
+                section is called, and a screen reader announcing "Crafts soon"
+                as the name is a worse trade than one extra element. */}
+            <span className="shrink-0 rounded-full px-1.5 py-0.5 text-xs leading-5 text-gray-1100 shadow-custom">
+              {t.craftsSoon}
+            </span>
+          </div>
+          <p className="paragraph">{t.craftsIntro}</p>
+        </section>
+
         {/* Dropped entirely when the calendar can't be read — an empty grid
             would claim a year of no work rather than a failed fetch. */}
         {contributions && (
@@ -460,7 +800,11 @@ export function HomeContent({
         </section>
       </main>
       {/* Both toggles live in the header on this page. */}
-      <Footer language={language} showLanguageToggle={false} showThemeToggle={false} />
+      <Footer
+        language={language}
+        showLanguageToggle={false}
+        showThemeToggle={false}
+      />
     </div>
-  )
+  );
 }

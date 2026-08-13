@@ -9,7 +9,7 @@ import { AbacatePreview, KuboPreview, ProjectCard } from "@/components/project-c
 import { WorkList } from "@/components/work-list"
 import { ContributionGraph } from "@/components/contribution-graph"
 import { LanguageToggle, ThemeToggle } from "@/components/toggles"
-import { BioLink, GithubLink, PlaylistLink } from "@/components/link-preview"
+import { BioLink, GithubLink, HoverPreview, PlaylistLink } from "@/components/link-preview"
 import { SocialLinks } from "@/components/social-links"
 import { SectionDivider } from "@/components/section-divider"
 import { localeToLanguage } from "@/lib/locale"
@@ -22,9 +22,8 @@ import { AvatarStack } from "@/components/avatar-stack"
 import { PhotoDeck } from "@/components/photo-deck"
 import { FileTextIcon } from "@/components/file-text-icon"
 import { DOCUMENT_PANEL_ID, useDocumentPanel } from "@/components/document-panel"
-import { Mail } from "lucide-react"
+import { Check, Copy, Mail } from "lucide-react"
 import { AnimatePresence, motion, useReducedMotion } from "motion/react"
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
 
 const EMAIL = "mathuscardoso@gmail.com"
 
@@ -89,14 +88,13 @@ const translations = {
 }
 
 /**
- * Apple-style spring for the box, which has to travel between two label
- * widths. A duration can't stay in step with text whose length changes per
- * language; a spring settles on whatever distance it is handed.
+ * The same spring the theme toggle swaps its icon on, so the two controls
+ * sitting a few pixels apart in the header behave identically.
  */
-const COPY_SPRING = { type: "spring" as const, duration: 0.42, bounce: 0.12 }
+const ICON_SWAP = { type: "spring" as const, duration: 0.35, bounce: 0.15 }
 
-/** Barely any bounce on the swap itself — the box is the thing in motion. */
-const COPY_SWAP = { type: "spring" as const, duration: 0.34, bounce: 0 }
+/** Barely any bounce on the box, which is only absorbing a width change. */
+const BOX = { type: "spring" as const, duration: 0.34, bounce: 0 }
 
 function CopyEmailButton({
   ariaLabel,
@@ -120,8 +118,8 @@ function CopyEmailButton({
 
   const handleOpenChange = (next: boolean) => {
     setOpen(next)
-    // Reset only once the tooltip is on its way out, so "Copiado!" never
-    // flips back to "Copiar" while it is still under the pointer.
+    // Reset only once the card is on its way out, so the tick never flips back
+    // to the copy glyph while it is still under the pointer.
     if (!next) {
       if (resetTimeoutRef.current) clearTimeout(resetTimeoutRef.current)
       resetTimeoutRef.current = setTimeout(() => setCopied(false), 150)
@@ -131,7 +129,7 @@ function CopyEmailButton({
   const handleCopy = React.useCallback(async () => {
     await navigator.clipboard.writeText(EMAIL)
     setCopied(true)
-    // Clicking a control that was already hovered keeps its tooltip up; this
+    // Clicking a control that was already hovered keeps its card up; this
     // covers the tap, where there was never a hover to begin with.
     setOpen(true)
 
@@ -139,65 +137,87 @@ function CopyEmailButton({
     resetTimeoutRef.current = setTimeout(() => setCopied(false), 2000)
   }, [])
 
-  const box = shouldReduceMotion ? { duration: 0.12 } : COPY_SPRING
-  const swap = shouldReduceMotion ? { duration: 0.12 } : COPY_SWAP
+  const swap = shouldReduceMotion ? { duration: 0.12 } : ICON_SWAP
+  const box = shouldReduceMotion ? { duration: 0.12 } : BOX
 
-  // Blur bridges the two labels: without it the eye catches two separate
-  // words crossing over each other rather than one becoming the other.
+  // Blur bridges the two glyphs: without it the eye catches two separate marks
+  // crossing over each other rather than one becoming the other.
   const hidden = shouldReduceMotion
     ? { opacity: 0 }
-    : { opacity: 0, scale: 0.92, filter: "blur(5px)" }
+    : { opacity: 0, scale: 0.6, filter: "blur(4px)" }
+
+  const trigger = (
+    <button
+      type="button"
+      id="email"
+      onClick={handleCopy}
+      // Same -m-2/p-2 trick as the social row: a 32px touch target that
+      // grows into the gap instead of widening the layout.
+      className="-m-2 cursor-pointer p-2 transition-transform duration-150 ease-[cubic-bezier(0.23,1,0.32,1)] active:scale-[0.97] motion-reduce:active:scale-100"
+      aria-label={ariaLabel}
+    >
+      <Mail className="h-4 w-4" />
+    </button>
+  )
 
   return (
-    <Tooltip open={open} onOpenChange={handleOpenChange} delayDuration={300}>
-      <TooltipTrigger asChild>
-        <button
-          type="button"
-          id="email"
-          onClick={handleCopy}
-          // Same -m-2/p-2 trick as the social row: a 32px touch target that
-          // grows into the gap instead of widening the layout.
-          className="-m-2 cursor-pointer p-2 transition-transform duration-150 ease-[cubic-bezier(0.23,1,0.32,1)] active:scale-[0.97] motion-reduce:active:scale-100"
-          aria-label={ariaLabel}
-        >
-          <Mail className="h-4 w-4" />
-        </button>
-      </TooltipTrigger>
-      {/*
-        The surface is painted on the motion node inside, not on the content
-        itself. A layout animation resizes the element's box immediately and
-        only fakes the difference with a transform — so whichever node carries
-        the background is the one that must be animating, or the panel snaps
-        to its new width while the word inside is still travelling.
-      */}
-      <TooltipContent
-        side="top"
-        sideOffset={8}
-        className="bg-transparent p-0 shadow-none"
+    /*
+     * Controlled, and `width="auto"` rather than a number: this is the one
+     * card on the page whose contents change while it is open, so it has to
+     * stay up after the click and size itself to whichever label is showing.
+     */
+    <HoverPreview
+      width="auto"
+      open={open}
+      onOpenChange={handleOpenChange}
+      openDelay={150}
+      trigger={trigger}
+    >
+      <motion.div
+        layout
+        transition={box}
+        className="flex w-fit items-center gap-1.5 rounded-lg bg-preview-bg py-1.5 pr-2.5 pl-2 shadow-card-lift"
       >
-        <motion.div
-          layout
-          transition={box}
-          className="flex items-center justify-center overflow-hidden rounded-md bg-foreground px-2.5 py-1.5"
-        >
-          {/* `popLayout` takes the outgoing word out of flow, so the box
-              measures the incoming one and resizes with it rather than after it. */}
-          <AnimatePresence mode="popLayout" initial={false}>
+        <span className="relative grid size-4 shrink-0 place-items-center">
+          <AnimatePresence initial={false}>
             <motion.span
-              key={copied ? "copied" : "copy"}
-              layout
+              key={copied ? "done" : "copy"}
               initial={hidden}
               animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
               exit={hidden}
               transition={swap}
-              className="whitespace-nowrap"
+              className="absolute inset-0 grid place-items-center"
             >
-              {copied ? copiedLabel : copyLabel}
+              {copied ? (
+                /* Composed rather than a single lucide glyph: its tick is
+                   stroked in the same colour as its ring, and this wants a
+                   filled green disc with the tick knocked out in white. */
+                <span className="grid size-4 place-items-center rounded-full bg-[#22c55e]">
+                  <Check className="size-2.5 text-white" strokeWidth={3.5} />
+                </span>
+              ) : (
+                <Copy className="size-3.5 text-gray-1100" strokeWidth={1.75} />
+              )}
             </motion.span>
           </AnimatePresence>
-        </motion.div>
-      </TooltipContent>
-    </Tooltip>
+        </span>
+        {/* `popLayout` takes the outgoing word out of flow, so the box measures
+            the incoming one and resizes with it rather than after it. */}
+        <AnimatePresence mode="popLayout" initial={false}>
+          <motion.span
+            key={copied ? "copied" : "copy"}
+            layout
+            initial={hidden}
+            animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
+            exit={hidden}
+            transition={swap}
+            className="text-xs font-medium whitespace-nowrap text-gray-1200"
+          >
+            {copied ? copiedLabel : copyLabel}
+          </motion.span>
+        </AnimatePresence>
+      </motion.div>
+    </HoverPreview>
   )
 }
 
@@ -283,7 +303,7 @@ const bio: Record<Language, BioParagraphs> = {
         Sou engenheiro de software na <BioLink href="https://4selet.com.br" target="_blank" className={link} rel="noopener noreferrer"><BrandMark name="4selet" />4Selet</BioLink>, onde criadores vendem cursos e assinaturas, e na <BioLink href="https://zero7.com.br/home" target="_blank" className={link} rel="noopener noreferrer"><BrandMark name="zero7" />Zero7</BioLink>, uma mesa proprietária de day trade. Quase tudo que eu construo é fluxo de pagamento: checkout, cobrança e repasse. O <span className="font-display">caminho feliz</span> é a parte fácil. O trabalho está em decidir o que acontece quando ela falha, duplica ou chega fora de ordem.
       </p>
       <p className="paragraph mb-3">
-        Meu maior projeto open-source é a <BioLink href="https://www.abacatepay.com/" target="_blank" className={link} rel="noopener noreferrer"><span aria-hidden className="inline-block" style={{ marginRight: "0.3em" }}>🥑</span>Abacate Pay</BioLink>, um método de pagamento feito para o Brasil por <AvatarStack /> 23 desenvolvedores. Também construo o <BioLink href="https://kubofood.app" target="_blank" className={link} rel="noopener noreferrer"><BrandMark name="kubo" />KuboFood</BioLink>, que<br className="hidden sm:inline" /> leva o pedido do celular do cliente até a tela da cozinha sem ninguém redigitar nada.
+        Meu maior projeto open-source é a <BioLink href="https://www.abacatepay.com/" target="_blank" className={link} rel="noopener noreferrer"><span aria-hidden className="brand-mark inline-block" style={{ marginRight: "0.3em" }}>🥑</span>Abacate Pay</BioLink>, um método de pagamento feito para o Brasil por <AvatarStack /> 23 desenvolvedores. Também construo o <BioLink href="https://kubofood.app" target="_blank" className={link} rel="noopener noreferrer"><BrandMark name="kubo" />KuboFood</BioLink>, que<br className="hidden sm:inline" /> leva o pedido do celular do cliente até a tela da cozinha sem ninguém redigitar nada.
       </p>
       <p className="paragraph mb-3">
         Antes disso trabalhei com o <BioLink href="https://www.goiasec.com.br/" target="_blank" className={link} rel="noopener noreferrer"><BrandMark name="goias" />Goiás F.C.</BioLink> e outros. Monto uma <PlaylistLink language={lang} className={link} href={`/${locale}/monthly-playlists`}><BrandMark name="spotify" />playlist</PlaylistLink> por mês e corro todo dia.
@@ -299,7 +319,7 @@ const bio: Record<Language, BioParagraphs> = {
         I&apos;m a software engineer at <BioLink href="https://4selet.com.br" target="_blank" className={link} rel="noopener noreferrer"><BrandMark name="4selet" />4Selet</BioLink>, where creators sell courses and subscriptions, and at <BioLink href="https://zero7.com.br/home" target="_blank" className={link} rel="noopener noreferrer"><BrandMark name="zero7" />Zero7</BioLink>, a proprietary trading desk. Almost everything I build is a payment flow: checkout, billing, payouts. The <span className="font-display">happy path</span> is the easy part. The work is deciding what happens when a charge fails, fires twice, or arrives out of order.
       </p>
       <p className="paragraph mb-3">
-        My biggest open-source project is <BioLink href="https://www.abacatepay.com/" target="_blank" className={link} rel="noopener noreferrer"><span aria-hidden className="inline-block" style={{ marginRight: "0.3em" }}>🥑</span>Abacate Pay</BioLink>, a payment method built for Brazil by <AvatarStack /> 23 developers. I also build <BioLink href="https://kubofood.app" target="_blank" className={link} rel="noopener noreferrer"><BrandMark name="kubo" />KuboFood</BioLink>, which<br className="hidden sm:inline" /> carries an order from the customer&apos;s phone to the kitchen screen without anyone retyping it.
+        My biggest open-source project is <BioLink href="https://www.abacatepay.com/" target="_blank" className={link} rel="noopener noreferrer"><span aria-hidden className="brand-mark inline-block" style={{ marginRight: "0.3em" }}>🥑</span>Abacate Pay</BioLink>, a payment method built for Brazil by <AvatarStack /> 23 developers. I also build <BioLink href="https://kubofood.app" target="_blank" className={link} rel="noopener noreferrer"><BrandMark name="kubo" />KuboFood</BioLink>, which<br className="hidden sm:inline" /> carries an order from the customer&apos;s phone to the kitchen screen without anyone retyping it.
       </p>
       <p className="paragraph mb-3">
         Before that I worked with <BioLink href="https://www.goiasec.com.br/" target="_blank" className={link} rel="noopener noreferrer"><BrandMark name="goias" />Goiás F.C.</BioLink> and a few others. I put together a <PlaylistLink language={lang} className={link} href={`/${locale}/monthly-playlists`}><BrandMark name="spotify" />playlist</PlaylistLink> every month and run every day.
@@ -315,7 +335,7 @@ const bio: Record<Language, BioParagraphs> = {
         Soy ingeniero de software en <BioLink href="https://4selet.com.br" target="_blank" className={link} rel="noopener noreferrer"><BrandMark name="4selet" />4Selet</BioLink>, donde creadores venden cursos y suscripciones, y en <BioLink href="https://zero7.com.br/home" target="_blank" className={link} rel="noopener noreferrer"><BrandMark name="zero7" />Zero7</BioLink>, una mesa propietaria de day trade. Casi todo lo que construyo es flujo de pago: checkout, cobros y pagos. El <span className="font-display">camino feliz</span> es la parte fácil. El trabajo está en decidir qué pasa cuando un cobro falla, se duplica o llega fuera de orden.
       </p>
       <p className="paragraph mb-3">
-        Mi mayor proyecto open-source es <BioLink href="https://www.abacatepay.com/" target="_blank" className={link} rel="noopener noreferrer"><span aria-hidden className="inline-block" style={{ marginRight: "0.3em" }}>🥑</span>Abacate Pay</BioLink>, un método de pago hecho para Brasil por <AvatarStack /> 23 desarrolladores. También construyo <BioLink href="https://kubofood.app" target="_blank" className={link} rel="noopener noreferrer"><BrandMark name="kubo" />KuboFood</BioLink>, que<br className="hidden sm:inline" /> lleva el pedido del móvil del cliente hasta la pantalla de la cocina sin que nadie lo reescriba.
+        Mi mayor proyecto open-source es <BioLink href="https://www.abacatepay.com/" target="_blank" className={link} rel="noopener noreferrer"><span aria-hidden className="brand-mark inline-block" style={{ marginRight: "0.3em" }}>🥑</span>Abacate Pay</BioLink>, un método de pago hecho para Brasil por <AvatarStack /> 23 desarrolladores. También construyo <BioLink href="https://kubofood.app" target="_blank" className={link} rel="noopener noreferrer"><BrandMark name="kubo" />KuboFood</BioLink>, que<br className="hidden sm:inline" /> lleva el pedido del móvil del cliente hasta la pantalla de la cocina sin que nadie lo reescriba.
       </p>
       <p className="paragraph mb-3">
         Antes trabajé con <BioLink href="https://www.goiasec.com.br/" target="_blank" className={link} rel="noopener noreferrer"><BrandMark name="goias" />Goiás F.C.</BioLink> y algunos otros. Armo una <PlaylistLink language={lang} className={link} href={`/${locale}/monthly-playlists`}><BrandMark name="spotify" />playlist</PlaylistLink> cada mes y corro todos los días.

@@ -196,7 +196,7 @@ export function BrandMark({ name }: { name: MarkName }) {
         verticalAlign: `${(MARK_CENTER - height / 2).toFixed(3)}em`,
         marginRight: `${MARK_GAP}em`,
       }}
-      className="inline-block"
+      className="brand-mark inline-block"
     >
       {mark.gradient && (
         <defs>

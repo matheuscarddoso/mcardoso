@@ -308,6 +308,33 @@
 }
 
 /*
+ * The marks in the bio sit grey and take their brand colour when the link they
+ * belong to is hovered.
+ *
+ * A greyscale filter rather than a second set of colours: it works on the
+ * avocado emoji, which is a glyph the page cannot recolour, and on a gradient,
+ * which no `fill` swap could animate. One rule covers SVG paths and text.
+ *
+ * The two marks painted in `currentColor`, GitHub and X, are already grey by
+ * construction, so this does nothing to them and they stay put.
+ */
+.brand-mark {
+  filter: grayscale(1);
+  transition: filter 0.25s var(--ease-out-strong);
+}
+
+a:hover .brand-mark,
+a:focus-visible .brand-mark {
+  filter: grayscale(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .brand-mark {
+    transition: none;
+  }
+}
+
+/*
  * Width of the document panel, and of the margin the page gives up to it.
  * One variable so the two can never disagree: the panel is laid out from it
  * and the column beside it is pushed by the same value.

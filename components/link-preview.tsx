@@ -62,12 +62,29 @@ export function HoverPreview({
   width,
   trigger,
   children,
+  open: controlledOpen,
+  onOpenChange,
+  openDelay = 120,
 }: {
-  width: number
+  /** A number is a fixed card; `"auto"` lets one that changes size follow it. */
+  width: number | "auto"
   trigger: React.ReactNode
   children: React.ReactNode
+  /** Omit to let the card manage itself; pass it to hold the card open. */
+  open?: boolean
+  onOpenChange?: (open: boolean) => void
+  openDelay?: number
 }) {
-  const [open, setOpen] = React.useState(false)
+  const [uncontrolledOpen, setUncontrolledOpen] = React.useState(false)
+
+  // Controlled when a value is handed in, self-managing otherwise. The email
+  // button needs the first, because it keeps the card up after a click to show
+  // that the copy landed; everything else wants the second.
+  const open = controlledOpen ?? uncontrolledOpen
+  const setOpen = (next: boolean) => {
+    setUncontrolledOpen(next)
+    onOpenChange?.(next)
+  }
   const shouldReduceMotion = useReducedMotion()
 
   const enter = shouldReduceMotion
@@ -84,7 +101,7 @@ export function HoverPreview({
     : { opacity: 0, scale: 0.92, y: 8, filter: "blur(10px)" }
 
   return (
-    <HoverCardPrimitive.Root open={open} onOpenChange={setOpen} openDelay={120} closeDelay={80}>
+    <HoverCardPrimitive.Root open={open} onOpenChange={setOpen} openDelay={openDelay} closeDelay={80}>
       <HoverCardPrimitive.Trigger asChild>{trigger}</HoverCardPrimitive.Trigger>
       <AnimatePresence>
         {open && (

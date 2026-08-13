@@ -308,49 +308,27 @@
 }
 
 /*
- * The koala beside the footer clock.
+ * The rubber duck beside the footer clock. One frame, no animation: it is a
+ * bath toy, and bath toys do not move.
  *
- * Two 24px frames side by side in a 48x24 sheet, the second one a pixel lower
- * than the first, which is the whole animation: it breathes. The source that
- * draws it is committed next to the image, because pixel art typed out by hand
- * is unmaintainable and this one was generated from ellipses.
+ * 12x12, drawn by hand, and the source that writes the PNG is committed next
+ * to it. Two earlier attempts at an animal were generated from ellipses and
+ * both came out as blobs; at this size the shape has to be placed pixel by
+ * pixel, and a duck is legible in twelve where a koala was not.
  *
- * The scale is the point. At 1:1 there is no resampling and
- * `image-rendering: pixelated` has nothing to do, so the sprite just looks
- * small. At 2x every source pixel becomes a 2x2 block, which is what reads as
- * pixel art. Integer scales only: at 1.5x some source pixels land on one
- * screen pixel and some on two, and the sprite comes out visibly uneven.
- *
- * It carries its own colours, grey fur and a pink inner ear, so unlike the
- * black-and-white cat it needs no per-theme inversion to stay visible.
+ * Drawn at 2x, so every source pixel is a 2x2 block and the sprite reads as
+ * pixel art rather than as a small picture. Integer scales only: at 1.5x some
+ * source pixels land on one screen pixel and some on two.
  */
-.pixel-koala {
-  --koala-scale: 2;
+.pixel-duck {
+  --duck-scale: 2;
 
   display: inline-block;
-  width: calc(24px * var(--koala-scale));
-  height: calc(24px * var(--koala-scale));
-  background-image: url("/koala/koala.png");
-  background-size: calc(48px * var(--koala-scale)) calc(24px * var(--koala-scale));
-  background-position: 0 0;
+  width: calc(12px * var(--duck-scale));
+  height: calc(12px * var(--duck-scale));
+  background-image: url("/duck/duck.png");
+  background-size: 100% 100%;
   image-rendering: pixelated;
-  animation: pixel-koala-breathe 1.8s steps(2) infinite;
-}
-
-@keyframes pixel-koala-breathe {
-  from {
-    background-position: 0 0;
-  }
-  to {
-    background-position: calc(-48px * var(--koala-scale)) 0;
-  }
-}
-
-/* A loop that never stops is exactly what this setting is asking about. */
-@media (prefers-reduced-motion: reduce) {
-  .pixel-koala {
-    animation: none;
-  }
 }
 
 /*

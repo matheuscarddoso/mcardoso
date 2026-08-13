@@ -356,7 +356,7 @@ export function HomeContent({
           <div className="ml-4">
             {/* `inline-flex` on the link, not the heading: the badge belongs to
                 the name, so it has to sit on the last line if the name wraps. */}
-            <h1 className="font-semibold text-gray-1200 leading-snug text-lg">
+            <h1 className="font-medium text-gray-1200 leading-snug text-base">
               <Link href={`/${locale}`} className="inline-flex items-center gap-1">
                 Matheus Cardoso
                 <VerifiedBadge label={t.verified} />
@@ -365,7 +365,7 @@ export function HomeContent({
             {/* No `whitespace-nowrap`: the Portuguese and Spanish roles are
                 the longest strings on the page, and a 320px viewport has to
                 wrap them rather than push the column sideways. */}
-            <p className="font-medium text-gray-1100 leading-snug">{t.title}</p>
+            <p className="font-medium text-gray-1100 leading-snug text-sm">{t.title}</p>
           </div>
         </div>
 

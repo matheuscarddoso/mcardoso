@@ -38,7 +38,6 @@ const translations = {
     writing: "Escrita",
     elsewhere: "Por aí",
     copyEmail: "Copiar e-mail",
-    copy: "Copiar",
     copied: "Copiado!",
     verified: "Perfil verificado",
     resume: "Currículo",
@@ -57,7 +56,6 @@ const translations = {
     writing: "Writing",
     elsewhere: "Elsewhere",
     copyEmail: "Copy email",
-    copy: "Copy",
     copied: "Copied!",
     verified: "Verified profile",
     resume: "Resume",
@@ -76,7 +74,6 @@ const translations = {
     writing: "Escritura",
     elsewhere: "Por ahí",
     copyEmail: "Copiar correo",
-    copy: "Copiar",
     copied: "¡Copiado!",
     verified: "Perfil verificado",
     resume: "Currículum",
@@ -93,16 +90,11 @@ const translations = {
  */
 const ICON_SWAP = { type: "spring" as const, duration: 0.35, bounce: 0.15 }
 
-/** Barely any bounce on the box, which is only absorbing a width change. */
-const BOX = { type: "spring" as const, duration: 0.34, bounce: 0 }
-
 function CopyEmailButton({
   ariaLabel,
-  copyLabel,
   copiedLabel,
 }: {
   ariaLabel: string
-  copyLabel: string
   copiedLabel: string
 }) {
   const [open, setOpen] = React.useState(false)
@@ -138,7 +130,6 @@ function CopyEmailButton({
   }, [])
 
   const swap = shouldReduceMotion ? { duration: 0.12 } : ICON_SWAP
-  const box = shouldReduceMotion ? { duration: 0.12 } : BOX
 
   // Blur bridges the two glyphs: without it the eye catches two separate marks
   // crossing over each other rather than one becoming the other.
@@ -174,9 +165,7 @@ function CopyEmailButton({
       trigger={trigger}
     >
       <motion.div
-        layout
-        transition={box}
-        className="flex w-fit items-center gap-1.5 rounded-lg bg-preview-bg py-1.5 pr-2.5 pl-2 shadow-card-lift"
+        className="flex w-fit items-center rounded-lg bg-preview-bg p-2 shadow-card-lift"
       >
         <span className="relative grid size-4 shrink-0 place-items-center">
           <AnimatePresence initial={false}>
@@ -201,21 +190,11 @@ function CopyEmailButton({
             </motion.span>
           </AnimatePresence>
         </span>
-        {/* `popLayout` takes the outgoing word out of flow, so the box measures
-            the incoming one and resizes with it rather than after it. */}
-        <AnimatePresence mode="popLayout" initial={false}>
-          <motion.span
-            key={copied ? "copied" : "copy"}
-            layout
-            initial={hidden}
-            animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
-            exit={hidden}
-            transition={swap}
-            className="text-xs font-medium whitespace-nowrap text-gray-1200"
-          >
-            {copied ? copiedLabel : copyLabel}
-          </motion.span>
-        </AnimatePresence>
+        {/* The card is glyph-only now, so the confirmation has to be said
+            somewhere. `status` announces it without printing it. */}
+        <span role="status" className="sr-only">
+          {copied ? copiedLabel : ""}
+        </span>
       </motion.div>
     </HoverPreview>
   )
@@ -402,7 +381,7 @@ export function HomeContent({
           <ResumeButton language={language} label={t.resume} />
           <div className="flex items-center gap-4 text-black dark:text-white">
             <SocialLinks include={HEADER_SOCIAL} />
-            <CopyEmailButton ariaLabel={t.copyEmail} copyLabel={t.copy} copiedLabel={t.copied} />
+            <CopyEmailButton ariaLabel={t.copyEmail} copiedLabel={t.copied} />
           </div>
         </div>
 

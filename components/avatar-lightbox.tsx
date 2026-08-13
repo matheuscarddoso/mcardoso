@@ -47,7 +47,7 @@ export function AvatarLightbox({
   alt,
   triggerLabel,
   closeLabel,
-  size = 47,
+  size = 44,
 }: AvatarLightboxProps) {
   const [open, setOpen] = React.useState(false)
   const [warm, setWarm] = React.useState(false)

@@ -319,13 +319,22 @@
  * construction, so this does nothing to them and they stay put.
  */
 .brand-mark {
-  filter: grayscale(1);
+  /*
+   * `saturate(0)` rather than `grayscale(1)`, which the spec defines it as and
+   * which renders identically. The minifier rewrites every spelling of
+   * greyscale to the argument-less `grayscale()`, relying on a default the
+   * spec grants and a browser may not; `saturate`'s default is 1, so a zero
+   * cannot be dropped and what ships is unambiguous.
+   */
+  filter: saturate(0);
   transition: filter 0.25s var(--ease-out-strong);
 }
 
+/* `none`, not `saturate(1)`: the minifier drops that argument too, and this
+   says the same thing in a form it cannot rewrite. */
 a:hover .brand-mark,
 a:focus-visible .brand-mark {
-  filter: grayscale(0);
+  filter: none;
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -5,6 +5,7 @@ import "../globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { DocumentPanelProvider } from "@/components/document-panel";
 import { VisitTrail } from "@/components/visit-trail";
+import { Analytics } from "@vercel/analytics/next";
 import { LOCALES, localeToLanguage } from "@/lib/locale";
 import {
   HOME_SEO,
@@ -146,6 +147,16 @@ export default async function LocaleLayout({
             {children}
           </DocumentPanelProvider>
         </ThemeProvider>
+        {/*
+          Last in the body, and outside the providers: it renders nothing, and
+          nothing on the page depends on it, so it has no business sitting
+          between the theme and the content it wraps.
+
+          Cookieless, so there is no consent banner owed for it. In development
+          it prints to the console instead of reporting, which is why it costs
+          nothing to leave mounted here rather than gating it on an env check.
+        */}
+        <Analytics />
       </body>
     </html>
   );

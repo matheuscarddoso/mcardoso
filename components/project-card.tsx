@@ -29,7 +29,7 @@ function PreviewDeck({ children }: { children: React.ReactNode }) {
             aria-hidden
             // Each card answers for itself: hovering its exposed sliver lifts
             // only that one. The deck-wide fan still rides on the card hover.
-            className="absolute bottom-0 w-(--deck-width) rounded-t-lg bg-preview-bg shadow-custom transition-transform duration-300 ease-[var(--ease-out-strong)] group-hover:translate-x-(--fan) hover:-translate-y-1.5 motion-reduce:transition-none motion-reduce:hover:translate-y-0"
+            className="absolute bottom-0 w-(--deck-width) rounded-lg bg-preview-bg shadow-custom transition-transform duration-300 ease-[var(--ease-out-strong)] group-hover:translate-x-(--fan) hover:-translate-y-1.5 motion-reduce:transition-none motion-reduce:hover:translate-y-0"
             style={
               {
                 left: layer * DECK_STEP_X,
@@ -43,7 +43,7 @@ function PreviewDeck({ children }: { children: React.ReactNode }) {
       })}
       {/* Front card drives the deck's height, so the screenshot sets the aspect ratio. */}
       <div
-        className="relative aspect-16/9 w-(--deck-width) overflow-hidden rounded-t-lg bg-preview-bg shadow-custom"
+        className="relative aspect-16/9 w-(--deck-width) overflow-hidden rounded-lg bg-preview-bg shadow-custom"
         style={{ "--deck-width": DECK_WIDTH } as React.CSSProperties}
       >
         {children}

@@ -579,15 +579,20 @@ a:focus-visible .brand-mark {
  * Named with a prefix so a craft's animation cannot collide with the site's:
  * these are global by definition, and "shimmer" is a name two things will pick
  * eventually.
+ *
+ * The pulse fills the whole cycle rather than flashing and waiting. A short
+ * flash with a long tail leaves every cell dark at the same moment, several
+ * times a second, and a loader that is dark half the time reads as one that
+ * has stopped. Rising and falling across the full cycle means the nine cells,
+ * each offset by ninety milliseconds, are never all at rest together.
  */
 @keyframes craft-pixel-on {
   0% {
     opacity: 0.15;
   }
-  18% {
+  40% {
     opacity: 1;
   }
-  55%,
   100% {
     opacity: 0.15;
   }

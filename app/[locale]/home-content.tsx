@@ -312,7 +312,7 @@ const bio: Record<Language, BioParagraphs> = {
   PT: (link, locale, lang, github) => (
     <>
       <p className="paragraph mb-3">
-        Sou engenheiro de software na{" "}
+        Oi, eu sou o Matheus. Sou engenheiro de software na{" "}
         <BioLink
           href="https://4selet.com.br"
           target="_blank"
@@ -332,12 +332,13 @@ const bio: Record<Language, BioParagraphs> = {
           <BrandMark name="zero7" />
           Zero7
         </BioLink>
-        . Construo fluxo de pagamento: checkout, cobrança, repasse. O{" "}
+        . Quase tudo que eu construo é pagamento: checkout, cobrança, repasse. O{" "}
         <span className="font-display">caminho feliz</span> é a parte fácil. O
-        trabalho é quando falha, duplica ou chega fora de ordem.
+        trabalho começa mesmo quando a cobrança falha, duplica ou chega fora de
+        ordem, e alguém ainda precisa terminar com o valor certo na conta.
       </p>
       <p className="paragraph mb-3">
-        Meu maior open-source é a{" "}
+        O open-source de que eu mais me orgulho é a{" "}
         <BioLink
           href="https://www.abacatepay.com/"
           target="_blank"
@@ -353,7 +354,7 @@ const bio: Record<Language, BioParagraphs> = {
           </span>
           Abacate Pay
         </BioLink>
-        , feita no Brasil por <AvatarStack /> 23 devs. Também construo o{" "}
+        , feita no Brasil por <AvatarStack /> 23 devs. Também fundei o{" "}
         <BioLink
           href="https://kubofood.app"
           target="_blank"
@@ -363,10 +364,10 @@ const bio: Record<Language, BioParagraphs> = {
           <BrandMark name="kubo" />
           KuboFood
         </BioLink>
-        , do pedido à cozinha.
+        , que acompanha um restaurante do pedido até a cozinha.
       </p>
       <p className="paragraph mb-3">
-        Antes,{" "}
+        Antes de tudo isso,{" "}
         <BioLink
           href="https://www.goiasec.com.br/"
           target="_blank"
@@ -376,7 +377,7 @@ const bio: Record<Language, BioParagraphs> = {
           <BrandMark name="goias" />
           Goiás F.C.
         </BioLink>{" "}
-        Monto uma{" "}
+        Fora do trabalho eu corro todo dia e monto uma{" "}
         <PlaylistLink
           language={lang}
           className={link}
@@ -385,7 +386,7 @@ const bio: Record<Language, BioParagraphs> = {
           <BrandMark name="spotify" />
           playlist
         </PlaylistLink>{" "}
-        por mês e corro todo dia. Me acha no{" "}
+        por mês. Me acha no{" "}
         <a
           href="https://x.com/mattcrdoso"
           target="_blank"
@@ -418,7 +419,7 @@ const bio: Record<Language, BioParagraphs> = {
   EN: (link, locale, lang, github) => (
     <>
       <p className="paragraph mb-3">
-        I&apos;m a software engineer at{" "}
+        Hi, I&apos;m Matheus. I&apos;m a software engineer at{" "}
         <BioLink
           href="https://4selet.com.br"
           target="_blank"
@@ -438,12 +439,13 @@ const bio: Record<Language, BioParagraphs> = {
           <BrandMark name="zero7" />
           Zero7
         </BioLink>
-        . I build payment flows: checkout, billing, payouts. The{" "}
+        . Almost everything I build is payments: checkout, billing, payouts. The{" "}
         <span className="font-display">happy path</span> is the easy part. The
-        work is when a charge fails, fires twice or arrives out of order.
+        job really starts when a charge fails, or fires twice, or arrives out of
+        order, and someone still has to end up with the right amount of money.
       </p>
       <p className="paragraph mb-3">
-        My biggest open source is{" "}
+        The open source I&apos;m proudest of is{" "}
         <BioLink
           href="https://www.abacatepay.com/"
           target="_blank"
@@ -459,7 +461,7 @@ const bio: Record<Language, BioParagraphs> = {
           </span>
           Abacate Pay
         </BioLink>
-        , built for Brazil by <AvatarStack /> 23 devs. I also build{" "}
+        , built for Brazil by <AvatarStack /> 23 devs. I also founded{" "}
         <BioLink
           href="https://kubofood.app"
           target="_blank"
@@ -469,10 +471,10 @@ const bio: Record<Language, BioParagraphs> = {
           <BrandMark name="kubo" />
           KuboFood
         </BioLink>
-        , from the order to the kitchen.
+        , which follows a restaurant from the order all the way to the kitchen.
       </p>
       <p className="paragraph mb-3">
-        Before that,{" "}
+        Before any of this,{" "}
         <BioLink
           href="https://www.goiasec.com.br/"
           target="_blank"
@@ -482,7 +484,7 @@ const bio: Record<Language, BioParagraphs> = {
           <BrandMark name="goias" />
           Goiás F.C.
         </BioLink>{" "}
-        I make a{" "}
+        Outside work I run every day and put together a{" "}
         <PlaylistLink
           language={lang}
           className={link}
@@ -491,7 +493,7 @@ const bio: Record<Language, BioParagraphs> = {
           <BrandMark name="spotify" />
           playlist
         </PlaylistLink>{" "}
-        a month and run every day. Find me on{" "}
+        once a month. You can find me on{" "}
         <a
           href="https://x.com/mattcrdoso"
           target="_blank"
@@ -524,7 +526,7 @@ const bio: Record<Language, BioParagraphs> = {
   ES: (link, locale, lang, github) => (
     <>
       <p className="paragraph mb-3">
-        Soy ingeniero de software en{" "}
+        Hola, soy Matheus. Soy ingeniero de software en{" "}
         <BioLink
           href="https://4selet.com.br"
           target="_blank"
@@ -544,12 +546,14 @@ const bio: Record<Language, BioParagraphs> = {
           <BrandMark name="zero7" />
           Zero7
         </BioLink>
-        . Construyo flujos de pago: checkout, cobros, pagos. El{" "}
-        <span className="font-display">camino feliz</span> es la parte fácil. El
-        trabajo es cuando un cobro falla, se duplica o llega fuera de orden.
+        . Casi todo lo que construyo son pagos: checkout, cobros,
+        transferencias. El <span className="font-display">camino feliz</span> es
+        la parte fácil. El trabajo empieza de verdad cuando un cobro falla, se
+        duplica o llega fuera de orden, y alguien todavía tiene que quedarse con
+        el monto correcto.
       </p>
       <p className="paragraph mb-3">
-        Mi mayor open source es{" "}
+        El open source del que más me enorgullezco es{" "}
         <BioLink
           href="https://www.abacatepay.com/"
           target="_blank"
@@ -565,7 +569,7 @@ const bio: Record<Language, BioParagraphs> = {
           </span>
           Abacate Pay
         </BioLink>
-        , hecha para Brasil por <AvatarStack /> 23 devs. También construyo{" "}
+        , hecha para Brasil por <AvatarStack /> 23 devs. También fundé{" "}
         <BioLink
           href="https://kubofood.app"
           target="_blank"
@@ -575,10 +579,10 @@ const bio: Record<Language, BioParagraphs> = {
           <BrandMark name="kubo" />
           KuboFood
         </BioLink>
-        , del pedido a la cocina.
+        , que acompaña a un restaurante desde el pedido hasta la cocina.
       </p>
       <p className="paragraph mb-3">
-        Antes,{" "}
+        Antes de todo esto,{" "}
         <BioLink
           href="https://www.goiasec.com.br/"
           target="_blank"
@@ -588,7 +592,7 @@ const bio: Record<Language, BioParagraphs> = {
           <BrandMark name="goias" />
           Goiás F.C.
         </BioLink>{" "}
-        Armo una{" "}
+        Fuera del trabajo corro todos los días y armo una{" "}
         <PlaylistLink
           language={lang}
           className={link}
@@ -597,7 +601,7 @@ const bio: Record<Language, BioParagraphs> = {
           <BrandMark name="spotify" />
           playlist
         </PlaylistLink>{" "}
-        al mes y corro todos los días. Encuéntrame en{" "}
+        al mes. Encuéntrame en{" "}
         <a
           href="https://x.com/mattcrdoso"
           target="_blank"

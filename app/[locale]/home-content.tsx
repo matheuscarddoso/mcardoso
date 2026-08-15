@@ -334,9 +334,9 @@ const bio: Record<Language, BioParagraphs> = {
           Zero7
         </BioLink>
         . Quase tudo que eu construo é pagamento: checkout, cobrança, repasse. O{" "}
-        <span className="font-display">caminho feliz</span> é a parte fácil. O
-        trabalho começa mesmo quando a cobrança falha, duplica ou chega fora de
-        ordem, e alguém ainda precisa terminar com o valor certo na conta.
+        <span className="font-display">caminho feliz</span> é a parte fácil.
+        Meus dias vão na cobrança que falha, na que duplica e na que chega fora
+        de ordem.
       </p>
       <p className="paragraph mb-3">
         O open-source de que eu mais me orgulho é a{" "}
@@ -441,9 +441,9 @@ const bio: Record<Language, BioParagraphs> = {
           Zero7
         </BioLink>
         . Almost everything I build is payments: checkout, billing, payouts. The{" "}
-        <span className="font-display">happy path</span> is the easy part. The
-        job really starts when a charge fails, or fires twice, or arrives out of
-        order, and someone still has to end up with the right amount of money.
+        <span className="font-display">happy path</span> is the easy part. My
+        days go to the charge that fails, the one that fires twice and the one
+        that arrives out of order.
       </p>
       <p className="paragraph mb-3">
         The open source I&apos;m proudest of is{" "}
@@ -549,9 +549,8 @@ const bio: Record<Language, BioParagraphs> = {
         </BioLink>
         . Casi todo lo que construyo son pagos: checkout, cobros,
         transferencias. El <span className="font-display">camino feliz</span> es
-        la parte fácil. El trabajo empieza de verdad cuando un cobro falla, se
-        duplica o llega fuera de orden, y alguien todavía tiene que quedarse con
-        el monto correcto.
+        la parte fácil. Mis días se van en el cobro que falla, el que se duplica
+        y el que llega fuera de orden.
       </p>
       <p className="paragraph mb-3">
         El open source del que más me enorgullezco es{" "}

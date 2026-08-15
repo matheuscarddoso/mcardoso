@@ -75,9 +75,14 @@ const MARKS: Record<SocialKey, Mark> = {
  * are all the author's own do not need a scraper, an SSRF surface and a
  * runtime dependency on four third parties staying up.
  *
- * GitHub's and X's lines are their own `og:description`, trimmed of the counts
- * that would go stale. The other two are written here, since neither site
- * will hand them over.
+ * GitHub's line is its own `og:description`, trimmed of the counts that would
+ * go stale. X's is the profile bio as written, which is not what X puts in its
+ * `og:description`. The other two are written here, since neither site will
+ * hand them over.
+ *
+ * Which makes these copies, and copies drift: a bio edited on the profile is
+ * edited here too, or the card starts telling a reader something the profile
+ * stopped saying.
  */
 type Preview = {
   title: string
@@ -94,7 +99,10 @@ const PREVIEWS: Partial<Record<SocialKey, Preview>> = {
   },
   x: {
     title: "Matheus Cardoso (@mattcrdoso)",
-    description: "Founder at Abacate Pay. Software & Design Engineer at 4Selet.",
+    /* The bio as it stands on the profile, across its own two lines. X's
+       `og:description` flattens them into one run of words that reads as a
+       sentence and is not one. */
+    description: "SE: @4selet\nFounder: kubofood.app",
     domain: "x.com",
   },
   stackoverflow: {
@@ -145,8 +153,9 @@ function ProfileCard({ mark, preview }: { mark: Mark; preview: Preview }) {
       <div className="flex flex-col gap-1 p-2.5">
         <p className="truncate text-[13px] font-medium text-gray-1200">{preview.title}</p>
         {/* Three lines then an ellipsis, so a long description cannot stretch
-            the card past the height its neighbours settle at. */}
-        <p className="line-clamp-3 text-xs leading-[1.45] text-gray-1100">
+            the card past the height its neighbours settle at. Line breaks in a
+            bio are kept: they are how the profile itself is written. */}
+        <p className="line-clamp-3 text-xs leading-[1.45] whitespace-pre-line text-gray-1100">
           {preview.description}
         </p>
         <p className="mt-0.5 flex items-center gap-1.5">

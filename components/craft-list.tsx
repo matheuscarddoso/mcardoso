@@ -4,6 +4,7 @@ import * as React from "react";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { CassettePlayer } from "@/components/crafts/cassette-player";
+import { CommandPaletteDemo } from "@/components/crafts/command-palette-demo";
 import { LoadingState } from "@/components/crafts/loading-state";
 import { crafts, type Craft } from "@/lib/crafts";
 import type { Language } from "@/lib/locale";
@@ -25,9 +26,30 @@ type Preview = {
   render: (active: boolean) => React.ReactNode;
   /** Applied to the wrapper the card hovers. */
   motion?: string;
+  /** Spans both columns, for a component too wide to read at half width. */
+  wide?: boolean;
+  /** Height of the preview box. Taller components need more of a look. */
+  height?: string;
 };
 
 const PREVIEWS: Record<string, Preview> = {
+  "command-palette": {
+    wide: true,
+    height: "h-64",
+    /*
+       Cropped from the top: the input and the first rows are what say what
+       this is, and the footer under them says it again in words. Shown at its
+       own size rather than scaled down, because the whole subject is text at
+       thirteen pixels and scaling it is the one thing that would make it
+       illegible.
+    */
+    render: () => (
+      <div className="absolute top-6 left-1/2 w-full max-w-[24rem] -translate-x-1/2">
+        <CommandPaletteDemo interactive={false} />
+      </div>
+    ),
+    motion: "motion-safe:group-hover:-translate-y-2",
+  },
   "cassette-audio-player": {
     render: () => (
       /* Anchored left rather than centred: the crop has to fall on the empty
@@ -125,7 +147,7 @@ function CraftCard({
   };
 
   return (
-    <li className="flex">
+    <li className={`flex${preview?.wide ? " sm:col-span-2" : ""}`}>
       <Link
         href={`/${locale}/crafts/${craft.slug}`}
         onPointerEnter={enter}
@@ -143,7 +165,7 @@ function CraftCard({
         */}
         <div
           inert
-          className="relative h-40 w-full overflow-hidden rounded-lg bg-secondary"
+          className={`relative w-full overflow-hidden rounded-lg bg-secondary ${preview?.height ?? "h-40"}`}
         >
           <div
             ref={ref}

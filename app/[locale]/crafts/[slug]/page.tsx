@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import { CodePanel } from "@/components/code-panel";
 import { CraftShell } from "@/components/craft-shell";
 import { CassettePlayer } from "@/components/crafts/cassette-player";
+import { CommandPaletteDemo } from "@/components/crafts/command-palette-demo";
 import { LoadingStateDemo } from "@/components/crafts/loading-state-demo";
 import { craftBySlug, crafts } from "@/lib/crafts";
 import { LOCALES, localeToLanguage } from "@/lib/locale";
@@ -18,6 +19,7 @@ import { pageMetadata, toLocale } from "@/lib/site";
 const DEMOS: Record<string, React.ReactNode> = {
   "cassette-audio-player": <CassettePlayer />,
   "loading-state": <LoadingStateDemo />,
+  "command-palette": <CommandPaletteDemo />,
 };
 
 type Props = { params: Promise<{ locale: string; slug: string }> };

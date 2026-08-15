@@ -56,8 +56,70 @@ export function Saving({ pending }: { pending: boolean }) {
 }
 `;
 
+const PALETTE_USAGE = `import {
+  CommandPalette,
+  type Command,
+} from "@/components/crafts/command-palette"
+
+// Commands are data: a label, an icon, a shortcut, and typed argument slots
+// with their own options. \`message\` writes the line printed once applied.
+const COMMANDS: Command[] = [
+  {
+    id: "assign",
+    label: "Assign to",
+    icon: <UserIcon />,
+    shortcut: "A",
+    slots: [
+      { name: "assignee", prompt: "Assign to whom", kind: "person", options: PEOPLE },
+      { name: "priority", prompt: "With what priority", kind: "dot", options: PRIORITIES },
+    ],
+    message: (v) => \`Assigned to \${v[0].value} · \${v[1].value} priority\`,
+  },
+  {
+    id: "archive",
+    label: "Archive issue",
+    icon: <ArchiveIcon />,
+    danger: true,
+    slots: [],
+    message: () => "Issue archived",
+  },
+]
+
+export function IssueActions() {
+  return (
+    <CommandPalette
+      commands={COMMANDS}
+      onApply={(clauses) => console.log("apply", clauses)}
+    />
+  )
+}
+`;
+
 /** Newest first: the home page prints them in this order. */
 export const crafts: Craft[] = [
+  {
+    slug: "command-palette",
+    publishedAt: "2026-08-15",
+    title: "Command Palette with Argument Chips",
+    description: {
+      PT: "Comandos que recebem argumentos ali mesmo, viram chips, e uma lista que se mede antes de mudar de altura.",
+      EN: "Commands that take their arguments inline, collapse into chips, and a list that measures itself before changing height.",
+      ES: "Comandos que reciben sus argumentos en línea, se vuelven chips, y una lista que se mide antes de cambiar de altura.",
+    },
+    seoDescription: {
+      PT: "Command palette em React com argumentos em chips, busca por subsequência pontuada e uma única parada de tabulação do começo ao fim.",
+      EN: "A React command palette with inline argument chips, scored subsequence matching, and exactly one tab stop from start to finish.",
+      ES: "Command palette en React con argumentos en chips, búsqueda por subsecuencia puntuada y una sola parada de tabulación.",
+    },
+    files: [
+      {
+        name: "CommandPalette.tsx",
+        path: "components/crafts/command-palette.tsx",
+        lang: "tsx",
+      },
+      { name: "Usage.tsx", code: PALETTE_USAGE, lang: "tsx" },
+    ],
+  },
   {
     slug: "loading-state",
     publishedAt: "2026-08-15",

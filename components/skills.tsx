@@ -7,28 +7,49 @@ import { TECH_MARKS, type TechName } from "@/lib/tech-marks";
 import type { Language } from "@/lib/locale";
 
 /**
- * What I work with, grouped.
+ * What I work with, grouped. Drawn from the résumé and from what is actually
+ * in daily use, which are not the same list and both belong here.
  *
- * To change the list, edit `ROWS`. A name that has no mark yet needs adding to
- * `scripts/build-tech-marks.mjs` and the script re-run, which is the whole
- * ceremony: the marks file is generated, so hand-editing it is undone by the
- * next run.
+ * To change it, edit `ROWS`. A name with a brand mark goes in as a string and
+ * has to exist in `scripts/build-tech-marks.mjs`; the marks file is generated,
+ * so hand-editing it is undone by the next run.
+ *
+ * A name with no mark available goes in as `{ label }` and prints as text.
+ * That escape hatch exists on purpose: simple-icons has no Java, no RxJS and
+ * no AWS, and a skills list that quietly drops what nobody drew an icon for is
+ * a list edited by an icon set.
  */
+
+type Item = TechName | { label: string };
 
 type Row = {
   /** Key into `labels`, so the heading of the row translates. */
-  key: "language" | "backend" | "frontend" | "infra" | "tools";
-  items: readonly TechName[];
+  key: "language" | "frontend" | "backend" | "data" | "infra" | "tools";
+  items: readonly Item[];
 };
 
 const ROWS: readonly Row[] = [
-  { key: "language", items: ["php", "typescript", "javascript"] },
-  { key: "backend", items: ["laravel", "nodedotjs", "postgresql", "redis"] },
+  {
+    key: "language",
+    items: [
+      "typescript",
+      "javascript",
+      "php",
+      "ruby",
+      "dart",
+      { label: "Java" },
+      { label: "SQL" },
+    ],
+  },
   {
     key: "frontend",
     items: [
+      "angular",
+      { label: "RxJS" },
+      "ngrx",
       "react",
       "nextdotjs",
+      "flutter",
       "tailwindcss",
       "shadcnui",
       "alpinedotjs",
@@ -36,8 +57,45 @@ const ROWS: readonly Row[] = [
       "jquery",
     ],
   },
-  { key: "infra", items: ["docker", "linux", "vercel", "railway"] },
-  { key: "tools", items: ["vite", "git", "github", "claude"] },
+  {
+    key: "backend",
+    items: [
+      "laravel",
+      "nestjs",
+      "nodedotjs",
+      "rubyonrails",
+      "quarkus",
+      "prisma",
+    ],
+  },
+  { key: "data", items: ["postgresql", "mariadb", "redis", "firebase"] },
+  {
+    key: "infra",
+    items: [
+      "docker",
+      { label: "AWS" },
+      "nginx",
+      "linux",
+      "vercel",
+      "railway",
+      "keycloak",
+      "jsonwebtokens",
+      { label: "OAuth" },
+    ],
+  },
+  {
+    key: "tools",
+    items: [
+      "git",
+      "github",
+      "vite",
+      "swagger",
+      { label: "Pest" },
+      "cursor",
+      "claude",
+      "githubcopilot",
+    ],
+  },
 ];
 
 /** Rows shown before the list is opened. */
@@ -46,22 +104,25 @@ const COLLAPSED = 3;
 const labels: Record<Language, Record<Row["key"], string>> = {
   PT: {
     language: "Linguagem",
-    backend: "Backend",
     frontend: "Frontend",
+    backend: "Backend",
+    data: "Dados",
     infra: "Infraestrutura",
     tools: "Ferramentas",
   },
   EN: {
     language: "Language",
-    backend: "Backend",
     frontend: "Frontend",
+    backend: "Backend",
+    data: "Data",
     infra: "Infrastructure",
     tools: "Tools",
   },
   ES: {
     language: "Lenguaje",
-    backend: "Backend",
     frontend: "Frontend",
+    backend: "Backend",
+    data: "Datos",
     infra: "Infraestructura",
     tools: "Herramientas",
   },
@@ -76,8 +137,9 @@ const toggle: Record<Language, { more: string; less: string }> = {
 /* Same register as the theme tray and the photo deck. */
 const SPRING = { type: "spring" as const, duration: 0.42, bounce: 0.12 };
 
-function Tech({ name }: { name: TechName }) {
-  const mark = TECH_MARKS[name];
+function Tech({ item }: { item: Item }) {
+  const mark = typeof item === "string" ? TECH_MARKS[item] : null;
+  const label = mark ? mark.label : (item as { label: string }).label;
 
   return (
     <span className="inline-flex items-center gap-1.5 text-sm text-gray-1100">
@@ -88,15 +150,17 @@ function Tech({ name }: { name: TechName }) {
         Monochrome rather than in brand colour. Two dozen logos at full
         saturation is a sticker sheet, and the row is meant to be read.
       */}
-      <svg
-        aria-hidden
-        viewBox="0 0 24 24"
-        fill="currentColor"
-        className="size-3.5 shrink-0 text-gray-1000"
-      >
-        <path d={mark.path} />
-      </svg>
-      {mark.label}
+      {mark && (
+        <svg
+          aria-hidden
+          viewBox="0 0 24 24"
+          fill="currentColor"
+          className="size-3.5 shrink-0 text-gray-1000"
+        >
+          <path d={mark.path} />
+        </svg>
+      )}
+      {label}
     </span>
   );
 }
@@ -108,8 +172,11 @@ function Group({ row, language }: { row: Row; language: Language }) {
     <div className="grid gap-x-6 gap-y-1.5 py-1.5 sm:grid-cols-[8.5rem_1fr]">
       <dt className="text-sm text-gray-1000">{labels[language][row.key]}</dt>
       <dd className="flex flex-wrap items-center gap-x-4 gap-y-2">
-        {row.items.map((name) => (
-          <Tech key={name} name={name} />
+        {row.items.map((item) => (
+          <Tech
+            key={typeof item === "string" ? item : item.label}
+            item={item}
+          />
         ))}
       </dd>
     </div>

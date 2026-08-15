@@ -6,7 +6,7 @@
  * drawn get committed. Nothing about simple-icons reaches the browser, and
  * nobody has to trust that a bundler tree-shook it correctly.
  *
- * Run it after editing SKILLS in components/skills.tsx:
+ * Run it after editing ROWS in components/skills.tsx:
  *   node scripts/build-tech-marks.mjs
  */
 
@@ -15,28 +15,45 @@ import * as icons from "simple-icons";
 
 /** Slug in simple-icons, then the label the site prints. */
 const MARKS = [
-  ["php", "PHP"],
   ["typescript", "TypeScript"],
   ["javascript", "JavaScript"],
-  ["laravel", "Laravel"],
-  ["nodedotjs", "Node.js"],
-  ["postgresql", "PostgreSQL"],
-  ["redis", "Redis"],
+  ["php", "PHP"],
+  ["ruby", "Ruby"],
+  ["dart", "Dart"],
+  ["angular", "Angular"],
+  ["ngrx", "NgRx"],
   ["react", "React"],
   ["nextdotjs", "Next.js"],
+  ["flutter", "Flutter"],
   ["tailwindcss", "Tailwind CSS"],
   ["shadcnui", "shadcn/ui"],
   ["alpinedotjs", "Alpine.js"],
   ["bootstrap", "Bootstrap"],
   ["jquery", "jQuery"],
+  ["laravel", "Laravel"],
+  ["nestjs", "NestJS"],
+  ["nodedotjs", "Node.js"],
+  ["rubyonrails", "Ruby on Rails"],
+  ["quarkus", "Quarkus"],
+  ["prisma", "Prisma"],
+  ["postgresql", "PostgreSQL"],
+  ["mariadb", "MariaDB"],
+  ["redis", "Redis"],
+  ["firebase", "Firebase"],
   ["docker", "Docker"],
+  ["nginx", "NGINX"],
   ["linux", "Linux"],
   ["vercel", "Vercel"],
   ["railway", "Railway"],
-  ["vite", "Vite"],
+  ["keycloak", "Keycloak"],
+  ["jsonwebtokens", "JWT"],
   ["git", "Git"],
   ["github", "GitHub"],
+  ["vite", "Vite"],
+  ["swagger", "Swagger"],
+  ["cursor", "Cursor"],
   ["claude", "Claude"],
+  ["githubcopilot", "GitHub Copilot"],
 ];
 
 const key = (slug) => "si" + slug[0].toUpperCase() + slug.slice(1);

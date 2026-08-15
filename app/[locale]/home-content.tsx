@@ -740,19 +740,6 @@ export function HomeContent({
           </ul>
         </section>
 
-        <SectionDivider className="my-10" />
-
-        <section aria-labelledby="crafts-heading" className="w-full">
-          <h2
-            id="crafts-heading"
-            className="mb-1 flex w-full items-center font-medium text-gray-1200"
-          >
-            {t.crafts}
-          </h2>
-          <p className="mb-5 text-sm text-gray-1100">{t.craftsIntro}</p>
-          <CraftList locale={locale} language={language} />
-        </section>
-
         {/* Dropped entirely when the calendar can't be read — an empty grid
             would claim a year of no work rather than a failed fetch. */}
         {contributions && (
@@ -786,6 +773,19 @@ export function HomeContent({
             {t.writing}
           </h2>
           <WorkList language={language} locale={locale} />
+        </section>
+
+        <SectionDivider className="my-10" />
+
+        <section aria-labelledby="crafts-heading" className="w-full">
+          <h2
+            id="crafts-heading"
+            className="mb-1 flex w-full items-center font-medium text-gray-1200"
+          >
+            {t.crafts}
+          </h2>
+          <p className="mb-5 text-sm text-gray-1100">{t.craftsIntro}</p>
+          <CraftList locale={locale} language={language} />
         </section>
 
         <SectionDivider className="my-10" />

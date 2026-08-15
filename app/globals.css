@@ -572,3 +572,32 @@ a:focus-visible .brand-mark {
   color: var(--shiki-dark) !important;
   background-color: var(--shiki-dark-bg) !important;
 }
+
+/*
+ * Keyframes for the loading-state craft.
+ *
+ * Named with a prefix so a craft's animation cannot collide with the site's:
+ * these are global by definition, and "shimmer" is a name two things will pick
+ * eventually.
+ */
+@keyframes craft-pixel-on {
+  0% {
+    opacity: 0.15;
+  }
+  18% {
+    opacity: 1;
+  }
+  55%,
+  100% {
+    opacity: 0.15;
+  }
+}
+
+@keyframes craft-shimmer-text {
+  from {
+    background-position: -50% 0;
+  }
+  to {
+    background-position: 150% 0;
+  }
+}

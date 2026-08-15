@@ -1,10 +1,11 @@
-import { notFound } from "next/navigation"
-import { CodePanel } from "@/components/code-panel"
-import { CraftShell } from "@/components/craft-shell"
-import { CassettePlayer } from "@/components/crafts/cassette-player"
-import { craftBySlug, crafts } from "@/lib/crafts"
-import { LOCALES, localeToLanguage } from "@/lib/locale"
-import { pageMetadata, toLocale } from "@/lib/site"
+import { notFound } from "next/navigation";
+import { CodePanel } from "@/components/code-panel";
+import { CraftShell } from "@/components/craft-shell";
+import { CassettePlayer } from "@/components/crafts/cassette-player";
+import { LoadingStateDemo } from "@/components/crafts/loading-state-demo";
+import { craftBySlug, crafts } from "@/lib/crafts";
+import { LOCALES, localeToLanguage } from "@/lib/locale";
+import { pageMetadata, toLocale } from "@/lib/site";
 
 /**
  * The demo for each craft, by slug.
@@ -16,37 +17,40 @@ import { pageMetadata, toLocale } from "@/lib/site"
  */
 const DEMOS: Record<string, React.ReactNode> = {
   "cassette-audio-player": <CassettePlayer />,
-}
+  "loading-state": <LoadingStateDemo />,
+};
 
-type Props = { params: Promise<{ locale: string; slug: string }> }
+type Props = { params: Promise<{ locale: string; slug: string }> };
 
 export function generateStaticParams() {
-  return LOCALES.flatMap((locale) => crafts.map((craft) => ({ locale, slug: craft.slug })))
+  return LOCALES.flatMap((locale) =>
+    crafts.map((craft) => ({ locale, slug: craft.slug })),
+  );
 }
 
 export async function generateMetadata({ params }: Props) {
-  const { locale: raw, slug } = await params
-  const locale = toLocale(raw)
-  const craft = craftBySlug.get(slug)
-  if (!craft) return {}
+  const { locale: raw, slug } = await params;
+  const locale = toLocale(raw);
+  const craft = craftBySlug.get(slug);
+  if (!craft) return {};
 
   return pageMetadata({
     locale,
     path: `/crafts/${slug}`,
     title: craft.title,
     description: craft.seoDescription[localeToLanguage(locale)],
-  })
+  });
 }
 
 export default async function CraftPage({ params }: Props) {
-  const { locale: raw, slug } = await params
-  const locale = toLocale(raw)
-  const language = localeToLanguage(locale)
-  const craft = craftBySlug.get(slug)
+  const { locale: raw, slug } = await params;
+  const locale = toLocale(raw);
+  const language = localeToLanguage(locale);
+  const craft = craftBySlug.get(slug);
 
   /* A slug outside the registry is a 404, not an empty page: the route is
      prerendered from `crafts`, so anything else was never a page here. */
-  if (!craft) notFound()
+  if (!craft) notFound();
 
   return (
     <CraftShell
@@ -59,5 +63,5 @@ export default async function CraftPage({ params }: Props) {
     >
       <CodePanel files={craft.files} language={language} />
     </CraftShell>
-  )
+  );
 }

@@ -1,11 +1,12 @@
-"use client"
+"use client";
 
-import * as React from "react"
-import Link from "next/link"
-import { ArrowRight } from "lucide-react"
-import { CassettePlayer } from "@/components/crafts/cassette-player"
-import { crafts } from "@/lib/crafts"
-import type { Language } from "@/lib/locale"
+import * as React from "react";
+import Link from "next/link";
+import { ArrowRight } from "lucide-react";
+import { CassettePlayer } from "@/components/crafts/cassette-player";
+import { LoadingState } from "@/components/crafts/loading-state";
+import { crafts } from "@/lib/crafts";
+import type { Language } from "@/lib/locale";
 
 /**
  * The crafts on the home page.
@@ -31,9 +32,22 @@ const PREVIEWS: Record<string, React.ReactNode> = {
       <CassettePlayer preload="none" className="bg-transparent p-0" />
     </div>
   ),
-}
+  /* Centred rather than cropped: it is small enough to show whole, and a
+     loader with its edges cut off looks broken rather than framed. */
+  "loading-state": (
+    <div className="absolute inset-0 grid place-items-center">
+      <LoadingState />
+    </div>
+  ),
+};
 
-export function CraftList({ locale, language }: { locale: string; language: Language }) {
+export function CraftList({
+  locale,
+  language,
+}: {
+  locale: string;
+  language: Language;
+}) {
   return (
     <ul className="grid w-full grid-cols-1 gap-6 sm:grid-cols-2">
       {crafts.map((craft) => (
@@ -85,5 +99,5 @@ export function CraftList({ locale, language }: { locale: string; language: Lang
         </li>
       ))}
     </ul>
-  )
+  );
 }

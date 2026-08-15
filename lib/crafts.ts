@@ -1,38 +1,38 @@
-import type { Language } from "./locale"
+import type { Language } from "./locale";
 
-type Localized = Record<Language, string>
+type Localized = Record<Language, string>;
 
 export type CraftFile = {
   /** Printed on the tab. */
-  name: string
+  name: string;
   /**
    * Repository-relative path, read at build time. Reading the file rather than
    * repeating it in a string is the only way the listing cannot drift from the
    * component that actually runs on the page above it.
    */
-  path?: string
+  path?: string;
   /** For a snippet with no file behind it, such as the usage example. */
-  code?: string
-  lang: string
-}
+  code?: string;
+  lang: string;
+};
 
 export type Craft = {
-  slug: string
+  slug: string;
   /** ISO date it went up. The sitemap reports it; nothing else reads it. */
-  publishedAt: string
+  publishedAt: string;
   /**
    * Not localized. It is the component's name, the thing you would type to
    * import it, and translating that would make the page disagree with the code
    * printed on it.
    */
-  title: string
-  description: Localized
+  title: string;
+  description: Localized;
   /** Search-result copy; the on-page description is written to sit under a heading. */
-  seoDescription: Localized
-  files: CraftFile[]
+  seoDescription: Localized;
+  files: CraftFile[];
   /** Printed under the demo, when the demo leans on someone else's work. */
-  credit?: Localized
-}
+  credit?: Localized;
+};
 
 const CASSETTE_USAGE = `import { CassettePlayer } from "@/components/crafts/cassette-player"
 
@@ -46,10 +46,41 @@ export function AudioPlayer() {
     />
   )
 }
-`
+`;
+
+const LOADING_USAGE = `import { LoadingState } from "@/components/crafts/loading-state"
+
+export function Saving({ pending }: { pending: boolean }) {
+  if (!pending) return null
+  return <LoadingState label="Saving" variant="drive" />
+}
+`;
 
 /** Newest first: the home page prints them in this order. */
 export const crafts: Craft[] = [
+  {
+    slug: "loading-state",
+    publishedAt: "2026-08-15",
+    title: "Loading State",
+    description: {
+      PT: "Loader em grade de pixels, com brilho passando pelo texto e o tempo decorrido.",
+      EN: "A pixel-grid loader, with a shimmer across the label and the time elapsed.",
+      ES: "Loader en cuadrícula de píxeles, con brillo sobre el texto y el tiempo transcurrido.",
+    },
+    seoDescription: {
+      PT: "Loader em React para espera longa: grade de 3x3 com frente de onda, brilho no rótulo e cronômetro que não atrasa em aba ocupada.",
+      EN: "A React loader for long waits: a 3x3 grid with a travelling wavefront, a shimmering label, and a timer that cannot drift.",
+      ES: "Loader en React para esperas largas: cuadrícula 3x3 con frente de onda, brillo en la etiqueta y cronómetro que no se atrasa.",
+    },
+    files: [
+      {
+        name: "LoadingState.tsx",
+        path: "components/crafts/loading-state.tsx",
+        lang: "tsx",
+      },
+      { name: "Usage.tsx", code: LOADING_USAGE, lang: "tsx" },
+    ],
+  },
   {
     slug: "cassette-audio-player",
     publishedAt: "2026-08-15",
@@ -78,12 +109,12 @@ export const crafts: Craft[] = [
       ES: "Audio de la NASA, dominio público: Apolo 11, 20 de julio de 1969.",
     },
   },
-]
+];
 
-export const craftBySlug = new Map(crafts.map((craft) => [craft.slug, craft]))
+export const craftBySlug = new Map(crafts.map((craft) => [craft.slug, craft]));
 
 export function getCraft(slug: string): Craft {
-  const craft = craftBySlug.get(slug)
-  if (!craft) throw new Error(`No craft named "${slug}"`)
-  return craft
+  const craft = craftBySlug.get(slug);
+  if (!craft) throw new Error(`No craft named "${slug}"`);
+  return craft;
 }

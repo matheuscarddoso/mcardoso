@@ -99,7 +99,33 @@ const nextConfig: NextConfig = {
        */
       {
         source: "/elsewhere/:path*",
-        headers: [{ key: "Cache-Control", value: "public, max-age=31536000, immutable" }],
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, max-age=31536000, immutable",
+          },
+        ],
+      },
+      /*
+       * The résumé, which arrived with Vercel's default for a static file:
+       * `max-age=0, must-revalidate`. Every open of the panel paid a round
+       * trip to be told the same 82kB had not changed.
+       *
+       * Ten minutes in the browser, so opening the panel twice in a sitting
+       * costs one request; a year at the edge, which is safe because Vercel
+       * keys static assets per deployment and replacing the file means
+       * deploying. Not `immutable`: unlike the photographs, this document is
+       * meant to be revised under the same name.
+       */
+      {
+        source: "/cv/:path*",
+        headers: [
+          {
+            key: "Cache-Control",
+            value:
+              "public, max-age=600, s-maxage=31536000, stale-while-revalidate=86400",
+          },
+        ],
       },
     ];
   },

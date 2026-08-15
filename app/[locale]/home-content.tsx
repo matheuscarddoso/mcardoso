@@ -252,6 +252,25 @@ function ResumeButton({
   const { canOpen, openSrc, toggle } = useDocumentPanel();
   const src = CV[language];
   const isOpen = openSrc === src;
+  const warmed = React.useRef(false);
+
+  /**
+   * Fetches the file on pointer intent, before the click.
+   *
+   * The panel mounts its iframe when it opens, so nothing about the document
+   * was requested until the moment the reader asked to see it: the download,
+   * the viewer starting up and the first page painting all queued behind one
+   * click. This moves the download out of that queue, and 82kB arrives well
+   * inside the time it takes a pointer to travel to a button and press it.
+   *
+   * `fetch` rather than a preload tag: this wants the ordinary HTTP cache,
+   * which is the one the iframe will read from.
+   */
+  const warm = () => {
+    if (warmed.current) return;
+    warmed.current = true;
+    void fetch(src, { cache: "force-cache" }).catch(() => {});
+  };
 
   /*
    * Intercepts the plain left click and nothing else. A modified click is the
@@ -284,6 +303,8 @@ function ResumeButton({
       target="_blank"
       rel="noopener noreferrer"
       onClick={handleClick}
+      onPointerEnter={warm}
+      onFocus={warm}
       /*
        * Announced as a toggle only where it behaves like one. Below the split
        * it is a plain link to a file, and claiming it expands a panel that

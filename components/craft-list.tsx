@@ -40,7 +40,9 @@ export function CraftList({ locale, language }: { locale: string; language: Lang
         <li key={craft.slug} className="flex">
           <Link
             href={`/${locale}/crafts/${craft.slug}`}
-            className="group flex w-full flex-col overflow-hidden rounded-xl bg-preview-bg px-3.5 pt-3.5 pb-3.5 shadow-custom transition-[box-shadow,transform] duration-300 ease-[var(--ease-out-strong)] hover:scale-[1.015] hover:shadow-card-lift active:scale-[0.985] motion-reduce:hover:scale-100 motion-reduce:active:scale-100"
+            /* No scale on hover: the card holds still and the component inside
+               it moves instead, which is the thing worth looking at. */
+            className="group flex w-full flex-col overflow-hidden rounded-xl bg-preview-bg px-3.5 pt-3.5 pb-3.5 shadow-custom transition-[box-shadow,transform] duration-300 ease-[var(--ease-out-strong)] hover:shadow-card-lift active:scale-[0.985] motion-reduce:active:scale-100"
           >
             {/*
               `inert` rather than `aria-hidden`: the preview is a whole player
@@ -52,7 +54,19 @@ export function CraftList({ locale, language }: { locale: string; language: Lang
               inert
               className="relative h-40 w-full overflow-hidden rounded-lg bg-secondary"
             >
-              {PREVIEWS[craft.slug]}
+              {/*
+                Hovering lifts the component up and to the left and turns it a
+                few degrees, all in one move. Held on a wrapper rather than on
+                each preview, so a craft added later inherits it.
+
+                `motion-safe` rather than a reduced-motion override: under
+                reduced motion this should not travel at all, and a transform
+                that merely snaps into place instead of sliding is still the
+                same distance covered.
+              */}
+              <div className="absolute inset-0 origin-center transition-transform duration-500 ease-[var(--ease-out-strong)] motion-safe:group-hover:-translate-x-3 motion-safe:group-hover:-translate-y-2.5 motion-safe:group-hover:-rotate-3">
+                {PREVIEWS[craft.slug]}
+              </div>
             </div>
 
             <div className="mt-3 flex items-center gap-2">

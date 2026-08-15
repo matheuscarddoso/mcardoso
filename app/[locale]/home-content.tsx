@@ -333,10 +333,10 @@ const bio: Record<Language, BioParagraphs> = {
           <BrandMark name="zero7" />
           Zero7
         </BioLink>
-        . Quase tudo que eu construo é pagamento: checkout, cobrança, repasse. O{" "}
-        <span className="font-display">caminho feliz</span> é a parte fácil.
-        Meus dias vão na cobrança que falha, na que duplica e na que chega fora
-        de ordem.
+        . Quase tudo que eu construo é pagamento: checkout, cobrança, repasse.
+        Me importo com cada peça que faz um checkout ser{" "}
+        <span className="font-display">eficiente</span>, e com a velocidade e a
+        experiência de quem está comprando.
       </p>
       <p className="paragraph mb-3">
         O open-source de que eu mais me orgulho é a{" "}
@@ -440,10 +440,10 @@ const bio: Record<Language, BioParagraphs> = {
           <BrandMark name="zero7" />
           Zero7
         </BioLink>
-        . Almost everything I build is payments: checkout, billing, payouts. The{" "}
-        <span className="font-display">happy path</span> is the easy part. My
-        days go to the charge that fails, the one that fires twice and the one
-        that arrives out of order.
+        . Almost everything I build is payments: checkout, billing, payouts. I
+        care about every piece that makes a checkout{" "}
+        <span className="font-display">efficient</span>, and about the speed and
+        the experience of the person buying.
       </p>
       <p className="paragraph mb-3">
         The open source I&apos;m proudest of is{" "}
@@ -548,9 +548,9 @@ const bio: Record<Language, BioParagraphs> = {
           Zero7
         </BioLink>
         . Casi todo lo que construyo son pagos: checkout, cobros,
-        transferencias. El <span className="font-display">camino feliz</span> es
-        la parte fácil. Mis días se van en el cobro que falla, el que se duplica
-        y el que llega fuera de orden.
+        transferencias. Me importa cada pieza que hace que un checkout sea{" "}
+        <span className="font-display">eficiente</span>, y la velocidad y la
+        experiencia de quien está comprando.
       </p>
       <p className="paragraph mb-3">
         El open source del que más me enorgullezco es{" "}

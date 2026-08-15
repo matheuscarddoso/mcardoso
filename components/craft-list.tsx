@@ -1,12 +1,12 @@
-"use client"
+"use client";
 
-import * as React from "react"
-import Link from "next/link"
-import { ArrowRight } from "lucide-react"
-import { CassettePlayer } from "@/components/crafts/cassette-player"
-import { LoadingState } from "@/components/crafts/loading-state"
-import { crafts, type Craft } from "@/lib/crafts"
-import type { Language } from "@/lib/locale"
+import * as React from "react";
+import Link from "next/link";
+import { ArrowRight } from "lucide-react";
+import { CassettePlayer } from "@/components/crafts/cassette-player";
+import { LoadingState } from "@/components/crafts/loading-state";
+import { crafts, type Craft } from "@/lib/crafts";
+import type { Language } from "@/lib/locale";
 
 /**
  * The crafts on the home page.
@@ -21,14 +21,15 @@ import type { Language } from "@/lib/locale"
  */
 
 type Preview = {
-  node: React.ReactNode
+  /** `active` is true while the card is hovered or focused. */
+  render: (active: boolean) => React.ReactNode;
   /** Applied to the wrapper the card hovers. */
-  motion?: string
-}
+  motion?: string;
+};
 
 const PREVIEWS: Record<string, Preview> = {
   "cassette-audio-player": {
-    node: (
+    render: () => (
       /* Anchored left rather than centred: the crop has to fall on the empty
          right of the label, because centring takes the same bite out of both
          ends and the title is on one of them. */
@@ -42,27 +43,22 @@ const PREVIEWS: Record<string, Preview> = {
       "motion-safe:group-hover:-translate-x-1.5 motion-safe:group-hover:-translate-y-2",
   },
   "loading-state": {
-    node: (
+    /*
+     * At rest until the card is hovered, through the component's own `running`
+     * prop rather than by pausing its animations from outside. Pausing with
+     * CSS stops what moves and leaves the clock counting a wait nobody is
+     * waiting, and it takes an `!important` to beat the inline `animation`
+     * shorthand. The prop stops all three parts and needs no fight.
+     */
+    render: (active) => (
       /* Centred rather than cropped: small enough to show whole, and a loader
          with its edges cut off reads as broken rather than framed. */
       <div className="absolute inset-0 grid place-items-center">
-        <LoadingState />
+        <LoadingState running={active} />
       </div>
     ),
-    /*
-     * Held still until the card is hovered. `animation-play-state` rather than
-     * a prop on the component: whether a loader is animating is a question the
-     * page is asking, not one the component should have an opinion about, and
-     * a `paused` loading state is a contradiction to put in an API.
-     *
-     * Important, and it has to be. The component sets the `animation`
-     * shorthand inline, the shorthand resets play state to running, and an
-     * inline declaration outranks a stylesheet one every time but this.
-     */
-    motion:
-      "[&_*]:[animation-play-state:paused]! group-hover:[&_*]:[animation-play-state:running]!",
   },
-}
+};
 
 /**
  * Starts the cassette on hover, silently.
@@ -76,31 +72,31 @@ const PREVIEWS: Record<string, Preview> = {
  * without a click.
  */
 function useHoverPlayback() {
-  const ref = React.useRef<HTMLDivElement>(null)
+  const ref = React.useRef<HTMLDivElement>(null);
 
-  const audio = () => ref.current?.querySelector("audio") ?? null
+  const audio = () => ref.current?.querySelector("audio") ?? null;
 
   const start = () => {
-    const element = audio()
-    if (!element) return
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return
+    const element = audio();
+    if (!element) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
-    element.muted = true
-    element.currentTime = 0
+    element.muted = true;
+    element.currentTime = 0;
     /* Rejected when the file has not arrived yet, which is not an error worth
        reporting for a decoration. */
-    void element.play().catch(() => {})
-  }
+    void element.play().catch(() => {});
+  };
 
   const stop = () => {
-    const element = audio()
-    if (!element) return
-    element.pause()
+    const element = audio();
+    if (!element) return;
+    element.pause();
     /* Back to the start, so the next hover plays the same opening. */
-    element.currentTime = 0
-  }
+    element.currentTime = 0;
+  };
 
-  return { ref, start, stop }
+  return { ref, start, stop };
 }
 
 function CraftCard({
@@ -108,22 +104,34 @@ function CraftCard({
   locale,
   language,
 }: {
-  craft: Craft
-  locale: string
-  language: Language
+  craft: Craft;
+  locale: string;
+  language: Language;
 }) {
-  const preview = PREVIEWS[craft.slug]
-  const { ref, start, stop } = useHoverPlayback()
-  const plays = craft.slug === "cassette-audio-player"
+  const preview = PREVIEWS[craft.slug];
+  const { ref, start, stop } = useHoverPlayback();
+  /* One flag for both: the cassette starts playing and the loader starts
+     counting off the same moment of attention. */
+  const [active, setActive] = React.useState(false);
+
+  const enter = () => {
+    setActive(true);
+    start();
+  };
+
+  const leave = () => {
+    setActive(false);
+    stop();
+  };
 
   return (
     <li className="flex">
       <Link
         href={`/${locale}/crafts/${craft.slug}`}
-        onPointerEnter={plays ? start : undefined}
-        onPointerLeave={plays ? stop : undefined}
-        onFocus={plays ? start : undefined}
-        onBlur={plays ? stop : undefined}
+        onPointerEnter={enter}
+        onPointerLeave={leave}
+        onFocus={enter}
+        onBlur={leave}
         /* No scale on hover: the card holds still and the component inside it
            moves instead, which is the thing worth looking at. */
         className="group flex w-full flex-col overflow-hidden rounded-xl bg-preview-bg px-3.5 pt-3.5 pb-3.5 shadow-custom transition-[box-shadow,transform] duration-300 ease-[var(--ease-out-strong)] hover:shadow-card-lift active:scale-[0.985] motion-reduce:active:scale-100"
@@ -133,12 +141,15 @@ function CraftCard({
           with its own buttons, and hiding it from a screen reader while
           leaving those buttons in the tab order is worse than not hiding it.
         */}
-        <div inert className="relative h-40 w-full overflow-hidden rounded-lg bg-secondary">
+        <div
+          inert
+          className="relative h-40 w-full overflow-hidden rounded-lg bg-secondary"
+        >
           <div
             ref={ref}
             className={`absolute inset-0 transition-transform duration-500 ease-[var(--ease-out-strong)] ${preview?.motion ?? ""}`}
           >
-            {preview?.node}
+            {preview?.render(active)}
           </div>
         </div>
 
@@ -151,18 +162,31 @@ function CraftCard({
             className="ml-auto size-4 shrink-0 text-gray-1100 transition-transform duration-300 ease-[var(--ease-out-strong)] group-hover:translate-x-0.5"
           />
         </div>
-        <p className="mt-1 text-sm leading-5 text-gray-1100">{craft.description[language]}</p>
+        <p className="mt-1 text-sm leading-5 text-gray-1100">
+          {craft.description[language]}
+        </p>
       </Link>
     </li>
-  )
+  );
 }
 
-export function CraftList({ locale, language }: { locale: string; language: Language }) {
+export function CraftList({
+  locale,
+  language,
+}: {
+  locale: string;
+  language: Language;
+}) {
   return (
     <ul className="grid w-full grid-cols-1 gap-6 sm:grid-cols-2">
       {crafts.map((craft) => (
-        <CraftCard key={craft.slug} craft={craft} locale={locale} language={language} />
+        <CraftCard
+          key={craft.slug}
+          craft={craft}
+          locale={locale}
+          language={language}
+        />
       ))}
     </ul>
-  )
+  );
 }

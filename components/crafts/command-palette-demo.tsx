@@ -135,7 +135,8 @@ function Icon({ name }: { name: string }) {
   )
 }
 
-function buildCommands(): Command[] {
+/** Exported so the home card can drive the same set without the stage. */
+export function buildCommands(): Command[] {
   return [
     {
       id: "assign",

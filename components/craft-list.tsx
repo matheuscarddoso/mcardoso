@@ -4,7 +4,7 @@ import * as React from "react";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { CassettePlayer } from "@/components/crafts/cassette-player";
-import { CommandPaletteDemo } from "@/components/crafts/command-palette-demo";
+import { CommandPaletteAutoplay } from "@/components/crafts/command-palette-autoplay";
 import { LoadingState } from "@/components/crafts/loading-state";
 import { crafts, type Craft } from "@/lib/crafts";
 import type { Language } from "@/lib/locale";
@@ -44,11 +44,10 @@ const PREVIEWS: Record<string, Preview> = {
        illegible.
     */
     render: () => (
-      <div className="absolute top-6 left-1/2 w-full max-w-[24rem] -translate-x-1/2">
-        <CommandPaletteDemo interactive={false} />
+      <div className="absolute top-5 left-1/2 w-full max-w-[24rem] -translate-x-1/2">
+        <CommandPaletteAutoplay />
       </div>
     ),
-    motion: "motion-safe:group-hover:-translate-y-2",
   },
   "cassette-audio-player": {
     render: () => (
@@ -163,9 +162,14 @@ function CraftCard({
           with its own buttons, and hiding it from a screen reader while
           leaving those buttons in the tab order is worse than not hiding it.
         */}
+        {/*
+          No surface of its own. The component already brings one, and a tinted
+          box behind it stacked three greys where the eye wanted one: the card,
+          then this, then whatever the component paints.
+        */}
         <div
           inert
-          className={`relative w-full overflow-hidden rounded-lg bg-secondary ${preview?.height ?? "h-40"}`}
+          className={`relative w-full overflow-hidden rounded-lg ${preview?.height ?? "h-40"}`}
         >
           <div
             ref={ref}

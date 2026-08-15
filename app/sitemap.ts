@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next"
 import { articles, lastRevised } from "@/lib/articles"
+import { crafts } from "@/lib/crafts"
 import { LOCALES } from "@/lib/locale"
 import { DEFAULT_LOCALE, HREFLANG, absolute } from "@/lib/site"
 
@@ -29,6 +30,15 @@ const ROUTES: Route[] = [
     changeFrequency: "yearly",
     priority: 0.8,
     lastModified: lastRevised(article),
+  })),
+  /* A craft is a live component rather than a piece of writing, so it can
+     change without the prose around it changing. Monthly, and a shade below
+     the articles, which are what someone searching is usually after. */
+  ...crafts.map<Route>((craft) => ({
+    path: `/crafts/${craft.slug}`,
+    changeFrequency: "monthly",
+    priority: 0.7,
+    lastModified: craft.publishedAt,
   })),
 ]
 

@@ -22,6 +22,7 @@ import {
 import { SocialLinks } from "@/components/social-links";
 import { SectionDivider } from "@/components/section-divider";
 import { Skills } from "@/components/skills";
+import { CraftList } from "@/components/craft-list";
 import { localeToLanguage } from "@/lib/locale";
 import { switchLocale } from "@/lib/switch-locale";
 import { HEADER_SOCIAL } from "@/lib/site";
@@ -48,7 +49,6 @@ const translations = {
     title: "Engenheiro de Software",
     projects: "Projetos",
     crafts: "Crafts",
-    craftsSoon: "em breve",
     craftsIntro: "Componentes que eu construo e solto aqui, um de cada vez.",
     contributions: "Contribuições",
     writing: "Escrita",
@@ -69,7 +69,6 @@ const translations = {
     title: "Software Engineer",
     projects: "Projects",
     crafts: "Crafts",
-    craftsSoon: "soon",
     craftsIntro: "Components I build and drop here, one at a time.",
     contributions: "Contributions",
     writing: "Writing",
@@ -90,7 +89,6 @@ const translations = {
     title: "Ingeniero de Software",
     projects: "Proyectos",
     crafts: "Crafts",
-    craftsSoon: "pronto",
     craftsIntro: "Componentes que construyo y suelto aquí, uno a uno.",
     contributions: "Contribuciones",
     writing: "Escritura",
@@ -744,22 +742,15 @@ export function HomeContent({
 
         <SectionDivider className="my-10" />
 
-        {/* Empty on purpose, and saying so. A heading over nothing reads as a
-            section that failed to load; the badge is what makes it read as one
-            that has not opened yet. */}
         <section aria-labelledby="crafts-heading" className="w-full">
-          <div className="mb-2 flex w-full items-center gap-2">
-            <h2 id="crafts-heading" className="font-medium text-gray-1200">
-              {t.crafts}
-            </h2>
-            {/* Outside the heading rather than inside it: "Crafts" is what this
-                section is called, and a screen reader announcing "Crafts soon"
-                as the name is a worse trade than one extra element. */}
-            <span className="shrink-0 rounded-full px-1.5 py-0.5 text-xs leading-5 text-gray-1100 shadow-custom">
-              {t.craftsSoon}
-            </span>
-          </div>
-          <p className="paragraph">{t.craftsIntro}</p>
+          <h2
+            id="crafts-heading"
+            className="mb-1 flex w-full items-center font-medium text-gray-1200"
+          >
+            {t.crafts}
+          </h2>
+          <p className="mb-5 text-sm text-gray-1100">{t.craftsIntro}</p>
+          <CraftList locale={locale} language={language} />
         </section>
 
         {/* Dropped entirely when the calendar can't be read — an empty grid

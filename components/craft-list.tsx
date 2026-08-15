@@ -3,6 +3,7 @@
 import * as React from "react";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
+import { AnimatePresence, motion } from "motion/react";
 import { CassettePlayer } from "@/components/crafts/cassette-player";
 import { CommandPaletteAutoplay } from "@/components/crafts/command-palette-autoplay";
 import { LoadingState } from "@/components/crafts/loading-state";
@@ -34,6 +35,54 @@ type Preview = {
   /** Height of the preview box. Taller components need more of a look. */
   height?: string;
 };
+
+const viewLabel: Record<Language, string> = {
+  PT: "Ver",
+  EN: "View",
+  ES: "Ver",
+};
+
+/* Apple-ish spring, the same register as the photo deck's lightbox. */
+const SPRING = { type: "spring" as const, duration: 0.42, bounce: 0.28 };
+/* The veil is a plain ease: a wash that overshoots reads as a flicker. */
+const VEIL = { duration: 0.22, ease: [0.23, 1, 0.32, 1] as const };
+
+/**
+ * The blur and the button that come up over a preview on hover.
+ *
+ * Not a button, though it is shaped like one. The whole card is already the
+ * link, and a real button inside an anchor is invalid and gives a keyboard two
+ * stops where the reader sees one thing. It is painted, hidden from screen
+ * readers, and the card underneath does the work.
+ *
+ * Mounted only while hovered, so the backdrop filter is not a compositing cost
+ * the page pays at rest.
+ */
+function ViewVeil({ label }: { label: string }) {
+  return (
+    <motion.div
+      aria-hidden
+      /* Opacity is what fades the blur in: `backdrop-filter` composites
+         through the element's own opacity, so the two animate as one and the
+         browser never has to interpolate a filter string. */
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={VEIL}
+      className="absolute inset-0 z-10 grid place-items-center bg-preview-bg/40 backdrop-blur-[6px]"
+    >
+      <motion.span
+        initial={{ opacity: 0, scale: 0.9, filter: "blur(4px)" }}
+        animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
+        exit={{ opacity: 0, scale: 0.94, filter: "blur(4px)" }}
+        transition={SPRING}
+        className="rounded-full bg-preview-bg px-4 py-2 text-sm font-medium text-gray-1200 shadow-card-lift"
+      >
+        {label}
+      </motion.span>
+    </motion.div>
+  );
+}
 
 const PREVIEWS: Record<string, Preview> = {
   "command-palette": {
@@ -155,27 +204,41 @@ function CraftCard({
   const ref = React.useRef<HTMLDivElement>(null);
   const onScreen = useOnScreen(ref);
   useVisiblePlayback(ref, onScreen);
+  /* Focus counts as hover here: a keyboard should see the same affordance a
+     pointer does. */
+  const [hovered, setHovered] = React.useState(false);
 
   return (
     <li className={`flex${preview?.wide ? " sm:col-span-2" : ""}`}>
       <Link
         href={`/${locale}/crafts/${craft.slug}`}
+        onPointerEnter={() => setHovered(true)}
+        onPointerLeave={() => setHovered(false)}
+        onFocus={() => setHovered(true)}
+        onBlur={() => setHovered(false)}
         /* No scale on hover: the card holds still and the component inside it
            moves instead, which is the thing worth looking at. */
         className="group flex w-full flex-col overflow-hidden rounded-xl bg-preview-bg px-3.5 pt-3.5 pb-3.5 shadow-custom transition-[box-shadow,transform] duration-300 ease-[var(--ease-out-strong)] hover:shadow-card-lift active:scale-[0.985] motion-reduce:active:scale-100"
       >
         {/*
-          `inert` rather than `aria-hidden`: the preview can be a whole player
-          with its own buttons, and hiding it from a screen reader while
-          leaving those buttons in the tab order is worse than not hiding it.
-        */}
-        {/*
-          No surface of its own. The component already brings one, and a tinted
-          box behind it stacked three greys where the eye wanted one: the card,
-          then this, then whatever the component paints.
+          Both `inert` and `aria-hidden`, and it takes both.
+
+          `inert` removes the preview from the tab order, which it does: three
+          cards are three tab stops, and the player's buttons and the palette's
+          input are all skipped. What it does not do here is leave the
+          accessibility tree, so the link's accessible name was computed from
+          everything inside it and came out as a paragraph: "Remove Assign to,
+          also removes later chips Change June Park Building..." before it ever
+          reached the title. `aria-hidden` fixes that, and it is only safe to
+          use because `inert` has already made sure nothing in here can be
+          focused.
+
+          No surface of its own, either. The component brings one, and a tinted
+          box behind it stacked three greys where the eye wanted one.
         */}
         <div
           inert
+          aria-hidden
           className={`relative w-full overflow-hidden rounded-lg ${preview?.height ?? "h-40"}`}
         >
           <div
@@ -184,6 +247,10 @@ function CraftCard({
           >
             {preview?.render(onScreen)}
           </div>
+
+          <AnimatePresence>
+            {hovered && <ViewVeil label={viewLabel[language]} />}
+          </AnimatePresence>
         </div>
 
         <div className="mt-3 flex items-center gap-2">

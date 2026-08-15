@@ -16,15 +16,18 @@ import type { Language } from "@/lib/locale";
  * component goes stale the first time the component changes and nobody
  * notices for a month.
  *
- * What hovering does is the craft's own business, because what is worth
- * showing differs: the cassette has something to play, and the loader is
- * already an animation and only needs permission to run.
+ * They all run on their own, and what running means is the craft's own
+ * business: the cassette plays, the loader counts, the palette types. What
+ * they share is when. Nothing starts until its card is on screen, because the
+ * section sits near the foot of a long page and most visits never reach it.
+ *
+ * Hovering is left to say something else: the card lifts what is inside it.
  */
 
 type Preview = {
-  /** `active` is true while the card is hovered or focused. */
+  /** `active` is true while the card is on screen. */
   render: (active: boolean) => React.ReactNode;
-  /** Applied to the wrapper the card hovers. */
+  /** Applied to the wrapper, for what hovering the card should do to it. */
   motion?: string;
   /** Spans both columns, for a component too wide to read at half width. */
   wide?: boolean;
@@ -65,11 +68,11 @@ const PREVIEWS: Record<string, Preview> = {
   },
   "loading-state": {
     /*
-     * At rest until the card is hovered, through the component's own `running`
-     * prop rather than by pausing its animations from outside. Pausing with
-     * CSS stops what moves and leaves the clock counting a wait nobody is
-     * waiting, and it takes an `!important` to beat the inline `animation`
-     * shorthand. The prop stops all three parts and needs no fight.
+     * Runs while the card is on screen, through the component's own `running`
+     * prop rather than by pausing its animations from outside. The prop stops
+     * all three parts at once, including the clock, which CSS cannot reach;
+     * and it starts the count from zero each time the card comes back, which
+     * is the truth about how long this particular wait has been going.
      */
     render: (active) => (
       /* Centred rather than cropped: small enough to show whole, and a loader
@@ -82,42 +85,61 @@ const PREVIEWS: Record<string, Preview> = {
 };
 
 /**
- * Starts the cassette on hover, silently.
+ * Observes one element, so a preview can run only while it is worth running.
+ */
+function useOnScreen(ref: React.RefObject<HTMLElement | null>) {
+  const [onScreen, setOnScreen] = React.useState(false);
+
+  React.useEffect(() => {
+    const node = ref.current;
+    if (!node) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => setOnScreen(entry.isIntersecting),
+      /* A little early, so a card is already moving by the time it arrives
+         rather than starting under the reader's eyes. */
+      { rootMargin: "120px" },
+    );
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, [ref]);
+
+  return onScreen;
+}
+
+/**
+ * Plays the cassette while its card is on screen, silently.
  *
  * Reaching into the DOM for the `audio` element rather than adding a prop: the
- * component's job is to play what someone asked it to play, and "start when a
- * card two levels up is hovered" is the card's idea. It stays here.
+ * component's job is to play what someone asked it to play, and "play while a
+ * card two levels up is visible" is the card's idea. It stays here.
  *
- * Muted, always. A page that makes noise because a pointer crossed it is a
- * page people close, and muted playback is also the only kind browsers allow
- * without a click.
+ * Muted, always. A page that makes noise on its own is a page people close,
+ * and muted is also the only playback browsers allow without a click. Nothing
+ * is fetched until the card comes into view, so a visit that stops short of
+ * this section costs nothing.
  */
-function useHoverPlayback() {
-  const ref = React.useRef<HTMLDivElement>(null);
+function useVisiblePlayback(
+  ref: React.RefObject<HTMLElement | null>,
+  playing: boolean,
+) {
+  React.useEffect(() => {
+    const audio = ref.current?.querySelector("audio");
+    if (!audio) return;
 
-  const audio = () => ref.current?.querySelector("audio") ?? null;
+    if (
+      !playing ||
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches
+    ) {
+      audio.pause();
+      return;
+    }
 
-  const start = () => {
-    const element = audio();
-    if (!element) return;
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-
-    element.muted = true;
-    element.currentTime = 0;
-    /* Rejected when the file has not arrived yet, which is not an error worth
+    audio.muted = true;
+    /* Rejected while the file is still arriving, which is not an error worth
        reporting for a decoration. */
-    void element.play().catch(() => {});
-  };
-
-  const stop = () => {
-    const element = audio();
-    if (!element) return;
-    element.pause();
-    /* Back to the start, so the next hover plays the same opening. */
-    element.currentTime = 0;
-  };
-
-  return { ref, start, stop };
+    void audio.play().catch(() => {});
+  }, [ref, playing]);
 }
 
 function CraftCard({
@@ -130,29 +152,14 @@ function CraftCard({
   language: Language;
 }) {
   const preview = PREVIEWS[craft.slug];
-  const { ref, start, stop } = useHoverPlayback();
-  /* One flag for both: the cassette starts playing and the loader starts
-     counting off the same moment of attention. */
-  const [active, setActive] = React.useState(false);
-
-  const enter = () => {
-    setActive(true);
-    start();
-  };
-
-  const leave = () => {
-    setActive(false);
-    stop();
-  };
+  const ref = React.useRef<HTMLDivElement>(null);
+  const onScreen = useOnScreen(ref);
+  useVisiblePlayback(ref, onScreen);
 
   return (
     <li className={`flex${preview?.wide ? " sm:col-span-2" : ""}`}>
       <Link
         href={`/${locale}/crafts/${craft.slug}`}
-        onPointerEnter={enter}
-        onPointerLeave={leave}
-        onFocus={enter}
-        onBlur={leave}
         /* No scale on hover: the card holds still and the component inside it
            moves instead, which is the thing worth looking at. */
         className="group flex w-full flex-col overflow-hidden rounded-xl bg-preview-bg px-3.5 pt-3.5 pb-3.5 shadow-custom transition-[box-shadow,transform] duration-300 ease-[var(--ease-out-strong)] hover:shadow-card-lift active:scale-[0.985] motion-reduce:active:scale-100"
@@ -175,7 +182,7 @@ function CraftCard({
             ref={ref}
             className={`absolute inset-0 transition-transform duration-500 ease-[var(--ease-out-strong)] ${preview?.motion ?? ""}`}
           >
-            {preview?.render(active)}
+            {preview?.render(onScreen)}
           </div>
         </div>
 

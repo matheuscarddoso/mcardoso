@@ -21,6 +21,7 @@ import {
 } from "@/components/link-preview";
 import { SocialLinks } from "@/components/social-links";
 import { SectionDivider } from "@/components/section-divider";
+import { Skills } from "@/components/skills";
 import { localeToLanguage } from "@/lib/locale";
 import { switchLocale } from "@/lib/switch-locale";
 import { HEADER_SOCIAL } from "@/lib/site";
@@ -778,6 +779,12 @@ export function HomeContent({
             </section>
           </>
         )}
+
+        <SectionDivider className="my-10" />
+
+        <section aria-labelledby="skills-heading" className="w-full">
+          <Skills language={language} />
+        </section>
 
         <SectionDivider className="my-10" />
 

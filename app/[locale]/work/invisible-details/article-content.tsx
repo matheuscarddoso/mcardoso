@@ -309,28 +309,27 @@ const translations = {
     title: "Detalhes invisíveis que fazem interfaces parecerem certas",
     intro: (
       <>
-        A maioria dos detalhes de uma interface os usuários nunca percebem
-        conscientemente. Esse é o ponto. Quando um botão responde exatamente
-        como alguém espera, quando uma transição não chama atenção, quando tudo
-        simplesmente {c("funciona")}, isso é o resultado de centenas de decisões
-        invisíveis trabalhando juntas.
+        Quase nada disso aqui alguém percebe. Um botão que responde do jeito que
+        você esperava, uma transição que não pede atenção nenhuma: o que fica é
+        só a sensação de que {c("funciona")}. Por trás são algumas centenas de
+        decisões pequenas, e o prêmio por acertar todas é ninguém conseguir
+        apontar uma.
       </>
     ),
     whyDetails: "Por que detalhes importam",
     whyDetailsP1: (
       <>
-        Em um mundo onde todo software é &quot;bom o suficiente&quot;, gosto é o
-        diferencial. As pessoas escolhem ferramentas baseadas na experiência
-        geral, não apenas na funcionalidade. Beleza é subutilizada em software.
-        Use-a como alavanca.
+        Hoje quase todo software é bom o suficiente, e é justamente por isso que
+        o gosto decide. As pessoas escolhem ferramenta pela sensação do
+        conjunto, não pela lista de recursos. Beleza continua sendo pouco usada
+        em software, o que faz dela uma vantagem barata.
       </>
     ),
     whyDetailsP2: (
       <>
-        Bom gosto não é preferência pessoal. É um instinto treinado: a
-        habilidade de ver além do óbvio e reconhecer o que eleva. Você o
-        desenvolve cercando-se de trabalhos excelentes e pensando profundamente
-        sobre por que algo parece bom.
+        Gosto se treina. Você constrói o seu convivendo com trabalho melhor que
+        o seu e perguntando, toda vez que alguma coisa parecer boa, o que
+        exatamente está fazendo aquilo.
       </>
     ),
     animations: "Animações",
@@ -402,11 +401,11 @@ const translations = {
     typography: "Tipografia",
     typographyP1: (
       <>
-        Três regras simples que fazem toda a diferença:{" "}
-        {c("text-wrap: balance")} em headings para quebras de linha
-        equilibradas, {c("text-wrap: pretty")} em parágrafos para evitar órfãos,
-        e {c("font-variant-numeric: tabular-nums")} em qualquer número que muda
-        dinamicamente para evitar layout shift.
+        Três regras, e cada uma é uma linha de CSS: {c("text-wrap: balance")} em
+        headings, para quebras equilibradas; {c("text-wrap: pretty")} em
+        parágrafos, para não sobrar órfã; e{" "}
+        {c("font-variant-numeric: tabular-nums")} em qualquer número que muda,
+        para o layout parar de pular.
       </>
     ),
     typographyP2: (
@@ -444,28 +443,27 @@ const translations = {
     title: "Invisible details that make interfaces feel right",
     intro: (
       <>
-        Most interface details users never consciously notice. That is the
-        point. When a button responds exactly as someone expects, when a
-        transition doesn&apos;t draw attention, when everything just{" "}
-        {c("works")}, that is the result of hundreds of invisible decisions
-        working together.
+        Almost none of this gets noticed. A button that answers the way you
+        expected, a transition that never asks for your attention: what is left
+        is the sense that it {c("works")}. Behind that are a few hundred small
+        decisions, and the reward for getting them right is that nobody can
+        point to one.
       </>
     ),
     whyDetails: "Why details matter",
     whyDetailsP1: (
       <>
-        In a world where everyone&apos;s software is &quot;good enough,&quot;
-        taste is the differentiator. People select tools based on the overall
-        experience, not just functionality. Beauty is underutilized in software.
-        Use it as leverage.
+        Almost all software is good enough now, which is exactly why taste
+        decides. People pick tools on how the whole thing feels, not on the
+        feature list. Beauty is still barely used in software, which makes it a
+        cheap advantage.
       </>
     ),
     whyDetailsP2: (
       <>
-        Good taste is not personal preference. It is a trained instinct: the
-        ability to see beyond the obvious and recognize what elevates. You
-        develop it by surrounding yourself with great work and thinking deeply
-        about why something feels good.
+        Taste can be trained. You build yours by spending time around work
+        better than your own, and by asking, every time something feels right,
+        what exactly is doing that.
       </>
     ),
     animations: "Animations",
@@ -537,11 +535,11 @@ const translations = {
     typography: "Typography",
     typographyP1: (
       <>
-        Three simple rules that make all the difference:{" "}
-        {c("text-wrap: balance")} on headings for even line breaks,{" "}
-        {c("text-wrap: pretty")} on paragraphs to avoid orphans, and{" "}
-        {c("font-variant-numeric: tabular-nums")} on any dynamically changing
-        number to prevent layout shift.
+        Three rules, one line of CSS each: {c("text-wrap: balance")} on
+        headings, for even line breaks; {c("text-wrap: pretty")} on paragraphs,
+        so no word is left alone on the last line; and{" "}
+        {c("font-variant-numeric: tabular-nums")} on any number that changes, so
+        the layout stops jumping.
       </>
     ),
     typographyP2: (
@@ -579,28 +577,26 @@ const translations = {
     title: "Detalles invisibles que hacen que las interfaces se sientan bien",
     intro: (
       <>
-        La mayoría de los detalles de una interfaz los usuarios nunca los notan
-        conscientemente. Ese es el punto. Cuando un botón responde exactamente
-        como alguien espera, cuando una transición no llama la atención, cuando
-        todo simplemente {c("funciona")}, eso es el resultado de cientos de
-        decisiones invisibles trabajando juntas.
+        Casi nada de esto se nota. Un botón que responde como esperabas, una
+        transición que no pide atención: lo que queda es la sensación de que{" "}
+        {c("funciona")}. Detrás hay unos cientos de decisiones pequeñas, y el
+        premio por acertarlas todas es que nadie pueda señalar ninguna.
       </>
     ),
     whyDetails: "Por qué importan los detalles",
     whyDetailsP1: (
       <>
-        En un mundo donde todo software es &quot;suficientemente bueno,&quot; el
-        gusto es el diferencial. Las personas eligen herramientas basándose en
-        la experiencia general, no solo en la funcionalidad. La belleza está
-        subutilizada en software. Úsala como palanca.
+        Hoy casi todo el software es suficientemente bueno, y por eso mismo
+        decide el gusto. La gente elige herramienta por cómo se siente el
+        conjunto, no por la lista de funciones. La belleza sigue estando poco
+        usada en software, lo que la vuelve una ventaja barata.
       </>
     ),
     whyDetailsP2: (
       <>
-        El buen gusto no es preferencia personal. Es un instinto entrenado: la
-        habilidad de ver más allá de lo obvio y reconocer lo que eleva. Lo
-        desarrollas rodeándote de trabajo excelente y pensando profundamente
-        sobre por qué algo se siente bien.
+        El gusto se entrena. Construyes el tuyo pasando tiempo con trabajo mejor
+        que el tuyo y preguntando, cada vez que algo se sienta bien, qué es
+        exactamente lo que lo está logrando.
       </>
     ),
     animations: "Animaciones",
@@ -671,11 +667,11 @@ const translations = {
     typography: "Tipografía",
     typographyP1: (
       <>
-        Tres reglas simples que hacen toda la diferencia:{" "}
-        {c("text-wrap: balance")} en headings para quiebres de línea
-        equilibrados, {c("text-wrap: pretty")} en párrafos para evitar
-        huérfanos, y {c("font-variant-numeric: tabular-nums")} en cualquier
-        número que cambia dinámicamente para evitar layout shift.
+        Tres reglas, una línea de CSS cada una: {c("text-wrap: balance")} en
+        headings, para quiebres equilibrados; {c("text-wrap: pretty")} en
+        párrafos, para que no quede una palabra sola al final; y{" "}
+        {c("font-variant-numeric: tabular-nums")} en cualquier número que
+        cambia, para que el layout deje de saltar.
       </>
     ),
     typographyP2: (

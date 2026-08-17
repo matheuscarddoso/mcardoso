@@ -14,8 +14,10 @@ export default function manifest(): MetadataRoute.Manifest {
     // Not "standalone" — this is a site to read, and hiding the URL bar takes
     // away the address and the back button for no gain.
     display: "browser",
-    background_color: "#111111",
-    theme_color: "#111111",
+    /* Sampled from the corner of the icon, so an installed shortcut has no
+       seam between the artwork and the surface behind it. */
+    background_color: "#17181b",
+    theme_color: "#17181b",
     icons: [
       { src: "/icons/icon-192.png", sizes: "192x192", type: "image/png" },
       { src: "/icons/icon-512.png", sizes: "512x512", type: "image/png" },

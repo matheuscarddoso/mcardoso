@@ -312,7 +312,10 @@ function ResumeButton({
        */
       aria-expanded={canOpen ? isOpen : undefined}
       aria-controls={canOpen ? DOCUMENT_PANEL_ID : undefined}
-      className="inline-flex w-fit items-center gap-2 rounded-xl bg-gray-1200 py-2 pr-3.5 pl-3 text-sm font-medium text-preview-bg shadow-custom transition-[box-shadow,transform] duration-300 ease-[var(--ease-out-strong)] hover:scale-[1.02] hover:shadow-card-lift active:scale-[0.98] motion-reduce:hover:scale-100 motion-reduce:active:scale-100"
+      /* A little more room at the ends than the rounded rectangle needed: a
+         full radius curves in where the text sits, so the same padding reads
+         as tighter than it is. */
+      className="inline-flex w-fit items-center gap-2 rounded-full bg-gray-1200 py-2 pr-4.5 pl-3.5 text-sm font-medium text-preview-bg shadow-custom transition-[box-shadow,transform] duration-300 ease-[var(--ease-out-strong)] hover:scale-[1.02] hover:shadow-card-lift active:scale-[0.98] motion-reduce:hover:scale-100 motion-reduce:active:scale-100"
     >
       {/* No colour of its own — it takes the button's ink. */}
       <FileTextIcon aria-hidden loop size={18} className="shrink-0" />

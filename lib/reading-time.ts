@@ -11,7 +11,7 @@ export const READING_MINUTES: Record<string, Record<Language, number>> = {
   "agent-loops-harness-graphs": { PT: 9, EN: 9, ES: 9 },
   "ai-bubble": { PT: 7, EN: 7, ES: 7 },
   "ai-ml-github-repos": { PT: 3, EN: 3, ES: 3 },
-  "claude-code-skills": { PT: 4, EN: 4, ES: 4 },
+  "claude-code-skills": { PT: 4, EN: 5, ES: 5 },
   "invisible-details": { PT: 3, EN: 3, ES: 3 },
   "oklch-colors": { PT: 2, EN: 2, ES: 2 },
   "saving-claude-tokens": { PT: 2, EN: 2, ES: 2 },

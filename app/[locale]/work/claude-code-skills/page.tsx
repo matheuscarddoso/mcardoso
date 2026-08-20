@@ -60,7 +60,15 @@ vermelho, o corte fica. Ficou verde, o corte tocou a causa.
   --------------------------------------------------------------
   ask           571         571           0       47
   grill         946         946           0       90
-  designer      833         1576          1       94
+  a11y          1226        3296          3       98
+  color         1210        3194          3       72
+  designer      1341        2584          2       89
+  layout        1345        2720          2       85
+  microcopy     1137        1965          1       56
+  polish        1378        3376          3       95
+  teardown      1159        1796          1       80
+  typography    1230        2485          2       79
+  variant       1245        1857          1       77
   deploy        705         1240          1       75
   engineer      1258        4613          6      105
   investigate   849         849           0       79
@@ -71,8 +79,8 @@ vermelho, o corte fica. Ficou verde, o corte tocou a causa.
   tdd           737         737           0       61
   --------------------------------------------------------------
 
-  Sempre carregado (soma das descrições): 899 tokens de 1600
-  Chamada mais cara: 1258 tokens`}
+  Sempre carregado (soma das descrições): 1550 tokens de 1600
+  Chamada mais cara: 1378 tokens`}
           />
         }
       />

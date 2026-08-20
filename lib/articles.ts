@@ -41,19 +41,19 @@ export const articles: Article[] = [
       ES: "Las skills que uso todos los días",
     },
     description: {
-      PT: "Onze skills pro Claude Code, num repo público",
-      EN: "Eleven skills for Claude Code, in a public repo",
-      ES: "Once skills para Claude Code, en un repo público",
+      PT: "Dezenove skills pro Claude Code, metade interface",
+      EN: "Nineteen skills for Claude Code, half of them interface",
+      ES: "Diecinueve skills para Claude Code, mitad interfaz",
     },
     seoTitle: {
-      PT: "Skills do Claude Code: as onze que eu uso",
-      EN: "Claude Code skills: the eleven I actually use",
-      ES: "Skills de Claude Code: las once que uso",
+      PT: "Skills do Claude Code: as dezenove que eu uso",
+      EN: "Claude Code skills: the nineteen I actually use",
+      ES: "Skills de Claude Code: las diecinueve que uso",
     },
     seoDescription: {
-      PT: "Onze skills de engenharia pro Claude Code, com orçamento de tokens que quebra o build. O que entra no corpo, o que fica atrás de link, e quem pode chamar cada uma.",
-      EN: "Eleven engineering skills for Claude Code, with a token budget that breaks the build. What goes in the body, what sits behind a link, and who gets to call each one.",
-      ES: "Once skills de ingeniería para Claude Code, con presupuesto de tokens que rompe el build. Qué va en el cuerpo, qué queda detrás de un link y quién llama a cada una.",
+      PT: "Dezenove skills pro Claude Code, metade engenharia e metade interface, com orçamento de tokens que quebra o build. O que entra no corpo, o que fica atrás de link, e quem pode chamar cada uma.",
+      EN: "Nineteen skills for Claude Code, half engineering and half interface, with a token budget that breaks the build. What goes in the body, what sits behind a link, and who gets to call each one.",
+      ES: "Diecinueve skills para Claude Code, mitad ingeniería y mitad interfaz, con presupuesto de tokens que rompe el build. Qué va en el cuerpo, qué queda detrás de un link y quién llama a cada una.",
     },
   },
   {

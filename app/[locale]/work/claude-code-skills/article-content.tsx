@@ -80,117 +80,91 @@ const GROUPS: {
   skills: { name: string; line: Record<Language, string> }[];
 }[] = [
   {
-    id: "alinhamento",
-    label: {
-      PT: "Antes de escrever código",
-      EN: "Before writing code",
-      ES: "Antes de escribir código",
-    },
+    id: "interface",
+    label: { PT: "Interface", EN: "Interface", ES: "Interfaz" },
     skills: [
-      {
-        name: "ask",
-        line: {
-          PT: "Descreva a situação e ele diz qual das outras dez resolve.",
-          EN: "Describe the situation and it says which of the other ten fits.",
-          ES: "Describe la situación y dice cuál de las otras diez resuelve.",
-        },
-      },
-      {
-        name: "grill",
-        line: {
-          PT: "Entrevista dura antes de construir, uma pergunta por vez.",
-          EN: "A hard interview before building, one question at a time.",
-          ES: "Entrevista dura antes de construir, una pregunta a la vez.",
-        },
-      },
+      { name: "designer", line: {
+        PT: "Coordena as oito abaixo e devolve um veredito só, ranqueado.",
+        EN: "Coordinates the eight below and returns one ranked verdict.",
+        ES: "Coordina las ocho de abajo y devuelve un veredicto único." } },
+      { name: "layout", line: {
+        PT: "Estrutura, agrupamento, ordem de leitura, breakpoint que vem do conteúdo.",
+        EN: "Structure, grouping, reading order, breakpoints that come from content.",
+        ES: "Estructura, agrupación, orden de lectura, breakpoints del contenido." } },
+      { name: "typography", line: {
+        PT: "Escolha de fonte, escala, medida, altura de linha, truncamento.",
+        EN: "Choosing type, scale, measure, line height, truncation.",
+        ES: "Elección de fuente, escala, medida, altura de línea, truncamiento." } },
+      { name: "color", line: {
+        PT: "Paleta em oklch, cor semântica, contraste, token, tema.",
+        EN: "Palettes in oklch, semantic color, contrast, tokens, theming.",
+        ES: "Paleta en oklch, color semántico, contraste, token, tema." } },
+      { name: "a11y", line: {
+        PT: "Semântica, foco, teclado, ARIA, formulário, área de toque.",
+        EN: "Semantics, focus, keyboard, ARIA, forms, hit areas.",
+        ES: "Semántica, foco, teclado, ARIA, formulario, área de toque." } },
+      { name: "polish", line: {
+        PT: "O acabamento: raio, sombra, superfície, ícone, movimento.",
+        EN: "The finish: radius, shadow, surface, icons, motion.",
+        ES: "El acabado: radio, sombra, superficie, icono, movimiento." } },
+      { name: "microcopy", line: {
+        PT: "Texto de interface, de rótulo de botão a erro e estado vazio.",
+        EN: "Interface copy, from button labels to errors and empty states.",
+        ES: "Texto de interfaz, del rótulo de botón al error y estado vacío." } },
+      { name: "variant", line: {
+        PT: "Três versões diferentes atrás de um seletor na página real.",
+        EN: "Three different versions behind a picker in the real page.",
+        ES: "Tres versiones distintas detrás de un selector en la página real." } },
+      { name: "teardown", line: {
+        PT: "Desmonta interface de terceiro e explica o mecanismo.",
+        EN: "Takes someone else's interface apart and explains the mechanism.",
+        ES: "Desarma interfaz de terceros y explica el mecanismo." } },
     ],
   },
   {
     id: "engenharia",
-    label: {
-      PT: "Trabalho de código",
-      EN: "Code work",
-      ES: "Trabajo de código",
-    },
+    label: { PT: "Engenharia", EN: "Engineering", ES: "Ingeniería" },
     skills: [
-      {
-        name: "kickoff",
-        line: {
-          PT: "Projeto novo: stack com justificativa, segurança no dia um.",
-          EN: "New project: stack with a written reason, security on day one.",
-          ES: "Proyecto nuevo: stack justificado, seguridad el día uno.",
-        },
-      },
-      {
-        name: "tdd",
-        line: {
-          PT: "Vermelho, verde, refatora, uma fatia vertical por vez.",
-          EN: "Red, green, refactor, one vertical slice at a time.",
-          ES: "Rojo, verde, refactoriza, una porción vertical a la vez.",
-        },
-      },
-      {
-        name: "investigate",
-        line: {
-          PT: "Bug difícil em seis fases, com trava entre elas.",
-          EN: "Hard bugs in six phases, with a gate between each.",
-          ES: "Bug difícil en seis fases, con traba entre ellas.",
-        },
-      },
-      {
-        name: "review",
-        line: {
-          PT: "Diff em dois eixos que não se contaminam: padrão e spec.",
-          EN: "The diff on two axes that never pollute each other: standards and spec.",
-          ES: "Diff en dos ejes que no se contaminan: estándar y spec.",
-        },
-      },
-      {
-        name: "engineer",
-        line: {
-          PT: "Auditoria em todas as camadas, a partir de um mínimo inegociável.",
-          EN: "Every layer audited, starting from a non-negotiable minimum.",
-          ES: "Auditoría en todas las capas, desde un mínimo no negociable.",
-        },
-      },
-      {
-        name: "qa",
-        line: {
-          PT: "Cinco checks, fluxos de verdade, e o que deveria estar testado.",
-          EN: "Five checks, real flows, and what should have been tested.",
-          ES: "Cinco checks, flujos reales, y lo que debería estar probado.",
-        },
-      },
-      {
-        name: "security",
-        line: {
-          PT: "Três níveis, e o terceiro encadeia achados até virarem críticos.",
-          EN: "Three levels, and the third chains findings until they turn critical.",
-          ES: "Tres niveles, y el tercero encadena hallazgos hasta volverlos críticos.",
-        },
-      },
-      {
-        name: "deploy",
-        line: {
-          PT: "Trava de segurança, e reprodutibilidade a partir de clone limpo.",
-          EN: "A security gate, and reproducibility from a clean clone.",
-          ES: "Traba de seguridad, y reproducibilidad desde un clon limpio.",
-        },
-      },
-    ],
-  },
-  {
-    id: "design",
-    label: { PT: "Interface", EN: "Interface", ES: "Interfaz" },
-    skills: [
-      {
-        name: "designer",
-        line: {
-          PT: "Seis eixos, e reprovação automática pro que parece template.",
-          EN: "Six axes, and an automatic fail for anything that looks templated.",
-          ES: "Seis ejes, y rechazo automático para lo que parece plantilla.",
-        },
-      },
+      { name: "grill", line: {
+        PT: "Entrevista dura antes de construir, uma pergunta por vez.",
+        EN: "A hard interview before building, one question at a time.",
+        ES: "Entrevista dura antes de construir, una pregunta a la vez." } },
+      { name: "kickoff", line: {
+        PT: "Projeto novo: stack com justificativa, segurança no dia um.",
+        EN: "New project: stack with a written reason, security on day one.",
+        ES: "Proyecto nuevo: stack justificado, seguridad el día uno." } },
+      { name: "tdd", line: {
+        PT: "Vermelho, verde, refatora, uma fatia vertical por vez.",
+        EN: "Red, green, refactor, one vertical slice at a time.",
+        ES: "Rojo, verde, refactoriza, una porción vertical a la vez." } },
+      { name: "investigate", line: {
+        PT: "Bug difícil em seis fases, com trava entre elas.",
+        EN: "Hard bugs in six phases, with a gate between each.",
+        ES: "Bug difícil en seis fases, con traba entre ellas." } },
+      { name: "review", line: {
+        PT: "Diff em dois eixos que não se contaminam: padrão e spec.",
+        EN: "The diff on two axes that never pollute each other.",
+        ES: "Diff en dos ejes que no se contaminan: estándar y spec." } },
+      { name: "engineer", line: {
+        PT: "Auditoria em todas as camadas, a partir de um mínimo inegociável.",
+        EN: "Every layer audited, from a non-negotiable minimum.",
+        ES: "Auditoría en todas las capas, desde un mínimo no negociable." } },
+      { name: "qa", line: {
+        PT: "Cinco checks, fluxos de verdade, e o que deveria estar testado.",
+        EN: "Five checks, real flows, and what should have been tested.",
+        ES: "Cinco checks, flujos reales, y lo que debería estar probado." } },
+      { name: "security", line: {
+        PT: "Três níveis, e o terceiro encadeia achados até virarem críticos.",
+        EN: "Three levels, and the third chains findings until they turn critical.",
+        ES: "Tres niveles, y el tercero encadena hallazgos hasta volverlos críticos." } },
+      { name: "deploy", line: {
+        PT: "Trava de segurança, e reprodutibilidade a partir de clone limpo.",
+        EN: "A security gate, and reproducibility from a clean clone.",
+        ES: "Traba de seguridad, y reproducibilidad desde un clon limpio." } },
+      { name: "ask", line: {
+        PT: "Roteador sobre todas. Descreva a situação e ele diz qual resolve.",
+        EN: "A router over all of them. Describe the situation, it picks one.",
+        ES: "Enrutador sobre todas. Describe la situación y dice cuál resuelve." } },
     ],
   },
 ];
@@ -200,10 +174,10 @@ const translations = {
     title: "As skills que eu uso todos os dias",
     intro: (
       <>
-        Onze skills de engenharia pro Claude Code, num repositório público. Cada
-        uma é um modo de trabalho: coloca o agente num papel específico, com um
-        trabalho específico e um critério de pronto que ele não pode fingir que
-        cumpriu.
+        Dezenove skills pro Claude Code, num repositório público. Metade é
+        engenharia e metade é interface. Cada uma é um modo de trabalho: coloca
+        o agente num papel específico, com um trabalho específico e um critério
+        de pronto que ele não pode fingir que cumpriu.
       </>
     ),
 
@@ -248,11 +222,12 @@ const translations = {
       </>
     ),
 
-    theSkills: "As onze",
+    theSkills: "As dezenove",
     theSkillsP1: (
       <>
-        Se você só for adotar duas, adote {c("/grill")} e {c("/review")}. Uma
-        evita construir errado, a outra evita entregar errado.
+        Se você só for adotar três, adote {c("/grill")}, {c("/review")} e{" "}
+        {c("/designer")}. Uma evita construir errado, a outra evita entregar
+        errado, e a terceira evita entregar feio.
       </>
     ),
 
@@ -275,17 +250,19 @@ const translations = {
     whoCalls: "Quem chama",
     whoCallsP1: (
       <>
-        As onze dividem num eixo só: quem pode chamar. Oito só respondem quando
-        você digita, porque uma auditoria completa que o agente dispara sozinho
-        sai caro e no meio do seu caminho.
+        As dezenove dividem num eixo só: quem pode chamar. Dez só respondem
+        quando você digita, porque auditoria completa que o agente dispara
+        sozinho sai caro e no meio do seu caminho.
       </>
     ),
     whoCallsP2: (
       <>
-        As outras três, {c("tdd")}, {c("review")} e {c("investigate")},
-        respondem ao agente também. São a disciplina que eu quero que ele use
-        sem eu precisar pedir. Quando alguém diz &quot;tá lento e não sei por
-        quê&quot;, o caminho certo é o diagnóstico em fases, não um palpite.
+        As outras nove respondem ao agente também, e é onde está a diferença
+        que eu mais sinto no dia. Quando alguém diz &quot;tá lento e não sei por
+        quê&quot;, ele vai pro diagnóstico em fases em vez de dar palpite. E
+        quando ele está escrevendo um componente, ele alcança {c("a11y")} e{" "}
+        {c("polish")} enquanto escreve, em vez de eu descobrir o problema na
+        revisão.
       </>
     ),
 
@@ -309,19 +286,20 @@ const translations = {
     ),
     tokensP3: (
       <>
-        Na prática: {c("/security")} numa passada rápida custa mil tokens, e a
-        auditoria completa com os catorze domínios custa quase quatro mil. Você
-        paga pelo que usa. Numa suíte com um arquivo monolítico por skill, essa
-        mesma auditoria cobra perto de nove mil sempre, inclusive quando você
-        queria só a varredura de segredo.
+        Na prática: a suíte inteira soma 42 mil tokens e nenhuma sessão paga
+        isso. {c("/security")} numa passada rápida custa mil, e a auditoria
+        completa com os catorze domínios custa quase quatro mil. Você paga pelo
+        que usa.
       </>
     ),
     tokensP4: (
       <>
-        E o orçamento quebra o build. O validador falha se uma descrição passar
-        do limite, se um corpo passar de seis mil bytes, ou se um arquivo de{" "}
-        {c("references/")} não tiver link que aponte pra ele. Orçamento que não
-        quebra o build não é orçamento, é intenção.
+        E o orçamento quebra o build. Dobrar a suíte de onze pra dezenove skills
+        levou o sempre-carregado de 899 pra 1.550 tokens, e o teto de 1.600 não
+        subiu: o que pagou a conta foi cortar as listas de gatilho pros termos
+        que de fato distinguem uma skill da vizinha. A próxima entra apertando
+        outra descrição. Orçamento que não quebra o build não é orçamento, é
+        intenção.
       </>
     ),
 
@@ -359,9 +337,10 @@ const translations = {
     title: "The skills I use every day",
     intro: (
       <>
-        Eleven engineering skills for Claude Code, in a public repository. Each
-        one is a mode of work: it puts the agent in a specific role, with a
-        specific job and a definition of done it cannot pretend to have met.
+        Nineteen skills for Claude Code, in a public repository. Half of them
+        are engineering, half are interface. Each one is a mode of work: it puts
+        the agent in a specific role, with a specific job and a definition of
+        done it cannot pretend to have met.
       </>
     ),
 
@@ -405,11 +384,12 @@ const translations = {
       </>
     ),
 
-    theSkills: "The eleven",
+    theSkills: "The nineteen",
     theSkillsP1: (
       <>
-        If you only adopt two, adopt {c("/grill")} and {c("/review")}. One stops
-        you building the wrong thing, the other stops you shipping it.
+        If you only adopt three, adopt {c("/grill")}, {c("/review")} and{" "}
+        {c("/designer")}. One stops you building the wrong thing, one stops you
+        shipping it, and one stops you shipping it ugly.
       </>
     ),
 
@@ -434,17 +414,18 @@ const translations = {
     whoCalls: "Who calls it",
     whoCallsP1: (
       <>
-        The eleven split on one axis: who can call them. Eight only answer when
+        The nineteen split on one axis: who can call them. Ten only answer when
         you type, because a full audit the agent fires on its own is expensive
         and lands in the middle of your work.
       </>
     ),
     whoCallsP2: (
       <>
-        The other three, {c("tdd")}, {c("review")} and {c("investigate")},
-        answer the agent too. They are the discipline I want it to use without
-        being asked. When someone says &quot;it is slow and I do not know
-        why&quot;, the right path is the phased diagnosis, not a guess.
+        The other nine answer the agent too, and that is where I feel the
+        difference most. When someone says &quot;it is slow and I do not know
+        why&quot;, it takes the phased diagnosis instead of guessing. And while
+        it writes a component it reaches {c("a11y")} and {c("polish")} as it
+        goes, rather than me finding the problem at review.
       </>
     ),
 
@@ -468,19 +449,21 @@ const translations = {
     ),
     tokensP3: (
       <>
-        In practice: {c("/security")} on a quick pass costs a thousand tokens,
+        In practice: the whole suite adds up to 42 thousand tokens and no
+        session pays that. {c("/security")} on a quick pass costs a thousand,
         and the full audit across fourteen domains costs almost four thousand.
-        You pay for what you use. In a suite with one monolithic file per skill,
-        that same audit charges close to nine thousand every time, including
-        when all you wanted was the secret scan.
+        You pay for what you use.
       </>
     ),
     tokensP4: (
       <>
-        And the budget breaks the build. The validator fails if a description
-        goes over the limit, if a body goes over six thousand bytes, or if a
-        file in {c("references/")} has no link pointing at it. A budget that
-        does not break the build is not a budget, it is an intention.
+        And the budget breaks the build. Doubling the suite from eleven to
+        nineteen skills took the always-loaded cost from 899 to 1,550 tokens,
+        and the 1,600 ceiling did not move: what paid for it was cutting the
+        trigger lists down to the terms that actually tell one skill from its
+        neighbour. The next one arrives by tightening another description. A
+        budget that does not break the build is not a budget, it is an
+        intention.
       </>
     ),
 
@@ -517,10 +500,10 @@ const translations = {
     title: "Las skills que uso todos los días",
     intro: (
       <>
-        Once skills de ingeniería para Claude Code, en un repositorio público.
-        Cada una es un modo de trabajo: pone al agente en un rol específico, con
-        un trabajo específico y un criterio de listo que no puede fingir haber
-        cumplido.
+        Diecinueve skills para Claude Code, en un repositorio público. La mitad
+        es ingeniería y la mitad es interfaz. Cada una es un modo de trabajo:
+        pone al agente en un rol específico, con un trabajo específico y un
+        criterio de listo que no puede fingir haber cumplido.
       </>
     ),
 
@@ -564,11 +547,12 @@ const translations = {
       </>
     ),
 
-    theSkills: "Las once",
+    theSkills: "Las diecinueve",
     theSkillsP1: (
       <>
-        Si solo vas a adoptar dos, adopta {c("/grill")} y {c("/review")}. Una
-        evita construir lo equivocado, la otra evita entregarlo.
+        Si solo vas a adoptar tres, adopta {c("/grill")}, {c("/review")} y{" "}
+        {c("/designer")}. Una evita construir lo equivocado, la otra evita
+        entregarlo, y la tercera evita entregarlo feo.
       </>
     ),
 
@@ -592,18 +576,18 @@ const translations = {
     whoCalls: "Quién la llama",
     whoCallsP1: (
       <>
-        Las once se dividen en un solo eje: quién puede llamarlas. Ocho solo
-        responden cuando escribes, porque una auditoría completa que el agente
-        dispara solo sale cara y cae en medio de tu trabajo.
+        Las diecinueve se dividen en un solo eje: quién puede llamarlas. Diez
+        solo responden cuando escribes, porque una auditoría completa que el
+        agente dispara solo sale cara y cae en medio de tu trabajo.
       </>
     ),
     whoCallsP2: (
       <>
-        Las otras tres, {c("tdd")}, {c("review")} e {c("investigate")},
-        responden al agente también. Son la disciplina que quiero que use sin
-        que yo la pida. Cuando alguien dice &quot;está lento y no sé por
-        qué&quot;, el camino correcto es el diagnóstico por fases, no una
-        corazonada.
+        Las otras nueve responden al agente también, y ahí está la diferencia
+        que más noto. Cuando alguien dice &quot;está lento y no sé por qué&quot;,
+        va al diagnóstico por fases en vez de adivinar. Y mientras escribe un
+        componente alcanza {c("a11y")} y {c("polish")} sobre la marcha, en vez
+        de que yo encuentre el problema en la revisión.
       </>
     ),
 
@@ -627,19 +611,20 @@ const translations = {
     ),
     tokensP3: (
       <>
-        En la práctica: {c("/security")} en una pasada rápida cuesta mil tokens,
-        y la auditoría completa con los catorce dominios cuesta casi cuatro mil.
-        Pagas por lo que usas. En una suite con un archivo monolítico por skill,
-        esa misma auditoría cobra cerca de nueve mil siempre, incluso cuando
-        solo querías el escaneo de secretos.
+        En la práctica: la suite entera suma 42 mil tokens y ninguna sesión paga
+        eso. {c("/security")} en una pasada rápida cuesta mil, y la auditoría
+        completa con los catorce dominios cuesta casi cuatro mil. Pagas por lo
+        que usas.
       </>
     ),
     tokensP4: (
       <>
-        Y el presupuesto rompe el build. El validador falla si una descripción
-        pasa el límite, si un cuerpo pasa de seis mil bytes, o si un archivo de{" "}
-        {c("references/")} no tiene link que apunte a él. Un presupuesto que no
-        rompe el build no es un presupuesto, es una intención.
+        Y el presupuesto rompe el build. Duplicar la suite de once a diecinueve
+        skills llevó el siempre-cargado de 899 a 1.550 tokens, y el techo de
+        1.600 no subió: lo que pagó la cuenta fue recortar las listas de
+        disparadores a los términos que de verdad distinguen una skill de su
+        vecina. Un presupuesto que no rompe el build no es un presupuesto, es
+        una intención.
       </>
     ),
 
@@ -691,7 +676,7 @@ export function ArticleContent({
 
   const budget = [
     {
-      value: "899",
+      value: "1.550",
       label: {
         PT: "sempre carregado",
         EN: "always loaded",
@@ -699,7 +684,7 @@ export function ArticleContent({
       }[language],
     },
     {
-      value: "1.258",
+      value: "1.378",
       label: {
         PT: "chamada mais cara",
         EN: "priciest call",
@@ -707,7 +692,7 @@ export function ArticleContent({
       }[language],
     },
     {
-      value: "20.583",
+      value: "42.276",
       label: {
         PT: "tudo de uma vez",
         EN: "everything at once",

@@ -32,6 +32,31 @@ export type Article = {
 /** Newest first — the writing list prints the year gutter on each group's first row. */
 export const articles: Article[] = [
   {
+    slug: "claude-code-skills",
+    year: "2026",
+    publishedAt: "2026-08-20",
+    title: {
+      PT: "As skills que eu uso todos os dias",
+      EN: "The skills I use every day",
+      ES: "Las skills que uso todos los días",
+    },
+    description: {
+      PT: "Onze skills pro Claude Code, num repo público",
+      EN: "Eleven skills for Claude Code, in a public repo",
+      ES: "Once skills para Claude Code, en un repo público",
+    },
+    seoTitle: {
+      PT: "Skills do Claude Code: as onze que eu uso",
+      EN: "Claude Code skills: the eleven I actually use",
+      ES: "Skills de Claude Code: las once que uso",
+    },
+    seoDescription: {
+      PT: "Onze skills de engenharia pro Claude Code, com orçamento de tokens que quebra o build. O que entra no corpo, o que fica atrás de link, e quem pode chamar cada uma.",
+      EN: "Eleven engineering skills for Claude Code, with a token budget that breaks the build. What goes in the body, what sits behind a link, and who gets to call each one.",
+      ES: "Once skills de ingeniería para Claude Code, con presupuesto de tokens que rompe el build. Qué va en el cuerpo, qué queda detrás de un link y quién llama a cada una.",
+    },
+  },
+  {
     slug: "agent-loops-harness-graphs",
     year: "2026",
     publishedAt: "2026-08-03",

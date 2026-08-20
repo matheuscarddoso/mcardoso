@@ -26,7 +26,7 @@ export default function GlobalNotFound() {
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
           <main className="mx-auto flex min-h-dvh w-full max-w-(--breakpoint-sm) flex-col items-start justify-center gap-3 px-4">
             <p className="font-mono text-sm text-gray-1000">404</p>
-            <h1 className="text-balance font-[550] article-heading">
+            <h1 className="text-balance font-medium article-heading">
               This page doesn&apos;t exist.
             </h1>
             <a href={`/${DEFAULT_LOCALE}`} className="article-underline">

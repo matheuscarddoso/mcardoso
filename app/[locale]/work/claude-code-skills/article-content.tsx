@@ -28,7 +28,7 @@ function SectionHeading({
 }) {
   return (
     <h2
-      className="mt-16 mb-2 scroll-mt-20 text-balance font-[550] article-heading"
+      className="mt-16 mb-2 scroll-mt-20 text-balance font-medium article-heading"
       id={id}
     >
       {children}
@@ -731,7 +731,7 @@ export function ArticleContent({
 
         <article>
           <h1
-            className="mb-2 w-fit scroll-mt-20 text-balance font-[550] article-heading"
+            className="mb-2 w-fit scroll-mt-20 text-balance font-medium article-heading"
             id="claude-code-skills"
           >
             {t.title}

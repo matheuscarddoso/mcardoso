@@ -36,7 +36,7 @@ function SectionHeading({
 }) {
   return (
     <h2
-      className="mt-16 mb-2 scroll-mt-20 text-balance font-[550] article-heading"
+      className="mt-16 mb-2 scroll-mt-20 text-balance font-medium article-heading"
       id={id}
     >
       {n !== undefined && (
@@ -315,7 +315,7 @@ export function ArticleContent() {
 
         <article>
           <h1
-            className="mb-2 w-fit scroll-mt-20 text-balance font-[550] article-heading"
+            className="mb-2 w-fit scroll-mt-20 text-balance font-medium article-heading"
             id="ai-ml-github-repos"
           >
             {t.title}
@@ -403,7 +403,7 @@ export function ArticleContent() {
           <Divider />
 
           <h2
-            className="mt-16 mb-2 w-full text-balance font-[550] article-heading scroll-mt-20"
+            className="mt-16 mb-2 w-full text-balance font-medium article-heading scroll-mt-20"
             id="the-order"
           >
             {t.advice}

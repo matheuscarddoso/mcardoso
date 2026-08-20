@@ -93,7 +93,7 @@ export function MonthlyPlaylistsContent() {
         </div>
         {/* The page shipped with no heading at all — nothing for a crawler or a
             screen reader to hang the page's subject on. */}
-        <h1 className="mb-2 text-balance font-[550] article-heading">
+        <h1 className="mb-2 text-balance font-medium article-heading">
           {titleByLang[language]}
         </h1>
         <p className="paragraph mb-3">{introByLang[language]}</p>

@@ -27,6 +27,7 @@ type MarkName =
   | "goias"
   | "spotify"
   | "kubo"
+  | "craft"
   | "twitter"
   | "github"
 
@@ -76,6 +77,11 @@ type Mark = {
   gradient?: { from: string; to: string; x1: number; y1: number; x2: number; y2: number }
   /** Only Spotify's artwork is drawn with holes in it. */
   evenOdd?: boolean
+  /**
+   * A line drawn over the filled shape, for artwork that is a stroke on a
+   * tile rather than a cut shape: Craft's spring on its blue square.
+   */
+  stroke?: { d: string; color: string; width: number }
 }
 
 const MARKS: Record<MarkName, Mark> = {
@@ -137,6 +143,18 @@ const MARKS: Record<MarkName, Mark> = {
       "M425.733 565.064H567V423.799H425.733V565.064Z",
       "M0 565.064H284.468V423.799H141.267V141.267H425.733V282.532H284.468V423.799H425.733V284.468H567V0H0V565.064Z",
     ],
+  },
+  /* The course's own mark: a spring settling, drawn on the button blue. */
+  craft: {
+    viewBox: "0 0 24 24",
+    height: 0.9,
+    gradient: { from: "#38bdf8", to: "#0ea5e9", x1: 0.5, y1: 0, x2: 0.5, y2: 1 },
+    paths: ["M7.5 0h9A7.5 7.5 0 0 1 24 7.5v9a7.5 7.5 0 0 1-7.5 7.5h-9A7.5 7.5 0 0 1 0 16.5v-9A7.5 7.5 0 0 1 7.5 0Z"],
+    stroke: {
+      d: "M4.5 15 C6.5 4.5 8.5 4.5 10 12 C11.2 17.5 12.8 17.5 14 12 C14.9 8.6 16.1 8.6 17 12 C17.6 14 18.6 14 19.5 12",
+      color: "#fff",
+      width: 2,
+    },
   },
   twitter: {
     viewBox: "0 0 1200 1227",
@@ -221,6 +239,16 @@ export function BrandMark({ name }: { name: MarkName }) {
           clipRule={mark.evenOdd ? "evenodd" : undefined}
         />
       ))}
+      {mark.stroke && (
+        <path
+          d={mark.stroke.d}
+          fill="none"
+          stroke={mark.stroke.color}
+          strokeWidth={mark.stroke.width}
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+      )}
     </svg>
   )
 }

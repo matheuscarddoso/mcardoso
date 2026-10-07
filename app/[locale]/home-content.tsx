@@ -377,17 +377,17 @@ const bio: Record<Language, BioParagraphs> = {
           </span>
           Abacate Pay
         </BioLink>
-        , feita no Brasil por <AvatarStack /> 23 devs. Também fundei o{" "}
+        , feita no Brasil por <AvatarStack /> 23 devs. Também criei o{" "}
         <BioLink
-          href="https://kubofood.app"
+          href="https://craft.ocardoso.com"
           target="_blank"
           rel="noopener noreferrer"
           className={link}
         >
-          <BrandMark name="kubo" />
-          KuboFood
+          <BrandMark name="craft" />
+          Craft
         </BioLink>
-        , que acompanha um restaurante do pedido até a cozinha.
+        , um curso sobre os detalhes que fazem uma interface parecer certa.
       </p>
       <p className="paragraph mb-3">
         Antes de tudo isso,{" "}
@@ -484,17 +484,17 @@ const bio: Record<Language, BioParagraphs> = {
           </span>
           Abacate Pay
         </BioLink>
-        , built for Brazil by <AvatarStack /> 23 devs. I also founded{" "}
+        , built for Brazil by <AvatarStack /> 23 devs. I also made{" "}
         <BioLink
-          href="https://kubofood.app"
+          href="https://craft.ocardoso.com"
           target="_blank"
           rel="noopener noreferrer"
           className={link}
         >
-          <BrandMark name="kubo" />
-          KuboFood
+          <BrandMark name="craft" />
+          Craft
         </BioLink>
-        , which follows a restaurant from the order all the way to the kitchen.
+        , a course on the details that make an interface feel right.
       </p>
       <p className="paragraph mb-3">
         Before any of this,{" "}
@@ -591,17 +591,17 @@ const bio: Record<Language, BioParagraphs> = {
           </span>
           Abacate Pay
         </BioLink>
-        , hecha para Brasil por <AvatarStack /> 23 devs. También fundé{" "}
+        , hecha para Brasil por <AvatarStack /> 23 devs. También creé{" "}
         <BioLink
-          href="https://kubofood.app"
+          href="https://craft.ocardoso.com"
           target="_blank"
           rel="noopener noreferrer"
           className={link}
         >
-          <BrandMark name="kubo" />
-          KuboFood
+          <BrandMark name="craft" />
+          Craft
         </BioLink>
-        , que acompaña a un restaurante desde el pedido hasta la cocina.
+        , un curso sobre los detalles que hacen que una interfaz se sienta bien.
       </p>
       <p className="paragraph mb-3">
         Antes de todo esto,{" "}

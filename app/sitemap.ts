@@ -1,5 +1,5 @@
 import type { MetadataRoute } from "next"
-import { articles, lastRevised } from "@/lib/articles"
+import { articlePath, articles, lastRevised } from "@/lib/articles"
 import { crafts } from "@/lib/crafts"
 import { LOCALES } from "@/lib/locale"
 import { DEFAULT_LOCALE, HREFLANG, absolute } from "@/lib/site"
@@ -20,19 +20,13 @@ const NEWEST_ARTICLE = articles.reduce(
 const ROUTES: Route[] = [
   { path: "", changeFrequency: "weekly", priority: 1, lastModified: NEWEST_ARTICLE },
   {
-    path: "/skills",
-    changeFrequency: "monthly",
-    priority: 0.7,
-    lastModified: NEWEST_ARTICLE,
-  },
-  {
     path: "/monthly-playlists",
     changeFrequency: "monthly",
     priority: 0.6,
     lastModified: NEWEST_ARTICLE,
   },
   ...articles.map<Route>((article) => ({
-    path: `/work/${article.slug}`,
+    path: articlePath(article),
     changeFrequency: "yearly",
     priority: 0.8,
     lastModified: lastRevised(article),

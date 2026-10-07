@@ -1,5 +1,5 @@
 import type { Metadata } from "next"
-import { getArticle, lastRevised } from "./articles"
+import { articlePath, getArticle, lastRevised } from "./articles"
 import { localeToLanguage } from "./locale"
 import { articleMetadata, toLocale } from "./site"
 
@@ -17,7 +17,7 @@ export async function articleMeta(
   return articleMetadata({
     locale,
     slug,
-    path: `/work/${slug}`,
+    path: articlePath(article),
     title: article.seoTitle[language],
     description: article.seoDescription[language],
     publishedTime: article.publishedAt,

@@ -1,4 +1,4 @@
-import { articles, lastRevised, type Article } from "./articles"
+import { articlePath, articles, lastRevised, type Article } from "./articles"
 import { localeToLanguage, type Locale } from "./locale"
 import {
   HOME_SEO,
@@ -6,7 +6,6 @@ import {
   ogCardPath,
   PERSON,
   PLAYLISTS_SEO,
-  SKILLS_SEO,
   SAME_AS,
   SITE_NAME,
   SITE_URL,
@@ -92,9 +91,9 @@ export function homeGraph(locale: Locale): Node {
         // Everything published, so the list page is discoverable as a set.
         hasPart: articles.map((article) => ({
           "@type": "BlogPosting",
-          "@id": `${absolute(`/${locale}/work/${article.slug}`)}#article`,
+          "@id": `${absolute(`/${locale}${articlePath(article)}`)}#article`,
           headline: article.title[localeToLanguage(locale)],
-          url: absolute(`/${locale}/work/${article.slug}`),
+          url: absolute(`/${locale}${articlePath(article)}`),
           datePublished: article.publishedAt,
         })),
       },
@@ -104,7 +103,7 @@ export function homeGraph(locale: Locale): Node {
 
 export function articleGraph(locale: Locale, article: Article): Node {
   const language = localeToLanguage(locale)
-  const url = absolute(`/${locale}/work/${article.slug}`)
+  const url = absolute(`/${locale}${articlePath(article)}`)
 
   return {
     "@context": "https://schema.org",
@@ -131,7 +130,7 @@ export function articleGraph(locale: Locale, article: Article): Node {
       },
       breadcrumbs(locale, [
         { name: PERSON.name, path: "" },
-        { name: article.title[language], path: `/work/${article.slug}` },
+        { name: article.title[language], path: articlePath(article) },
       ]),
     ],
   }
@@ -160,34 +159,6 @@ export function playlistsGraph(locale: Locale): Node {
       breadcrumbs(locale, [
         { name: PERSON.name, path: "" },
         { name: seo.title, path: "/monthly-playlists" },
-      ]),
-    ],
-  }
-}
-
-export function skillsGraph(locale: Locale): Node {
-  const language = localeToLanguage(locale)
-  const url = absolute(`/${locale}/skills`)
-  const seo = SKILLS_SEO[language]
-
-  return {
-    "@context": "https://schema.org",
-    "@graph": [
-      person(locale),
-      website(locale),
-      {
-        "@type": "CollectionPage",
-        "@id": `${url}#page`,
-        url,
-        name: seo.title,
-        description: seo.description,
-        inLanguage: HREFLANG[locale],
-        isPartOf: { "@id": WEBSITE_ID },
-        author: { "@id": PERSON_ID },
-      },
-      breadcrumbs(locale, [
-        { name: PERSON.name, path: "" },
-        { name: seo.title, path: "/skills" },
       ]),
     ],
   }

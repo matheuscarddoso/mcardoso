@@ -64,6 +64,32 @@ for (const slug of readdirSync(WORK).sort()) {
   );
 }
 
+/*
+ * The skills page lives outside /work and keeps its words in a data file
+ * rather than a `translations` block, so it is counted from that file: every
+ * string under a language key is read text. Node strips the types on import.
+ */
+{
+  const { GROUPS, COPY } = await import("../app/[locale]/skills/data.ts");
+  const perLanguage = {};
+  for (const language of ["PT", "EN", "ES"]) {
+    const texts = [];
+    const collect = (value) => {
+      if (typeof value === "string") texts.push(value);
+      else if (Array.isArray(value)) value.forEach(collect);
+      else if (value && typeof value === "object") {
+        if (language in value) collect(value[language]);
+        else Object.values(value).forEach(collect);
+      }
+    };
+    collect(GROUPS);
+    collect(COPY);
+    perLanguage[language] = Math.max(1, Math.ceil(words(texts.join(" ")) / WPM));
+  }
+  entries.push(`  "skills": { PT: ${perLanguage.PT}, EN: ${perLanguage.EN}, ES: ${perLanguage.ES} },`);
+  entries.sort();
+}
+
 writeFileSync(
   "lib/reading-time.ts",
   `import type { Language } from "./locale"

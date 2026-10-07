@@ -27,33 +27,44 @@ export type Article = {
    */
   seoTitle: Localized
   seoDescription: Localized
+  /**
+   * Where the piece lives, locale-less. Most pieces are essays under
+   * `/work/<slug>`; a piece that is really a page of its own (the skills,
+   * at `/skills`) sets this and keeps every other article feature.
+   */
+  path?: string
 }
+
+/** The locale-less URL of a piece: its own `path`, or `/work/<slug>`. */
+export const articlePath = (article: Article) => article.path ?? `/work/${article.slug}`
 
 /** Newest first — the writing list prints the year gutter on each group's first row. */
 export const articles: Article[] = [
   {
-    slug: "claude-code-skills",
+    slug: "skills",
+    path: "/skills",
     year: "2026",
     publishedAt: "2026-08-20",
+    revisedAt: "2026-10-07",
     title: {
       PT: "As skills que eu uso todos os dias",
       EN: "The skills I use every day",
       ES: "Las skills que uso todos los días",
     },
     description: {
-      PT: "Dezenove skills pro Claude Code, metade interface",
-      EN: "Nineteen skills for Claude Code, half of them interface",
-      ES: "Diecinueve skills para Claude Code, mitad interfaz",
+      PT: "Vinte e duas, cada uma com um exemplo",
+      EN: "Twenty-two, each with an example",
+      ES: "Veintidós, cada una con un ejemplo",
     },
     seoTitle: {
-      PT: "Skills do Claude Code: as dezenove que eu uso",
-      EN: "Claude Code skills: the nineteen I actually use",
-      ES: "Skills de Claude Code: las diecinueve que uso",
+      PT: "Skills: interface e engenharia para o Claude Code",
+      EN: "Skills: interface and engineering for Claude Code",
+      ES: "Skills: interfaz e ingeniería para Claude Code",
     },
     seoDescription: {
-      PT: "Dezenove skills pro Claude Code, metade engenharia e metade interface, com orçamento de tokens que quebra o build. O que entra no corpo, o que fica atrás de link, e quem pode chamar cada uma.",
-      EN: "Nineteen skills for Claude Code, half engineering and half interface, with a token budget that breaks the build. What goes in the body, what sits behind a link, and who gets to call each one.",
-      ES: "Diecinueve skills para Claude Code, mitad ingeniería y mitad interfaz, con presupuesto de tokens que rompe el build. Qué va en el cuerpo, qué queda detrás de un link y quién llama a cada una.",
+      PT: "As skills de agente que eu uso todo dia: acabamento, tipografia, cor, acessibilidade, revisão de interface, TDD, diagnóstico e auditoria. Cada uma com um exemplo de uso.",
+      EN: "The agent skills I use every day: polish, typography, color, accessibility, interface review, TDD, debugging and audits. Each one with a usage example.",
+      ES: "Las skills de agente que uso todos los días: acabado, tipografía, color, accesibilidad, revisión de interfaz, TDD, diagnóstico y auditoría. Cada una con un ejemplo de uso.",
     },
   },
   {

@@ -39,7 +39,7 @@ const designer: Demo = ({ after, lang }) =>
             ["ALTO", "layout", "checkout.tsx:86", tr(lang, "Deixar o botão encolher", "Let the button shrink", "Dejar que el botón se encoja")],
             ["MÉDIO", "type", "summary.tsx:24", tr(lang, "Quebrar nomes longos", "Wrap long names", "Ajustar nombres largos")],
           ].map((r) => (
-            <tr key={r[2]} className="border-t border-gray-400">
+            <tr key={r[2]} className="border-t">
               {r.map((c, i) => (
                 <td key={i} className={`py-1.5 pr-3 whitespace-nowrap ${i === 0 ? (c === "ALTO" ? "text-red-600 dark:text-red-400" : "text-amber-600 dark:text-amber-400") : ""}`}>
                   {lang !== "PT" && i === 0 ? (c === "ALTO" ? "HIGH" : "MEDIUM") : c}
@@ -380,7 +380,7 @@ const handoff: Demo = ({ after, lang }) =>
             [tr(lang, "Título", "Title", "Título"), "15px", "text-sm", tr(lang, "arredondado", "rounded", "redondeado")],
             ["Badge", "pill", "label", tr(lang, "perguntado", "asked", "preguntado")],
           ].map((r) => (
-            <tr key={r[0]} className="border-t border-gray-400">
+            <tr key={r[0]} className="border-t">
               {r.map((c, i) => (
                 <td key={i} className="py-1.5 pr-3 whitespace-nowrap">
                   {c}

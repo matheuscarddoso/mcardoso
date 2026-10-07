@@ -1,4 +1,4 @@
-import { articles } from "@/lib/articles"
+import { articlePath, articles } from "@/lib/articles"
 import { HOME_SEO, PERSON, SITE_NAME, SOCIAL, absolute } from "@/lib/site"
 
 /**
@@ -33,7 +33,7 @@ function body(): string {
 
   for (const article of articles) {
     lines.push(
-      `- [${article.title.EN}](${absolute(`/en/work/${article.slug}`)}): ` +
+      `- [${article.title.EN}](${absolute(`/en${articlePath(article)}`)}): ` +
         `${article.seoDescription.EN} Published ${article.publishedAt}.`
     )
   }

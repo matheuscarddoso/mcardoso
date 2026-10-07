@@ -1,5 +1,5 @@
 import Link from "next/link"
-import { articles, type Article } from "@/lib/articles"
+import { articlePath, articles, type Article } from "@/lib/articles"
 import type { Language } from "@/lib/locale"
 
 const LABELS = {
@@ -23,7 +23,7 @@ function Side({
 }) {
   return (
     <Link
-      href={`/${locale}/work/${article.slug}`}
+      href={`/${locale}${articlePath(article)}`}
       className={`group flex flex-col gap-1 ${align === "right" ? "items-end text-right" : "items-start"}`}
     >
       <span className="text-sm text-gray-1000">{label}</span>

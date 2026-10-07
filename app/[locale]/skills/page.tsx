@@ -1,28 +1,37 @@
-import type { Metadata } from "next"
+import { CodeBlock } from "@/components/code-block"
 import { JsonLd } from "@/components/json-ld"
-import { localeToLanguage } from "@/lib/locale"
-import { SKILLS_SEO, pageMetadata, toLocale } from "@/lib/site"
-import { skillsGraph } from "@/lib/structured-data"
+import { articleMeta, type ArticlePageProps } from "@/lib/article-page"
+import { getArticle } from "@/lib/articles"
+import { toLocale } from "@/lib/site"
+import { articleGraph } from "@/lib/structured-data"
 import { SkillsContent } from "./content"
 
-const PATH = "/skills"
+const SLUG = "skills"
 
-type PageProps = { params: Promise<{ locale: string }> }
-
-export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
-  const locale = toLocale((await params).locale)
-  const seo = SKILLS_SEO[localeToLanguage(locale)]
-
-  return pageMetadata({ locale, path: PATH, title: seo.title, description: seo.description })
+export async function generateMetadata({ params }: ArticlePageProps) {
+  return articleMeta(SLUG, await params)
 }
 
-export default async function Page({ params }: PageProps) {
+export default async function SkillsPage({ params }: ArticlePageProps) {
   const locale = toLocale((await params).locale)
 
   return (
     <>
-      <JsonLd data={skillsGraph(locale)} />
-      <SkillsContent />
+      <JsonLd data={articleGraph(locale, getArticle(SLUG))} />
+      <SkillsContent
+        codeInstall={
+          <CodeBlock
+            lang="bash"
+            code={`# plugin: atualiza junto com o repositório
+/plugin marketplace add matheuscarddoso/skills
+/plugin install mcardoso-skills@mcardoso
+
+# ou clone, se você quer editar as skills
+git clone https://github.com/matheuscarddoso/skills.git ~/Projects/skills
+~/Projects/skills/scripts/install`}
+          />
+        }
+      />
     </>
   )
 }

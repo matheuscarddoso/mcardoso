@@ -3,26 +3,53 @@
 import * as React from "react"
 import { useParams } from "next/navigation"
 import { AnimatePresence, motion, useReducedMotion } from "motion/react"
-import { ArrowUpRight, Check, Copy, Undo2 } from "lucide-react"
+import { Check, Copy, Undo2 } from "lucide-react"
+import { ArticleByline } from "@/components/article-byline"
+import { ArticleNav } from "@/components/article-nav"
+import { ArticleNextSection } from "@/components/article-next-section"
+import { ArticleTimeline } from "@/components/article-timeline"
+import { CopyLinkButton } from "@/components/copy-link-button"
 import { Footer } from "@/components/footer"
 import { HomeLink } from "@/components/home-link"
+import { SectionDivider } from "@/components/section-divider"
+import { getArticle } from "@/lib/articles"
 import { localeToLanguage, type Language } from "@/lib/locale"
 import { COPY, GROUPS, type Skill } from "./data"
 import { DEMOS } from "./demos"
 
 /*
- * The skills page, laid out the way jakub.kr/skills is: one line of intro,
- * the install command, then every skill as a name, a sentence or two and an
- * example. Interface skills show the example as a before/after you flip;
- * engineering skills show what you type and a taste of what comes back.
- *
- * Every prompt has a copy button, because the point of the page is to be
- * used, not read.
+ * The skills, in the same shell as every other piece on the site: back and
+ * copy-link up top, the title with its byline, dotted rules between
+ * sections, the section strip in the margin and previous and next at the
+ * bottom. What it adds is the catalogue itself: each skill as a name, a
+ * sentence or two and an example. Interface skills show the example as a
+ * before/after you flip; engineering skills show what you type and a taste
+ * of what comes back. Every prompt has a copy button, because the point is
+ * to use them.
  */
+
+const SLUG = "skills"
+
+/** Same dotted rule the home page uses, at the spacing the essays have. */
+function Divider() {
+  return <SectionDivider className="my-16" />
+}
+
+function SectionHeading({ id, children }: { id: string; children: React.ReactNode }) {
+  return (
+    <h2 className="mt-16 mb-2 scroll-mt-20 text-balance font-medium article-heading" id={id}>
+      {children}
+    </h2>
+  )
+}
+
+const c = (text: string) => <code className="code-inline">{text}</code>
+
+const prose = "mb-4 w-full text-pretty text-muted-foreground"
 
 const ICON_SWAP = { type: "spring", duration: 0.3, bounce: 0 } as const
 
-function CopyButton({ text, lang, className = "" }: { text: string; lang: Language; className?: string }) {
+function CopyPrompt({ text, lang }: { text: string; lang: Language }) {
   const [copied, setCopied] = React.useState(false)
   const reduce = useReducedMotion()
   const timer = React.useRef<number | undefined>(undefined)
@@ -46,7 +73,7 @@ function CopyButton({ text, lang, className = "" }: { text: string; lang: Langua
       type="button"
       onClick={copy}
       aria-label={copied ? COPY.copied[lang] : `${COPY.copy[lang]}: ${text}`}
-      className={`relative grid size-8 shrink-0 cursor-pointer place-items-center rounded-full text-gray-1000 outline-none transition-[color,background-color,scale] duration-150 ease-out hover:bg-gray-300 hover:text-gray-1200 focus-visible:ring-2 focus-visible:ring-blue-500 active:scale-[0.96] ${className}`}
+      className="relative grid size-8 shrink-0 cursor-pointer place-items-center rounded-full text-muted-foreground outline-none transition-[color,background-color,scale] duration-150 ease-out hover:bg-secondary hover:text-foreground focus-visible:ring-2 focus-visible:ring-blue-500 active:scale-[0.96]"
     >
       <AnimatePresence initial={false} mode="popLayout">
         <motion.span
@@ -57,7 +84,7 @@ function CopyButton({ text, lang, className = "" }: { text: string; lang: Langua
           transition={ICON_SWAP}
           className="grid place-items-center"
         >
-          {copied ? <Check className="size-3.5" strokeWidth={2} /> : <Copy className="size-3.5" strokeWidth={1.75} />}
+          {copied ? <Check className="size-3.5" strokeWidth={2} /> : <Copy className="size-3.5" strokeWidth={1.5} />}
         </motion.span>
       </AnimatePresence>
       <span className="sr-only" aria-live="polite">
@@ -67,38 +94,24 @@ function CopyButton({ text, lang, className = "" }: { text: string; lang: Langua
   )
 }
 
-function Prompt({ text, lang }: { text: string; lang: Language }) {
-  return (
-    <div className="flex items-center gap-2 border-t border-gray-400 py-1 pr-1 pl-4">
-      <span className="font-mono text-[12px] text-gray-900" aria-hidden>
-        &gt;
-      </span>
-      <code className="min-w-0 flex-1 truncate font-mono text-[12.5px] text-gray-1200" title={text}>
-        {text}
-      </code>
-      <CopyButton text={text} lang={lang} />
-    </div>
-  )
-}
-
 function Example({ skill, lang }: { skill: Skill; lang: Language }) {
   const [after, setAfter] = React.useState(true)
   const demo = DEMOS[skill.name]
 
   return (
-    <div className="preview-card mt-4">
+    <div className="preview-card mt-4 mb-2">
       {demo ? (
         <>
           <div className="flex min-h-56 items-center justify-center px-4 py-8">{demo({ after, lang })}</div>
-          <div className="flex justify-center gap-1 border-t border-gray-400 p-1.5" role="group" aria-label={COPY.example[lang]}>
+          <div className="flex justify-center gap-1 border-t p-1.5" role="group" aria-label={COPY.example[lang]}>
             {[false, true].map((value) => (
               <button
                 key={String(value)}
                 type="button"
                 aria-pressed={after === value}
                 onClick={() => setAfter(value)}
-                className={`h-7 cursor-pointer rounded-full px-3 text-[12px] font-medium outline-none transition-[background-color,color,scale] duration-150 ease-out focus-visible:ring-2 focus-visible:ring-blue-500 active:scale-[0.96] ${
-                  after === value ? "bg-gray-300 text-gray-1200" : "text-gray-1000 hover:text-gray-1200"
+                className={`h-7 cursor-pointer rounded-full px-3 text-[13px] font-medium outline-none transition-[background-color,color,scale] duration-150 ease-out focus-visible:ring-2 focus-visible:ring-blue-500 active:scale-[0.96] ${
+                  after === value ? "bg-secondary text-foreground" : "text-muted-foreground hover:text-foreground"
                 }`}
               >
                 {value ? COPY.after[lang] : COPY.before[lang]}
@@ -108,91 +121,126 @@ function Example({ skill, lang }: { skill: Skill; lang: Language }) {
         </>
       ) : (
         skill.output && (
-          <pre className="overflow-x-auto px-4 py-4 font-mono text-[12px] leading-5 whitespace-pre text-gray-1100">{skill.output[lang]}</pre>
+          <pre className="overflow-x-auto px-4 py-4 font-mono text-[12px] leading-5 whitespace-pre text-muted-foreground">{skill.output[lang]}</pre>
         )
       )}
-      <Prompt text={skill.prompt[lang]} lang={lang} />
+      <div className="flex items-center gap-2 border-t py-1 pr-1 pl-4">
+        <span className="font-mono text-[12px] text-muted-foreground/70" aria-hidden>
+          &gt;
+        </span>
+        <code className="min-w-0 flex-1 truncate font-mono text-[12.5px] text-foreground" title={skill.prompt[lang]}>
+          {skill.prompt[lang]}
+        </code>
+        <CopyPrompt text={skill.prompt[lang]} lang={lang} />
+      </div>
     </div>
   )
 }
 
-export function SkillsContent() {
+export function SkillsContent({ codeInstall }: { codeInstall: React.ReactNode }) {
   const params = useParams()
   const locale = (params.locale as string) ?? "en"
-  const lang = localeToLanguage(locale)
+  const language = localeToLanguage(locale)
+  const [p2a, p2b] = COPY.installP2[language]
+  const [a1, a2, a3, a4] = COPY.adoptThree[language]
 
   return (
-    <div className="relative flex min-h-dvh w-full flex-col overflow-x-hidden">
-      <div
-        className="pointer-events-none fixed top-0 left-0 z-50 h-12 w-full bg-neutral-100 to-transparent backdrop-blur-xl [-webkit-mask-image:linear-gradient(to_bottom,black,transparent)] dark:bg-neutral-900"
-        aria-hidden
-      />
-      <main className="mx-auto flex w-full max-w-(--breakpoint-sm) flex-1 flex-col px-4 pt-20 pb-4 text-gray-600 dark:text-[#b4b4b4]">
-        <div className="mb-16 flex items-center justify-between">
-          <HomeLink
-            locale={locale}
-            aria-label={COPY.back[lang]}
-            className="inline-flex h-8 w-8 cursor-pointer select-none items-center justify-center rounded-full bg-[#F0F0F0] text-primary-light-12 outline-none transition-all duration-150 hover:bg-primary-light-4 focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-1 active:scale-[0.97] dark:bg-primary-dark-3 dark:text-primary-dark-1 dark:hover:bg-primary-dark-4 [&_svg]:text-primary-light-12 dark:[&_svg]:text-primary-dark-12"
-          >
-            <Undo2 className="size-4" strokeWidth={1.5} />
-          </HomeLink>
-        </div>
+    <div className="relative flex min-h-[100dvh] w-full flex-col overflow-x-hidden">
+      <ArticleTimeline language={language} />
+      <ArticleNextSection language={language} />
+      <main className="mx-auto w-full max-w-(--breakpoint-sm) flex-1 px-4 py-12 leading-relaxed sm:py-20">
+        <header>
+          <div className="mb-24 flex min-h-9 w-full select-none items-center justify-between gap-2">
+            <HomeLink
+              locale={locale}
+              className="group flex size-9 shrink-0 cursor-pointer items-center justify-center rounded-full bg-secondary transition-[scale,background-color] duration-200 ease-out hover:bg-gray-300 active:scale-[0.96]"
+              aria-label="Home"
+            >
+              <Undo2
+                className="mr-0.5 size-4 text-muted-foreground transition-colors duration-200 ease-out group-hover:text-foreground"
+                strokeWidth={1.5}
+              />
+            </HomeLink>
+            <div className="flex items-center gap-2">
+              <CopyLinkButton />
+            </div>
+          </div>
+        </header>
 
-        <h1 className="article-heading mb-2 font-mono font-medium">/skills</h1>
-        <p className="paragraph mb-6 text-pretty">{COPY.intro[lang]}</p>
+        <article>
+          <h1 className="mb-2 w-fit scroll-mt-20 text-balance font-medium article-heading" id={SLUG}>
+            {getArticle(SLUG).title[language]}
+          </h1>
 
-        <div className="preview-card flex items-center gap-2 py-1 pr-1 pl-4">
-          <code className="min-w-0 flex-1 truncate font-mono text-[12.5px] text-gray-1200" title={COPY.install}>{COPY.install}</code>
-          <CopyButton text={COPY.install} lang={lang} />
-        </div>
-        <div className="mt-3 flex flex-wrap gap-x-4 gap-y-1 text-[13px]">
-          {[
-            { href: COPY.github, label: "GitHub" },
-            { href: COPY.course, label: COPY.courseLabel[lang] },
-          ].map((l) => (
-            <a key={l.href} href={l.href} target="_blank" rel="noopener noreferrer" className="article-underline inline-flex items-center gap-0.5">
-              {l.label}
-              <ArrowUpRight className="size-3" aria-hidden />
-              <span className="sr-only">({COPY.newTab[lang]})</span>
-            </a>
-          ))}
-        </div>
+          <ArticleByline slug={SLUG} language={language} />
 
-        {GROUPS.map((group) => (
-          <section key={group.id} aria-labelledby={`group-${group.id}`} className="mt-20">
-            <h2 id={`group-${group.id}`} className="article-heading font-medium">
-              {group.title[lang]}
-            </h2>
-            <p className="paragraph mt-1 text-pretty">{group.intro[lang]}</p>
+          <p className="w-full text-pretty text-muted-foreground">{COPY.intro[language]}</p>
 
-            <div className="mt-10 flex flex-col gap-16">
+          <Divider />
+
+          <SectionHeading id="install">{COPY.installTitle[language]}</SectionHeading>
+          <p className={prose}>{COPY.installP1[language]}</p>
+          {codeInstall}
+          <p className={prose}>
+            {p2a}
+            {c("/ask")}
+            {p2b}
+          </p>
+          <p className={prose}>
+            {a1}
+            {c("/grill")}
+            {a2}
+            {c("/review")}
+            {a3}
+            {c("/designer")}
+            {a4}
+          </p>
+
+          {GROUPS.map((group) => (
+            <React.Fragment key={group.id}>
+              <Divider />
+              <SectionHeading id={group.id}>{group.title[language]}</SectionHeading>
+              <p className={prose}>{group.intro[language]}</p>
+
               {group.skills.map((skill) => (
-                <article key={skill.name} id={skill.name} aria-labelledby={`skill-${skill.name}`} className="scroll-mt-20">
+                <section key={skill.name} id={skill.name} aria-labelledby={`skill-${skill.name}`} className="mt-12 scroll-mt-20">
                   <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
-                    <h3 id={`skill-${skill.name}`} className="article-heading font-mono text-[15px] font-medium">
+                    <h3 id={`skill-${skill.name}`} className="font-mono text-[15px] font-medium article-heading">
                       <a href={`#${skill.name}`} className="outline-none focus-visible:underline">
                         /{skill.name}
                       </a>
                     </h3>
-                    <span className="text-[12px] text-gray-1000">{skill.userInvoked ? COPY.youCall[lang] : COPY.agentCalls[lang]}</span>
+                    <span className="text-sm text-muted-foreground/80">{skill.userInvoked ? COPY.youCall[language] : COPY.agentCalls[language]}</span>
                   </div>
-                  <p className="paragraph mt-1.5 text-pretty">{skill.description[lang]}</p>
-                  <Example skill={skill} lang={lang} />
-                </article>
+                  <p className="mt-1 w-full text-pretty text-muted-foreground">{skill.description[language]}</p>
+                  <Example skill={skill} lang={language} />
+                </section>
               ))}
-            </div>
-          </section>
-        ))}
+            </React.Fragment>
+          ))}
 
-        <p className="paragraph mt-20 pb-20 text-pretty">
-          {COPY.credits[lang]}{" "}
-          <a href="https://jakub.kr/skills" target="_blank" rel="noopener noreferrer" className="article-underline">
-            jakub.kr/skills
-          </a>
-          .
-        </p>
+          <Divider />
+
+          <SectionHeading id="more">{COPY.moreTitle[language]}</SectionHeading>
+          <p className={prose}>
+            {COPY.more[language]}{" "}
+            <a href={COPY.github} target="_blank" rel="noopener noreferrer" className="article-underline">
+              matheuscarddoso/skills
+            </a>
+            . {COPY.credits[language]}
+          </p>
+          <p className="mb-6 w-full text-pretty text-muted-foreground">
+            {COPY.courseIntro[language]}{" "}
+            <a href={COPY.course} target="_blank" rel="noopener noreferrer" className="article-underline">
+              craft.ocardoso.com
+            </a>
+            .
+          </p>
+
+          <ArticleNav slug={SLUG} language={language} locale={locale} />
+        </article>
       </main>
-      <Footer language={lang} />
+      <Footer language={language} />
     </div>
   )
 }

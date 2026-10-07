@@ -375,16 +375,32 @@ export const GROUPS: Group[] = [
 ]
 
 export const COPY = {
-  title: t("Skills", "Skills", "Skills"),
   intro: t(
     "Skills de agente que eu uso todo dia no Claude Code. Metade é interface, metade é engenharia, cada uma com o número exato e o critério de pronto que um prompt de memória não traz.",
     "Agent skills I use every day in Claude Code. Half interface, half engineering, each with the exact values and the definition of done that a prompt from memory never has.",
     "Skills de agente que uso todos los días en Claude Code. Mitad interfaz, mitad ingeniería, cada una con el valor exacto y el criterio de terminado que un prompt de memoria no trae."
   ),
   install: "/plugin marketplace add matheuscarddoso/skills",
+  installTitle: t("Instalação", "Installation", "Instalación"),
+  installP1: t(
+    "Duas portas. O plugin instala o conjunto como pacote gerenciado que atualiza quando eu publico. O clone coloca os arquivos onde você pode editar. Escolha uma: instalar as duas te deixa com cada skill duas vezes.",
+    "Two doors. The plugin installs the set as a managed bundle that updates when I ship. The clone puts the files where you can edit them. Pick one: installing both leaves you with every skill twice.",
+    "Dos puertas. El plugin instala el conjunto como paquete gestionado que se actualiza cuando publico. El clon pone los archivos donde puedes editarlos. Elige una: instalar las dos te deja con cada skill dos veces."
+  ),
+  /** Split around the `/ask` chip. */
+  installP2: {
+    PT: ["Depois, ", " e uma frase descrevendo sua situação. Ele decide qual skill resolve e chama."],
+    EN: ["Then ", " and one sentence describing your situation. It decides which skill fits and calls it."],
+    ES: ["Después, ", " y una frase describiendo tu situación. Decide qué skill resuelve y la llama."],
+  } as Record<Language, [string, string]>,
+  /** Split around the three chips. */
+  adoptThree: {
+    PT: ["Se você só for adotar três, adote ", ", ", " e ", ". Uma evita construir errado, a outra evita entregar errado, e a terceira evita entregar feio."],
+    EN: ["If you only adopt three, adopt ", ", ", " and ", ". One stops you building the wrong thing, one stops you shipping it wrong, and the third stops you shipping it ugly."],
+    ES: ["Si solo vas a adoptar tres, adopta ", ", ", " y ", ". Una evita construir mal, otra evita entregar mal, y la tercera evita entregar feo."],
+  } as Record<Language, [string, string, string, string]>,
   github: "https://github.com/matheuscarddoso/skills",
-  course: "https://craft.ocardoso.com/aulas/skills",
-  courseLabel: t("Aula no Craft", "Craft lesson", "Clase en Craft"),
+  course: "https://craft.ocardoso.com",
   copy: t("Copiar", "Copy", "Copiar"),
   copied: t("Copiado", "Copied", "Copiado"),
   youCall: t("você chama", "you call it", "la llamas tú"),
@@ -393,7 +409,17 @@ export const COPY = {
   after: t("Depois", "After", "Después"),
   example: t("Exemplo", "Example", "Ejemplo"),
   back: t("Voltar", "Back", "Volver"),
-  newTab: t("abre numa nova aba", "opens in a new tab", "se abre en una pestaña nueva"),
+  moreTitle: t("Mais", "More", "Más"),
+  courseIntro: t(
+    "Cada regra destas skills é uma aula, com demo e exercício, no",
+    "Every rule in these skills is a lesson, with a demo and an exercise, in",
+    "Cada regla de estas skills es una clase, con demo y ejercicio, en"
+  ),
+  more: t(
+    "Tudo isso, com as referências de cada skill e o orçamento de tokens, está em",
+    "All of it, with each skill's references and the token budget, is at",
+    "Todo esto, con las referencias de cada skill y el presupuesto de tokens, está en"
+  ),
   credits: t(
     "A suíte de interface parte das skills de Jakub Krehel e dos princípios de Emil Kowalski, ambos sob licença MIT.",
     "The interface suite builds on Jakub Krehel's skills and Emil Kowalski's principles, both MIT licensed.",

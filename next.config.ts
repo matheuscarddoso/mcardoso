@@ -76,6 +76,21 @@ const nextConfig: NextConfig = {
     ],
   },
 
+  /*
+   * The skills essay became the skills page. Permanent, so search engines
+   * move the old URL's standing to the new one, and every link already out
+   * there still lands somewhere.
+   */
+  async redirects() {
+    return [
+      {
+        source: "/:locale(en|pt-br|es)/work/claude-code-skills",
+        destination: "/:locale/skills",
+        permanent: true,
+      },
+    ];
+  },
+
   async headers() {
     /*
      * The framing rules are split by path rather than layered, because Next

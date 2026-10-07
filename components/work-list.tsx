@@ -2,7 +2,7 @@
 
 import * as React from "react"
 import Link from "next/link"
-import { articles, latestSlug } from "@/lib/articles"
+import { articlePath, articles, latestSlug } from "@/lib/articles"
 import type { Language } from "@/components/footer"
 
 /**
@@ -113,7 +113,18 @@ function GlyphBubbles() {
  * JSON-LD all read the same rows, so a title can only be written once. Glyphs
  * stay here: they are JSX, and nothing on the server side needs them.
  */
+/** A prompt: the slash a skill is called with, and the line after it. */
+function GlyphSlash() {
+  return (
+    <div className="flex items-center gap-[3px]">
+      <span className="h-3 w-[3px] rotate-[20deg] rounded-full bg-current" />
+      <span className="h-[3px] w-2 rounded-full bg-current opacity-60" />
+    </div>
+  )
+}
+
 const GLYPHS: Record<string, React.ReactNode> = {
+  skills: <GlyphSlash />,
   "agent-loops-harness-graphs": <GlyphDiamond />,
   "ai-ml-github-repos": <GlyphFork />,
   "ai-bubble": <GlyphBubbles />,
@@ -137,7 +148,7 @@ export function WorkList({ language, locale }: { language: Language; locale: str
               {startsYear ? article.year : null}
             </span>
             <Link
-              href={`/${locale}/work/${article.slug}`}
+              href={`/${locale}${articlePath(article)}`}
               // Hovering the list dims every row; the hovered one stays lit.
               className="group/row flex min-w-0 items-center gap-3 py-2.5 transition-[opacity,transform] duration-300 ease-out group-hover/list:opacity-35 group-hover/list:hover:opacity-100 active:scale-[0.99] active:duration-150 active:ease-[var(--ease-out-strong)] motion-reduce:active:scale-100"
             >

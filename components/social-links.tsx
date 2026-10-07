@@ -102,7 +102,7 @@ const PREVIEWS: Partial<Record<SocialKey, Preview>> = {
     /* The bio as it stands on the profile, across its own two lines. X's
        `og:description` flattens them into one run of words that reads as a
        sentence and is not one. */
-    description: "SE: @4selet\nFounder: kubofood.app",
+    description: "SE: @4selet",
     domain: "x.com",
   },
   stackoverflow: {

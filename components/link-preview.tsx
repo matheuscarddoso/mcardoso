@@ -40,11 +40,11 @@ const PREVIEWS: Record<string, Preview> = {
     width: 640,
     height: 363,
   },
-  "https://kubofood.app": {
-    src: "/projects/kubofood.webp",
-    alt: "KuboFood",
+  "https://craft.ocardoso.com": {
+    src: "/projects/craft.webp",
+    alt: "Craft",
     width: 640,
-    height: 318,
+    height: 320,
   },
   "https://www.goiasec.com.br/": {
     src: "/previews/goias-fc.webp",

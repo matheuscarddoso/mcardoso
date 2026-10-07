@@ -109,8 +109,8 @@ function Screenshot({ src, alt }: { src: string; alt: string }) {
 /* Described rather than left decorative: the card's link label says where it
    goes, not what the product looks like, so the screenshot carries meaning of
    its own that a non-sighted reader would otherwise lose. */
-export function KuboPreview() {
-  return <Screenshot src="/projects/kubofood.webp" alt="KuboFood order screen" />
+export function CraftPreview() {
+  return <Screenshot src="/projects/craft.webp" alt="Craft course home page" />
 }
 
 export function AbacatePreview() {

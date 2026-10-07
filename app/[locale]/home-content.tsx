@@ -7,7 +7,7 @@ import { AvatarLightbox } from "@/components/avatar-lightbox";
 import { Footer, type Language } from "@/components/footer";
 import {
   AbacatePreview,
-  KuboPreview,
+  CraftPreview,
   ProjectCard,
 } from "@/components/project-card";
 import { WorkList } from "@/components/work-list";
@@ -57,8 +57,8 @@ const translations = {
     copied: "Copiado!",
     verified: "Perfil verificado",
     resume: "Currículo",
-    kuboMeta: "No ar",
-    kuboDescription: "Plataforma de food service, do pedido à cozinha.",
+    craftMeta: "Curso",
+    craftDescription: "Os detalhes que fazem uma interface parecer certa, com demos e exercícios.",
     abacateMeta: "Open-source",
     abacateDescription: "Método de pagamento open-source para o Brasil.",
   },
@@ -77,8 +77,8 @@ const translations = {
     copied: "Copied!",
     verified: "Verified profile",
     resume: "Resume",
-    kuboMeta: "Live",
-    kuboDescription: "Food service platform, from order to kitchen.",
+    craftMeta: "Course",
+    craftDescription: "The details that make an interface feel right, with demos and exercises.",
     abacateMeta: "Open-source",
     abacateDescription: "Open-source payment method built for Brazil.",
   },
@@ -97,8 +97,8 @@ const translations = {
     copied: "¡Copiado!",
     verified: "Perfil verificado",
     resume: "Currículum",
-    kuboMeta: "En vivo",
-    kuboDescription: "Plataforma de food service, del pedido a la cocina.",
+    craftMeta: "Curso",
+    craftDescription: "Los detalles que hacen que una interfaz se sienta bien, con demos y ejercicios.",
     abacateMeta: "Open-source",
     abacateDescription: "Método de pago open-source hecho para Brasil.",
   },
@@ -743,12 +743,12 @@ export function HomeContent({
           <ul className="grid w-full grid-cols-1 gap-6 sm:grid-cols-2">
             <li className="flex">
               <ProjectCard
-                href="https://kubofood.app"
-                ariaLabel="Visit KuboFood"
-                title="KuboFood"
-                meta={t.kuboMeta}
-                description={t.kuboDescription}
-                preview={<KuboPreview />}
+                href="https://craft.ocardoso.com"
+                ariaLabel="Visit Craft"
+                title="Craft"
+                meta={t.craftMeta}
+                description={t.craftDescription}
+                preview={<CraftPreview />}
               />
             </li>
             <li className="flex">

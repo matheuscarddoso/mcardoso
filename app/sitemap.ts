@@ -20,6 +20,12 @@ const NEWEST_ARTICLE = articles.reduce(
 const ROUTES: Route[] = [
   { path: "", changeFrequency: "weekly", priority: 1, lastModified: NEWEST_ARTICLE },
   {
+    path: "/skills",
+    changeFrequency: "monthly",
+    priority: 0.7,
+    lastModified: NEWEST_ARTICLE,
+  },
+  {
     path: "/monthly-playlists",
     changeFrequency: "monthly",
     priority: 0.6,

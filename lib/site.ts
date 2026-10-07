@@ -284,3 +284,21 @@ export const PLAYLISTS_SEO = {
       "Cada mes armo una playlist con las canciones que estuvieron en repeat. El archivo completo, mes a mes, con enlace directo a Spotify.",
   },
 } satisfies Record<Language, { title: string; description: string }>
+
+export const SKILLS_SEO = {
+  PT: {
+    title: "Skills: interface e engenharia para o Claude Code",
+    description:
+      "As skills de agente que eu uso todo dia: acabamento, tipografia, cor, acessibilidade, revisão de interface, TDD, diagnóstico e auditoria. Cada uma com um exemplo de uso.",
+  },
+  EN: {
+    title: "Skills: Interface and Engineering for Claude Code",
+    description:
+      "The agent skills I use every day: polish, typography, color, accessibility, interface review, TDD, debugging and audits. Each one with a usage example.",
+  },
+  ES: {
+    title: "Skills: interfaz e ingeniería para Claude Code",
+    description:
+      "Las skills de agente que uso todos los días: acabado, tipografía, color, accesibilidad, revisión de interfaz, TDD, diagnóstico y auditoría. Cada una con un ejemplo de uso.",
+  },
+} satisfies Record<Language, { title: string; description: string }>

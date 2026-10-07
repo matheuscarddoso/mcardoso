@@ -6,6 +6,7 @@ import {
   ogCardPath,
   PERSON,
   PLAYLISTS_SEO,
+  SKILLS_SEO,
   SAME_AS,
   SITE_NAME,
   SITE_URL,
@@ -159,6 +160,34 @@ export function playlistsGraph(locale: Locale): Node {
       breadcrumbs(locale, [
         { name: PERSON.name, path: "" },
         { name: seo.title, path: "/monthly-playlists" },
+      ]),
+    ],
+  }
+}
+
+export function skillsGraph(locale: Locale): Node {
+  const language = localeToLanguage(locale)
+  const url = absolute(`/${locale}/skills`)
+  const seo = SKILLS_SEO[language]
+
+  return {
+    "@context": "https://schema.org",
+    "@graph": [
+      person(locale),
+      website(locale),
+      {
+        "@type": "CollectionPage",
+        "@id": `${url}#page`,
+        url,
+        name: seo.title,
+        description: seo.description,
+        inLanguage: HREFLANG[locale],
+        isPartOf: { "@id": WEBSITE_ID },
+        author: { "@id": PERSON_ID },
+      },
+      breadcrumbs(locale, [
+        { name: PERSON.name, path: "" },
+        { name: seo.title, path: "/skills" },
       ]),
     ],
   }

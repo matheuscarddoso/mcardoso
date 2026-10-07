@@ -95,7 +95,7 @@ function CopyPrompt({ text, lang }: { text: string; lang: Language }) {
 }
 
 function Example({ skill, lang }: { skill: Skill; lang: Language }) {
-  const [after, setAfter] = React.useState(true)
+  const [after, setAfter] = React.useState(false)
   const demo = DEMOS[skill.name]
 
   return (

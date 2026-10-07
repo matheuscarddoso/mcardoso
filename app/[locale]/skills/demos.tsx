@@ -62,6 +62,7 @@ const designer: Demo = ({ after, lang }) =>
 /* ── polish ───────────────────────────────────────────────────────────── */
 
 const polish: Demo = ({ after, lang }) => (
+  <div className="flex flex-col items-center">
   <div
     className={`w-56 p-2 transition-[border-radius,box-shadow] duration-200 ease-out ${after ? "rounded-[20px] bg-gray-200 shadow-custom" : "rounded-[12px] border border-gray-700 bg-gray-200"}`}
   >
@@ -78,26 +79,35 @@ const polish: Demo = ({ after, lang }) => (
       </button>
     </div>
   </div>
+    <Note>
+      {after
+        ? tr(lang, "raio 20 = 12 + 8 · sombra no lugar da borda · contorno na imagem", "radius 20 = 12 + 8 · shadow instead of border · image outline", "radio 20 = 12 + 8 · sombra en lugar de borde · contorno en la imagen")
+        : tr(lang, "raio 12 por fora e por dentro · borda sólida · imagem sem contorno", "radius 12 inside and out · solid border · no image outline", "radio 12 por fuera y por dentro · borde sólido · imagen sin contorno")}
+    </Note>
+  </div>
 )
 
 /* ── typography ───────────────────────────────────────────────────────── */
 
+/** What changed, named under the demos where the change is a detail. */
+function Note({ children }: { children: React.ReactNode }) {
+  return <p className={`${mono} mt-4 text-center text-[11px] text-gray-1000`}>{children}</p>
+}
+
 const typography: Demo = ({ after, lang }) => (
-  <div className="flex flex-col gap-4" style={{ width: 230 }}>
-    <p
-      className="text-[17px] leading-snug font-medium text-gray-1200"
-      style={{ textWrap: after ? "balance" : "wrap", WebkitFontSmoothing: after ? "antialiased" : "auto" }}
-    >
-      {tr(lang, "Os detalhes que fazem uma interface parecer certa", "The details that make an interface feel right", "Los detalles que hacen que una interfaz se sienta bien")}
-    </p>
-    <div className={`flex items-baseline justify-between text-[14px] text-gray-1100 ${after ? "tabular-nums" : ""}`}>
-      <span>Total</span>
-      <span className="text-gray-1200">R$ 1.111,10</span>
+  <div className="flex flex-col items-center">
+    <div className="flex flex-col gap-5" style={{ width: 204 }}>
+      {/* 204px: where plain wrapping leaves the last word alone in all three
+          languages, and balance does not. Measured, not guessed. */}
+      <p className="text-[17px] leading-snug font-medium text-gray-1200" style={{ textWrap: after ? "balance" : "wrap" }}>
+        {tr(lang, "Os detalhes que fazem uma interface parecer certa", "The small details that make an interface feel right", "Los detalles que hacen que una interfaz se sienta bien")}
+      </p>
+      <div className={`flex flex-col items-end text-[20px] font-medium text-gray-1200 ${after ? "tabular-nums" : "proportional-nums"}`}>
+        <span>R$ 1.111,11</span>
+        <span>R$ 8.888,88</span>
+      </div>
     </div>
-    <div className={`flex items-baseline justify-between text-[14px] text-gray-1100 ${after ? "tabular-nums" : ""}`}>
-      <span>{tr(lang, "Imposto", "Tax", "Impuesto")}</span>
-      <span className="text-gray-1200">R$ 888,80</span>
-    </div>
+    <Note>{after ? "text-wrap: balance · tabular-nums" : "text-wrap: wrap · proportional-nums"}</Note>
   </div>
 )
 

@@ -113,6 +113,10 @@ export function CraftPreview() {
   return <Screenshot src="/projects/craft.webp" alt="Craft course home page" />
 }
 
+export function ReguaPreview() {
+  return <Screenshot src="/projects/regua.webp" alt="Régua measuring distances on its own home page" />
+}
+
 export function AbacatePreview() {
   return <Screenshot src="/projects/abacate-pay.webp" alt="Abacate Pay checkout screen" />
 }

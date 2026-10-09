@@ -40,6 +40,12 @@ const PREVIEWS: Record<string, Preview> = {
     width: 640,
     height: 363,
   },
+  "https://regua.ocardoso.com": {
+    src: "/projects/regua.webp",
+    alt: "Régua",
+    width: 640,
+    height: 320,
+  },
   "https://craft.ocardoso.com": {
     src: "/projects/craft.webp",
     alt: "Craft",

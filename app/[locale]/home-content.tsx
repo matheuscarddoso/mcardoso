@@ -8,6 +8,7 @@ import { Footer, type Language } from "@/components/footer";
 import {
   AbacatePreview,
   CraftPreview,
+  ReguaPreview,
   ProjectCard,
 } from "@/components/project-card";
 import { WorkList } from "@/components/work-list";
@@ -57,6 +58,8 @@ const translations = {
     resume: "Currículo",
     craftMeta: "Curso",
     craftDescription: "Os detalhes que fazem uma interface parecer certa, com demos e exercícios.",
+    reguaMeta: "Ferramenta",
+    reguaDescription: "Meça, inspecione e anote qualquer interface ao vivo, direto no navegador.",
     abacateMeta: "Open-source",
     abacateDescription: "Método de pagamento open-source para o Brasil.",
   },
@@ -77,6 +80,8 @@ const translations = {
     resume: "Resume",
     craftMeta: "Course",
     craftDescription: "The details that make an interface feel right, with demos and exercises.",
+    reguaMeta: "Tool",
+    reguaDescription: "Measure, inspect and annotate any live interface, right in the browser.",
     abacateMeta: "Open-source",
     abacateDescription: "Open-source payment method built for Brazil.",
   },
@@ -97,6 +102,8 @@ const translations = {
     resume: "Currículum",
     craftMeta: "Curso",
     craftDescription: "Los detalles que hacen que una interfaz se sienta bien, con demos y ejercicios.",
+    reguaMeta: "Herramienta",
+    reguaDescription: "Mide, inspecciona y anota cualquier interfaz en vivo, directo en el navegador.",
     abacateMeta: "Open-source",
     abacateDescription: "Método de pago open-source hecho para Brasil.",
   },
@@ -362,7 +369,11 @@ const bio: Record<Language, BioParagraphs> = {
         <BioLink href="https://craft.ocardoso.com" {...external} className={link}>
           Craft
         </BioLink>
-        , um curso sobre detalhes de interface, e o open source de que mais me orgulho é a{" "}
+        , um curso sobre detalhes de interface, e a{" "}
+        <BioLink href="https://regua.ocardoso.com" {...external} className={link}>
+          Régua
+        </BioLink>
+        , uma ferramenta pra medir e anotar qualquer interface ao vivo. O open source de que mais me orgulho é a{" "}
         <BioLink href="https://www.abacatepay.com/" {...external} className={link}>
           Abacate Pay
         </BioLink>
@@ -427,7 +438,11 @@ const bio: Record<Language, BioParagraphs> = {
         <BioLink href="https://craft.ocardoso.com" {...external} className={link}>
           Craft
         </BioLink>
-        , a course on interface details, and the open source I&apos;m proudest of is{" "}
+        , a course on interface details, and{" "}
+        <BioLink href="https://regua.ocardoso.com" {...external} className={link}>
+          Régua
+        </BioLink>
+        , a tool to measure and annotate any live interface. The open source I&apos;m proudest of is{" "}
         <BioLink href="https://www.abacatepay.com/" {...external} className={link}>
           Abacate Pay
         </BioLink>
@@ -492,7 +507,11 @@ const bio: Record<Language, BioParagraphs> = {
         <BioLink href="https://craft.ocardoso.com" {...external} className={link}>
           Craft
         </BioLink>
-        , un curso sobre detalles de interfaz, y el open source del que más me enorgullezco es{" "}
+        , un curso sobre detalles de interfaz, y{" "}
+        <BioLink href="https://regua.ocardoso.com" {...external} className={link}>
+          Régua
+        </BioLink>
+        , una herramienta para medir y anotar cualquier interfaz en vivo. El open source del que más me enorgullezco es{" "}
         <BioLink href="https://www.abacatepay.com/" {...external} className={link}>
           Abacate Pay
         </BioLink>
@@ -606,7 +625,7 @@ export function HomeContent({
 
         <SectionDivider className="my-10" />
 
-        {/* `section` + `ul`: two projects and five essays are lists, and saying
+        {/* `section` + `ul`: three projects and five essays are lists, and saying
             so is what lets a crawler tell the page's structure from its chrome. */}
         <section aria-labelledby="projects-heading" className="w-full">
           <h2
@@ -624,6 +643,16 @@ export function HomeContent({
                 meta={t.craftMeta}
                 description={t.craftDescription}
                 preview={<CraftPreview />}
+              />
+            </li>
+            <li className="flex">
+              <ProjectCard
+                href="https://regua.ocardoso.com"
+                ariaLabel="Visit Régua"
+                title="Régua"
+                meta={t.reguaMeta}
+                description={t.reguaDescription}
+                preview={<ReguaPreview />}
               />
             </li>
             <li className="flex">

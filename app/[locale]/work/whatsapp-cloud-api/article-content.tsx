@@ -3,16 +3,15 @@
 import * as React from "react";
 import { HomeLink } from "@/components/home-link";
 import { useParams } from "next/navigation";
-import { Undo2, Check, LinkIcon, Download } from "lucide-react";
+import { Undo2, Download } from "lucide-react";
 import { Footer, type Language } from "@/components/footer";
-import { LanguageToggle, ThemeToggle } from "@/components/toggles";
+import { CopyLinkButton } from "@/components/copy-link-button";
 import { ArticleByline } from "@/components/article-byline";
 import { ArticleNav } from "@/components/article-nav";
 import { ArticleTimeline } from "@/components/article-timeline";
 import { ArticleNextSection } from "@/components/article-next-section";
 import { SectionDivider } from "@/components/section-divider";
 import { localeToLanguage } from "@/lib/locale";
-import { switchLocale } from "@/lib/switch-locale";
 
 /** Same dotted rule the home page uses, at the spacing these essays had. */
 function Divider() {
@@ -33,47 +32,6 @@ function SectionHeading({
     >
       {children}
     </h2>
-  );
-}
-
-function CopyLinkButton() {
-  const [copied, setCopied] = React.useState(false);
-
-  const handleCopy = React.useCallback(() => {
-    navigator.clipboard.writeText(window.location.href);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  }, []);
-
-  return (
-    <button
-      onClick={handleCopy}
-      className="group relative flex size-9 shrink-0 cursor-pointer items-center justify-center rounded-full bg-secondary transition-[scale,background-color] duration-200 ease-out hover:bg-gray-300 active:scale-[0.96]"
-      aria-label="Copy link"
-    >
-      <span className="relative grid size-4 place-items-center">
-        <Check
-          className="col-start-1 row-start-1 size-4 text-muted-foreground transition-[opacity,transform,filter] duration-300 group-hover:text-foreground"
-          style={{
-            transitionTimingFunction: "cubic-bezier(0.2, 0, 0, 1)",
-            opacity: copied ? 1 : 0,
-            transform: copied ? "scale(1)" : "scale(0.25)",
-            filter: copied ? "blur(0px)" : "blur(4px)",
-          }}
-          strokeWidth={1.5}
-        />
-        <LinkIcon
-          className="col-start-1 row-start-1 size-4 text-muted-foreground transition-[opacity,transform,filter] duration-300 group-hover:text-foreground"
-          style={{
-            transitionTimingFunction: "cubic-bezier(0.2, 0, 0, 1)",
-            opacity: copied ? 0 : 1,
-            transform: copied ? "scale(0.25)" : "scale(1)",
-            filter: copied ? "blur(4px)" : "blur(0px)",
-          }}
-          strokeWidth={1.5}
-        />
-      </span>
-    </button>
   );
 }
 
@@ -400,11 +358,6 @@ export function ArticleContent({
               />
             </HomeLink>
             <div className="flex items-center gap-2">
-              <LanguageToggle
-                language={language}
-                onLanguageChange={switchLocale}
-              />
-              <ThemeToggle language={language} />
               <CopyLinkButton />
             </div>
           </div>
@@ -516,13 +469,7 @@ export function ArticleContent({
           />
         </article>
       </main>
-      {/* Language moved up beside the copy-link button; theme stays here. */}
-      {/* Both toggles live in the article header, beside copy-link. */}
-      <Footer
-        language={language}
-        showLanguageToggle={false}
-        showThemeToggle={false}
-      />
+      <Footer language={language} />
     </div>
   );
 }

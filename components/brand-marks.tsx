@@ -22,6 +22,7 @@
  */
 
 type MarkName =
+  | "mail"
   | "4selet"
   | "zero7"
   | "goias"
@@ -148,6 +149,16 @@ const MARKS: Record<MarkName, Mark> = {
     height: 0.75,
     paths: [
       "M714.163 519.284L1160.89 0H1055.03L667.137 450.887L357.328 0H0L468.492 681.821L0 1226.37H105.866L515.491 750.218L842.672 1226.37H1200L714.137 519.284H714.163ZM569.165 687.828L521.697 619.934L144.011 79.6944H306.615L611.412 515.685L658.88 583.579L1055.08 1150.3H892.476L569.165 687.854V687.828Z",
+    ],
+  },
+  mail: {
+    viewBox: "0 0 24 24",
+    // A closed envelope is wider than it is tall; at the default height it
+    // outweighs the GitHub ring it sits a few words away from.
+    height: 0.82,
+    width: 0.82,
+    paths: [
+      "M20 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2Zm0 4.25-8 5-8-5V6l8 5 8-5v2.25Z",
     ],
   },
   github: {

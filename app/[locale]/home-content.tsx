@@ -12,7 +12,6 @@ import {
 } from "@/components/project-card";
 import { WorkList } from "@/components/work-list";
 import { ContributionGraph } from "@/components/contribution-graph";
-import { LanguageToggle, ThemeToggle } from "@/components/toggles";
 import {
   BioLink,
   GithubLink,
@@ -24,7 +23,6 @@ import { SectionDivider } from "@/components/section-divider";
 import { Skills } from "@/components/skills";
 import { CraftList } from "@/components/craft-list";
 import { localeToLanguage } from "@/lib/locale";
-import { switchLocale } from "@/lib/switch-locale";
 import { HEADER_SOCIAL } from "@/lib/site";
 import type { ContributionYear, GithubCardData } from "@/lib/github";
 import { VerifiedBadge } from "@/components/verified-badge";
@@ -46,7 +44,7 @@ const translations = {
     imageAlt: "Foto de Matheus Cardoso",
     openPhoto: "Ampliar a foto de perfil",
     closePhoto: "Fechar a foto",
-    title: "Engenheiro de Software",
+    title: "Engenheiro de Software na 4Selet",
     projects: "Projetos",
     crafts: "Crafts",
     craftsIntro: "Componentes que eu construo e solto aqui, um de cada vez.",
@@ -66,7 +64,7 @@ const translations = {
     imageAlt: "Photo of Matheus Cardoso",
     openPhoto: "Expand profile photo",
     closePhoto: "Close photo",
-    title: "Software Engineer",
+    title: "Software Engineer at 4Selet",
     projects: "Projects",
     crafts: "Crafts",
     craftsIntro: "Components I build and drop here, one at a time.",
@@ -86,7 +84,7 @@ const translations = {
     imageAlt: "Foto de Matheus Cardoso",
     openPhoto: "Ampliar la foto de perfil",
     closePhoto: "Cerrar la foto",
-    title: "Ingeniero de Software",
+    title: "Ingeniero de Software en 4Selet",
     projects: "Proyectos",
     crafts: "Crafts",
     craftsIntro: "Componentes que construyo y suelto aquí, uno a uno.",
@@ -331,105 +329,73 @@ type BioParagraphs = (
   github: GithubCardData | null,
 ) => React.ReactNode;
 
+/** Props every outbound link in the bio shares. */
+const external = { target: "_blank", rel: "noopener noreferrer" } as const;
+
+/*
+ * Short paragraphs, and a mark only where it earns one: the two companies,
+ * then email and GitHub. Every logo past that was competing with the sentence
+ * it sat in, and the paragraph read as a row of badges.
+ *
+ * No "Hi, I'm Matheus": the name is already the heading a few pixels above.
+ */
 const bio: Record<Language, BioParagraphs> = {
   PT: (link, locale, lang, github) => (
     <>
-      <p className="paragraph mb-3">
-        Oi, eu sou o Matheus. Sou engenheiro de software na{" "}
-        <BioLink
-          href="https://4selet.com.br"
-          target="_blank"
-          rel="noopener noreferrer"
-          className={link}
-        >
+      <p className="paragraph mb-4">
+        Sou engenheiro de software na{" "}
+        <BioLink href="https://4selet.com.br" {...external} className={link}>
           <BrandMark name="4selet" />
           4Selet
         </BioLink>{" "}
         e na{" "}
-        <BioLink
-          href="https://zero7.com.br/home"
-          target="_blank"
-          rel="noopener noreferrer"
-          className={link}
-        >
+        <BioLink href="https://zero7.com.br/home" {...external} className={link}>
           <BrandMark name="zero7" />
           Zero7
         </BioLink>
-        . Quase tudo que eu construo é pagamento: checkout, cobrança, repasse.
-        Me importo com cada peça que faz um checkout ser{" "}
-        <span className="font-display">eficiente</span>, e com a velocidade e a
-        experiência de quem está comprando.
+        , onde construo pagamentos: checkout, cobrança e repasse. Quero que
+        pagar seja <span className="font-display">invisível</span> pra quem está
+        comprando.
       </p>
-      <p className="paragraph mb-3">
-        O open-source de que eu mais me orgulho é a{" "}
-        <BioLink
-          href="https://www.abacatepay.com/"
-          target="_blank"
-          rel="noopener noreferrer"
-          className={link}
-        >
-          <span
-            aria-hidden
-            className="brand-mark inline-block"
-            style={{ fontSize: "0.82em", marginRight: "0.3em" }}
-          >
-            🥑
-          </span>
-          Abacate Pay
-        </BioLink>
-        , feita no Brasil por <AvatarStack /> 23 devs. Também criei o{" "}
-        <BioLink
-          href="https://craft.ocardoso.com"
-          target="_blank"
-          rel="noopener noreferrer"
-          className={link}
-        >
-          <BrandMark name="craft" />
+      <p className="paragraph mb-4">
+        Criei o{" "}
+        <BioLink href="https://craft.ocardoso.com" {...external} className={link}>
           Craft
         </BioLink>
-        , um curso sobre os detalhes que fazem uma interface parecer certa.
-      </p>
-      <p className="paragraph mb-3">
-        Antes de tudo isso,{" "}
-        <BioLink
-          href="https://www.goiasec.com.br/"
-          target="_blank"
-          rel="noopener noreferrer"
-          className={link}
-        >
-          <BrandMark name="goias" />
+        , um curso sobre detalhes de interface, e o open source de que mais me orgulho é a{" "}
+        <BioLink href="https://www.abacatepay.com/" {...external} className={link}>
+          Abacate Pay
+        </BioLink>
+        , feita por <AvatarStack /> 23 devs. Antes, trabalhei com o{" "}
+        <BioLink href="https://www.goiasec.com.br/" {...external} className={link}>
           Goiás F.C.
         </BioLink>{" "}
-        Fora do trabalho eu corro todo dia e monto uma{" "}
+        e outros. Corro todo dia e monto uma{" "}
         <PlaylistLink
           language={lang}
           className={link}
           href={`/${locale}/monthly-playlists`}
         >
-          <BrandMark name="spotify" />
           playlist
         </PlaylistLink>{" "}
-        por mês. Me acha no{" "}
-        <a
-          href="https://x.com/mattcrdoso"
-          target="_blank"
-          rel="noopener noreferrer"
-          className={link}
-        >
-          <BrandMark name="twitter" />
-          Twitter
-        </a>
-        , no{" "}
-        <a href="mailto:mathuscardoso@gmail.com" className={link}>
-          email
+        por mês.
+      </p>
+      <p className="paragraph">
+        Fala comigo no{" "}
+        <a href="https://x.com/mattcrdoso" {...external} className={link}>
+          @mattcrdoso
         </a>{" "}
-        ou no{" "}
+        ou por{" "}
+        <a href={`mailto:${EMAIL}`} className={link}>
+          <BrandMark name="mail" />
+          email
+        </a>
+        , ou veja meu código no{" "}
         <GithubLink
           data={github}
           language={lang}
           href={GITHUB_URL}
-          target="_blank"
-          rel="noopener noreferrer"
+          {...external}
           className={link}
         >
           <BrandMark name="github" />
@@ -441,102 +407,60 @@ const bio: Record<Language, BioParagraphs> = {
   ),
   EN: (link, locale, lang, github) => (
     <>
-      <p className="paragraph mb-3">
-        Hi, I&apos;m Matheus. I&apos;m a software engineer at{" "}
-        <BioLink
-          href="https://4selet.com.br"
-          target="_blank"
-          rel="noopener noreferrer"
-          className={link}
-        >
+      <p className="paragraph mb-4">
+        I&apos;m a software engineer at{" "}
+        <BioLink href="https://4selet.com.br" {...external} className={link}>
           <BrandMark name="4selet" />
           4Selet
         </BioLink>{" "}
         and{" "}
-        <BioLink
-          href="https://zero7.com.br/home"
-          target="_blank"
-          rel="noopener noreferrer"
-          className={link}
-        >
+        <BioLink href="https://zero7.com.br/home" {...external} className={link}>
           <BrandMark name="zero7" />
           Zero7
         </BioLink>
-        . Almost everything I build is payments: checkout, billing, payouts. I
-        care about every piece that makes a checkout{" "}
-        <span className="font-display">efficient</span>, and about the speed and
-        the experience of the person buying.
+        , where I build payments: checkout, billing and payouts. I want paying
+        to feel <span className="font-display">invisible</span> to the person
+        buying.
       </p>
-      <p className="paragraph mb-3">
-        The open source I&apos;m proudest of is{" "}
-        <BioLink
-          href="https://www.abacatepay.com/"
-          target="_blank"
-          rel="noopener noreferrer"
-          className={link}
-        >
-          <span
-            aria-hidden
-            className="brand-mark inline-block"
-            style={{ fontSize: "0.82em", marginRight: "0.3em" }}
-          >
-            🥑
-          </span>
-          Abacate Pay
-        </BioLink>
-        , built for Brazil by <AvatarStack /> 23 devs. I also made{" "}
-        <BioLink
-          href="https://craft.ocardoso.com"
-          target="_blank"
-          rel="noopener noreferrer"
-          className={link}
-        >
-          <BrandMark name="craft" />
+      <p className="paragraph mb-4">
+        I made{" "}
+        <BioLink href="https://craft.ocardoso.com" {...external} className={link}>
           Craft
         </BioLink>
-        , a course on the details that make an interface feel right.
-      </p>
-      <p className="paragraph mb-3">
-        Before any of this,{" "}
-        <BioLink
-          href="https://www.goiasec.com.br/"
-          target="_blank"
-          rel="noopener noreferrer"
-          className={link}
-        >
-          <BrandMark name="goias" />
+        , a course on interface details, and the open source I&apos;m proudest of is{" "}
+        <BioLink href="https://www.abacatepay.com/" {...external} className={link}>
+          Abacate Pay
+        </BioLink>
+        , built by <AvatarStack /> 23 devs. Before that I worked with{" "}
+        <BioLink href="https://www.goiasec.com.br/" {...external} className={link}>
           Goiás F.C.
         </BioLink>{" "}
-        Outside work I run every day and put together a{" "}
+        and a few others. I run every day and make a{" "}
         <PlaylistLink
           language={lang}
           className={link}
           href={`/${locale}/monthly-playlists`}
         >
-          <BrandMark name="spotify" />
           playlist
         </PlaylistLink>{" "}
-        once a month. You can find me on{" "}
-        <a
-          href="https://x.com/mattcrdoso"
-          target="_blank"
-          rel="noopener noreferrer"
-          className={link}
-        >
-          <BrandMark name="twitter" />
-          Twitter
-        </a>
-        , by{" "}
-        <a href="mailto:mathuscardoso@gmail.com" className={link}>
+        every month.
+      </p>
+      <p className="paragraph">
+        You can reach me at{" "}
+        <a href="https://x.com/mattcrdoso" {...external} className={link}>
+          @mattcrdoso
+        </a>{" "}
+        and via{" "}
+        <a href={`mailto:${EMAIL}`} className={link}>
+          <BrandMark name="mail" />
           email
         </a>{" "}
-        or on{" "}
+        or see my code on{" "}
         <GithubLink
           data={github}
           language={lang}
           href={GITHUB_URL}
-          target="_blank"
-          rel="noopener noreferrer"
+          {...external}
           className={link}
         >
           <BrandMark name="github" />
@@ -548,102 +472,60 @@ const bio: Record<Language, BioParagraphs> = {
   ),
   ES: (link, locale, lang, github) => (
     <>
-      <p className="paragraph mb-3">
-        Hola, soy Matheus. Soy ingeniero de software en{" "}
-        <BioLink
-          href="https://4selet.com.br"
-          target="_blank"
-          rel="noopener noreferrer"
-          className={link}
-        >
+      <p className="paragraph mb-4">
+        Soy ingeniero de software en{" "}
+        <BioLink href="https://4selet.com.br" {...external} className={link}>
           <BrandMark name="4selet" />
           4Selet
         </BioLink>{" "}
         y{" "}
-        <BioLink
-          href="https://zero7.com.br/home"
-          target="_blank"
-          rel="noopener noreferrer"
-          className={link}
-        >
+        <BioLink href="https://zero7.com.br/home" {...external} className={link}>
           <BrandMark name="zero7" />
           Zero7
         </BioLink>
-        . Casi todo lo que construyo son pagos: checkout, cobros,
-        transferencias. Me importa cada pieza que hace que un checkout sea{" "}
-        <span className="font-display">eficiente</span>, y la velocidad y la
-        experiencia de quien está comprando.
+        , donde construyo pagos: checkout, cobros y transferencias. Quiero que
+        pagar sea <span className="font-display">invisible</span> para quien
+        compra.
       </p>
-      <p className="paragraph mb-3">
-        El open source del que más me enorgullezco es{" "}
-        <BioLink
-          href="https://www.abacatepay.com/"
-          target="_blank"
-          rel="noopener noreferrer"
-          className={link}
-        >
-          <span
-            aria-hidden
-            className="brand-mark inline-block"
-            style={{ fontSize: "0.82em", marginRight: "0.3em" }}
-          >
-            🥑
-          </span>
-          Abacate Pay
-        </BioLink>
-        , hecha para Brasil por <AvatarStack /> 23 devs. También creé{" "}
-        <BioLink
-          href="https://craft.ocardoso.com"
-          target="_blank"
-          rel="noopener noreferrer"
-          className={link}
-        >
-          <BrandMark name="craft" />
+      <p className="paragraph mb-4">
+        Creé{" "}
+        <BioLink href="https://craft.ocardoso.com" {...external} className={link}>
           Craft
         </BioLink>
-        , un curso sobre los detalles que hacen que una interfaz se sienta bien.
-      </p>
-      <p className="paragraph mb-3">
-        Antes de todo esto,{" "}
-        <BioLink
-          href="https://www.goiasec.com.br/"
-          target="_blank"
-          rel="noopener noreferrer"
-          className={link}
-        >
-          <BrandMark name="goias" />
+        , un curso sobre detalles de interfaz, y el open source del que más me enorgullezco es{" "}
+        <BioLink href="https://www.abacatepay.com/" {...external} className={link}>
+          Abacate Pay
+        </BioLink>
+        , hecha por <AvatarStack /> 23 devs. Antes trabajé con{" "}
+        <BioLink href="https://www.goiasec.com.br/" {...external} className={link}>
           Goiás F.C.
         </BioLink>{" "}
-        Fuera del trabajo corro todos los días y armo una{" "}
+        y otros. Corro todos los días y armo una{" "}
         <PlaylistLink
           language={lang}
           className={link}
           href={`/${locale}/monthly-playlists`}
         >
-          <BrandMark name="spotify" />
           playlist
         </PlaylistLink>{" "}
-        al mes. Encuéntrame en{" "}
-        <a
-          href="https://x.com/mattcrdoso"
-          target="_blank"
-          rel="noopener noreferrer"
-          className={link}
-        >
-          <BrandMark name="twitter" />
-          Twitter
-        </a>
-        , por{" "}
-        <a href="mailto:mathuscardoso@gmail.com" className={link}>
-          email
+        al mes.
+      </p>
+      <p className="paragraph">
+        Escríbeme en{" "}
+        <a href="https://x.com/mattcrdoso" {...external} className={link}>
+          @mattcrdoso
         </a>{" "}
-        o en{" "}
+        o por{" "}
+        <a href={`mailto:${EMAIL}`} className={link}>
+          <BrandMark name="mail" />
+          email
+        </a>
+        , o mira mi código en{" "}
         <GithubLink
           data={github}
           language={lang}
           href={GITHUB_URL}
-          target="_blank"
-          rel="noopener noreferrer"
+          {...external}
           className={link}
         >
           <BrandMark name="github" />
@@ -704,13 +586,6 @@ export function HomeContent({
             </p>
           </div>
 
-          <div className="ml-auto flex shrink-0 items-center gap-2 text-black dark:text-white">
-            <LanguageToggle
-              language={language}
-              onLanguageChange={switchLocale}
-            />
-            <ThemeToggle language={language} />
-          </div>
         </div>
 
         {bio[language](linkClass, locale, language, github)}
@@ -824,12 +699,7 @@ export function HomeContent({
           <PhotoDeck language={language} />
         </section>
       </main>
-      {/* Both toggles live in the header on this page. */}
-      <Footer
-        language={language}
-        showLanguageToggle={false}
-        showThemeToggle={false}
-      />
+      <Footer language={language} />
     </div>
   );
 }

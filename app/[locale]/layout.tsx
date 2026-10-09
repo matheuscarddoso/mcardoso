@@ -5,6 +5,7 @@ import "../globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { DocumentPanelProvider } from "@/components/document-panel";
 import { VisitTrail } from "@/components/visit-trail";
+import { FloatingToggles } from "@/components/toggles";
 import { Analytics } from "@vercel/analytics/next";
 import { LOCALES, localeToLanguage } from "@/lib/locale";
 import {
@@ -146,6 +147,7 @@ export default async function LocaleLayout({
           <DocumentPanelProvider language={localeToLanguage(locale)}>
             {children}
           </DocumentPanelProvider>
+          <FloatingToggles language={localeToLanguage(locale)} />
         </ThemeProvider>
         {/*
           Last in the body, and outside the providers: it renders nothing, and

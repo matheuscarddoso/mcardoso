@@ -8,7 +8,6 @@ import { Undo2 } from "lucide-react";
 import { useParams } from "next/navigation";
 import { Footer, type Language } from "@/components/footer";
 import { localeToLanguage } from "@/lib/locale";
-import { switchLocale } from "@/lib/switch-locale";
 
 const titleByLang = {
   PT: "Playlists mensais",
@@ -136,7 +135,7 @@ export function MonthlyPlaylistsContent() {
           .
         </p>
       </main>
-      <Footer language={language} onLanguageChange={switchLocale} />
+      <Footer language={language} />
     </div>
   );
 }

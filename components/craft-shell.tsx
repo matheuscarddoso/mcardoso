@@ -3,9 +3,6 @@
 import * as React from "react"
 import { Undo2 } from "lucide-react"
 import { HomeLink } from "@/components/home-link"
-import { LanguageToggle, ThemeToggle } from "@/components/toggles"
-import { switchLocale } from "@/lib/switch-locale"
-import type { Language } from "@/lib/locale"
 
 /**
  * The page around one craft: the same column, header and back control the
@@ -18,7 +15,6 @@ import type { Language } from "@/lib/locale"
  */
 export function CraftShell({
   locale,
-  language,
   title,
   description,
   credit,
@@ -26,7 +22,6 @@ export function CraftShell({
   children,
 }: {
   locale: string
-  language: Language
   title: string
   description: string
   credit?: string
@@ -48,10 +43,6 @@ export function CraftShell({
                 strokeWidth={1.5}
               />
             </HomeLink>
-            <div className="flex items-center gap-2">
-              <LanguageToggle language={language} onLanguageChange={switchLocale} />
-              <ThemeToggle language={language} />
-            </div>
           </div>
         </header>
 

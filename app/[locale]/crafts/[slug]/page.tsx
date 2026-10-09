@@ -57,7 +57,6 @@ export default async function CraftPage({ params }: Props) {
   return (
     <CraftShell
       locale={locale}
-      language={language}
       title={craft.title}
       description={craft.description[language]}
       credit={craft.credit?.[language]}
